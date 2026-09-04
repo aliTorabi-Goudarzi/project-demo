@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>راهنمای اجرای لوکال وب‌سایت ناجی سازان امین</title>
+  <style>
+    @font-face {
+      font-family: 'Vazirmatn';
+      src: url('naji-sazan-amin/assets/fonts/vazirmatn-0.woff2') format('woff2');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @page {
+      size: A4 portrait;
+      margin: 10mm 13mm;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body {
+      font-family: 'Vazirmatn', 'Segoe UI', Tahoma, sans-serif;
+      background-color: #ffffff;
+      color: #1e293b;
+      line-height: 1.65;
+      font-size: 12px;
+      direction: rtl;
+    }
+
+    .doc-container {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Header Bar */
+    .header-card {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #ffffff;
+      padding: 16px 22px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-right: 5px solid #3b82f6;
+    }
+
+    .header-card__info h1 {
+      font-size: 17px;
+      font-weight: 800;
+      margin-bottom: 3px;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+    }
+
+    .header-card__info p {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    .badge-status {
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      color: #93c5fd;
+      padding: 4px 12px;
+      border-radius: 16px;
+      font-size: 10.5px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* Intro Message */
+    .intro-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 14px;
+    }
+
+    .intro-box p {
+      color: #334155;
+      font-size: 12px;
+      line-height: 1.6;
+      margin-bottom: 4px;
+    }
+
+    .intro-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Section Title */
+    .section-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .section-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 15px;
+      background: #2563eb;
+      border-radius: 2px;
+    }
+
+    /* Primary Featured Method */
+    .method-featured {
+      background: #f0f7ff;
+      border: 2px solid #3b82f6;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+    }
+
+    .method-featured__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .method-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .num-pill {
+      background: #2563eb;
+      color: #ffffff;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .tag-recommend {
+      background: #dbeafe;
+      color: #1d4ed8;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 5px;
+    }
+
+    .method-featured p {
+      color: #475569;
+      font-size: 11.8px;
+      margin-bottom: 6px;
+    }
+
+    .steps-list {
+      padding-right: 18px;
+      color: #334155;
+      font-size: 11.8px;
+      line-height: 1.55;
+    }
+
+    /* 2-Column Alternate Methods */
+    .alt-methods-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .alt-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 9px;
+      padding: 10px 14px;
+    }
+
+    .alt-card .method-title {
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+
+    .alt-card p {
+      color: #475569;
+      font-size: 11.2px;
+      margin-bottom: 6px;
+      line-height: 1.5;
+    }
+
+    .code-snippet {
+      background: #0f172a;
+      color: #38bdf8;
+      font-family: Consolas, 'Courier New', monospace;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      direction: ltr;
+      text-align: left;
+      margin: 4px 0 6px;
+      font-weight: 600;
+    }
+
+    /* Highlights Section */
+    .highlights-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .highlight-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .highlight-card h4 {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 3px;
+    }
+
+    .highlight-card p {
+      font-size: 10.5px;
+      color: #64748b;
+      line-height: 1.45;
+    }
+
+    /* Footer / Tips */
+    .tips-box {
+      background: #fffbeb;
+      border: 1px solid #fef3c7;
+      border-right: 4px solid #f59e0b;
+      border-radius: 8px;
+      padding: 10px 14px;
+    }
+
+    .tips-box h4 {
+      color: #92400e;
+      font-size: 11.5px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .tips-box p {
+      color: #78350f;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+<div class="doc-container">
+
+  <!-- Header -->
+  <div class="header-card">
+    <div class="header-card__info">
+      <h1>راهنمای اجرای لوکال وب‌سایت مهندسین مشاور ناجی سازان امین</h1>
+      <p>دستورالعمل تست و مشاهده نسخه نهایی روی سیستم شخصی • آماده بررسی و پرزنت</p>
+    </div>
+    <div class="badge-status">نسخه نهایی وب‌سایت</div>
+  </div>
+
+  <!-- Intro Note (Conversational) -->
+  <div class="intro-box">
+    <p><strong>سلام رفیق جان،</strong></p>
+    <p>این فایل‌ها خروجی نسخه نهایی وب‌سایته که برات آماده کردم. همه صفحات (خانه، پروژه‌ها، درباره ما، تماس) همراه با انیمیشن تعاملی سه‌بعدی هیرو سکشن، قابلیت سوئیچ تم شب و روز، فیلتر پروژه‌ها و فرم استعلام آنلاین تکمیل شده‌اند.</p>
+    <p>برای اینکه روی سیستم خودت هم دقیقاً مشابه سیستم من، با بالاترین کیفیت، بدون به هم ریختگی فونت‌ها و با لود آنی انیمیشن ببینی، چند روش ساده برات آماده کردم:</p>
+  </div>
+
+  <!-- Section Title -->
+  <div class="section-title">روش‌های اجرای وب‌سایت روی سیستم شما</div>
+
+  <!-- Method 1: The One-Click Batch -->
+  <div class="method-featured">
+    <div class="method-featured__header">
+      <div class="method-title">
+        <span class="num-pill">۱</span>
+        روش اول: اجرای ۱-کلیکی خودکار (سریع‌ترین و راحت‌ترین گزینه - پیشنهاد اصلی من)
+      </div>
+      <span class="tag-recommend">بدون نیاز به نصب چیزی</span>
+    </div>
+    <p>داخل پوشه اصلی پروژه، یک فایل به اسم <strong>Run.bat</strong> (یا <strong>اجرا.bat</strong>) برات گذاشتم:</p>
+    <ol class="steps-list">
+      <li>فقط کافیه روی فایل <strong>Run.bat</strong> دو بار کلیک (دابل‌کلیک) کنی.</li>
+      <li>سیستم خودکار یک وب‌سرور سبک لوکال ایجاد کرده و مرورگر پیش‌فرض شما رو باز می‌کنه و سایت رو لود می‌کنه!</li>
+      <li>هر زمان کارت تموم شد، فقط کافیه پنجره سیاه خط فرمان (CMD) رو ببندی تا سرور خاموش بشه.</li>
+    </ol>
+  </div>
+
+  <!-- Alternate Methods (Grid 2-Col) -->
+  <div class="alt-methods-grid">
+
+    <!-- Method 2: Python HTTP Server -->
+    <div class="alt-card">
+      <div class="method-title">
+        <span class="num-pill">۲</span>
+        روش دوم: با پایتون (Python Server)
+      </div>
+      <p>اگر اهل توسعه و کدنویسی هستی و روی سیستمت پایتون داری:</p>
+      <ol class="steps-list">
+        <li>وارد پوشه پروژه بشو.</li>
+        <li>کلیک راست کن و <strong>Open in Terminal</strong> (یا کلید Shift + راست‌کلیک و <em>Open PowerShell</em>) رو بزن.</li>
+        <li>این دستور رو بنویس و Enter کن:</li>
+      </ol>
+      <div class="code-snippet">python -m http.server 8000</div>
+      <p>حالا توی مرورگرت برو به: <strong dir="ltr">http://localhost:8000</strong></p>
+    </div>
+
+    <!-- Method 3 & 4: VS Code & Direct -->
+    <div class="alt-card">
+      <div class="method-title">
+        <span class="num-pill">۳</span>
+        روش سوم: ادیتور VS Code یا باز کردن مستقیم
+      </div>
+      <p><strong>با افزونه Live Server در VS Code:</strong><br>
+      پوشه پروژه رو با VS Code باز کن، روی <code>index.html</code> کلیک راست کن و <strong>Open with Live Server</strong> رو بزن.</p>
+      <p style="margin-top: 5px;"><strong>روش چهارم (باز کردن مستقیم):</strong><br>
+      اگر هیچ‌کدوم رو نداشتی، کافیه مستقیم روی <strong>index.html</strong> دابل کلیک کنی تا باز بشه (ولی ترجیحاً از روش ۱ استفاده کن تا ویدیوها و فونت‌ها بدون محدودیت امنیتی مرورگر لود بشن).</p>
+    </div>
+
+  </div>
+
+  <!-- Highlights Section -->
+  <div class="section-title">بخش‌های ویژه‌ای که حتماً توی سایت امتحان کن</div>
+  <div class="highlights-grid">
+    <div class="highlight-card">
+      <h4>⚡ انیمیشن ۳ بعدی هیرو</h4>
+      <p>انیمیشن مدرن وایرلس ساختمانی در صفحه اصلی با کنتراست بهینه برای متن‌ها.</p>
+    </div>
+    <div class="highlight-card">
+      <h4>🌓 سوئیچر تم شب / روز</h4>
+      <p>آیکون ماه و خورشید در منو؛ کل پالت رنگی و ویدیوها با یک کلیک تغییر وضعیت میدن.</p>
+    </div>
+    <div class="highlight-card">
+      <h4>🏢 فیلتر دسته‌بندی پروژه‌ها</h4>
+      <p>در صفحه پروژه‌ها می‌تونی بر اساس مسکونی، تجاری، درمانی و... سریع فیلتر کنی.</p>
+    </div>
+    <div class="highlight-card">
+      <h4>📞 مرکز تماس و مشاوره</h4>
+      <p>فرم پویا، کارت‌های تماس مستقیم و وضعیت آنلاین ساعات اداری شرکت.</p>
+    </div>
+  </div>
+
+  <!-- Pro Tips -->
+  <div class="tips-box">
+    <h4>💡 یک نکته کاربردی:</h4>
+    <p>اگر احساس کردی فایلی بعد از تغییرات کش شده، کافیه توی مرورگر یک‌بار <strong>Ctrl + F5</strong> بزنی تا تمام استایل‌ها تازه بشن. هر سوالی داشتی یا هر جاش خواستی تغییری بدیم حتماً بهم خبر بده!</p>
+  </div>
+
+</div>
+
+</body>
+</html>
