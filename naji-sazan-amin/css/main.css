@@ -428,8 +428,15 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-text-fill-color: transparent;
 }
 
-.hero__lead { margin-inline: auto; margin-bottom: var(--space-8); }
-.hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-4); justify-content: center; align-items: center; }
+.hero__lead { margin-inline: auto; margin-bottom: 0; }
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  justify-content: center;
+  align-items: center;
+  margin-block-start: clamp(3.5rem, 6.5vw, 6.5rem);
+}
 
 /* Shimmer Pill Badge (21st.dev Style) */
 .shimmer-badge {
