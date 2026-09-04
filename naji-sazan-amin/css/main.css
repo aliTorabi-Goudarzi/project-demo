@@ -337,31 +337,31 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   justify-content: center;
-  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
-  mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 85%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 0%, black 85%, transparent 100%);
 }
 
 .hero__bg-video {
   position: absolute;
-  top: 58%;
+  top: 56%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: min(1240px, 92vw);
+  width: min(1340px, 94vw);
   height: auto;
   aspect-ratio: 16 / 9;
   object-fit: contain;
-  opacity: 0.55;
-  mix-blend-mode: multiply;
-  filter: contrast(1.15) brightness(1.02);
-  -webkit-mask-image: radial-gradient(ellipse 70% 65% at 50% 50%, black 45%, transparent 92%);
-  mask-image: radial-gradient(ellipse 70% 65% at 50% 50%, black 45%, transparent 92%);
+  opacity: 0.65;
   transition: opacity var(--dur-normal) var(--ease), filter var(--dur-normal) var(--ease);
 }
 
+:root[data-theme="light"] .hero__bg-video {
+  filter: invert(1);
+  opacity: 0.55;
+}
+
 :root[data-theme="dark"] .hero__bg-video {
-  filter: invert(1) contrast(1.4) brightness(0.95);
-  mix-blend-mode: screen;
-  opacity: 0.45;
+  filter: brightness(1.1) contrast(1.1);
+  opacity: 0.65;
 }
 
 .hero__bg-overlay {
