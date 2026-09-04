@@ -11,7 +11,7 @@ window.NSA_PROJECTS = [
     summary: 'برج ۲۲ طبقه مسکونی با سازه بتنی و نمای دوپوسته.',
     client: 'شرکت ساختمانی پارسا', location: 'تهران / الهیه', year: '۱۳۹۸',
     category: 'مسکونی', categorySlug: 'residential', type: 'tower',
-    image: 'assets/projects/parsa-tower.jpg',
+    image: 'assets/projects/parsa-tower.webp',
     description: 'طراحی معماری و سازه، نظارت عالیه بر اجرا. ۲۲ طبقه، ۹۸ واحد، ۱۸٬۰۰۰ متر مربع زیربنا. سیستم باربر قاب خمشی بتنی با دیوار برشی. پی فونداسیون گسترده.'
   },
   {
@@ -20,7 +20,7 @@ window.NSA_PROJECTS = [
     summary: 'مجتمع تجاری ۸ طبقه با پارکینگ ۴ طبقه در مرکز شهر.',
     client: 'گروه اطلس', location: 'اصفهان / چهارباغ', year: '۱۳۹۷',
     category: 'تجاری', categorySlug: 'commercial', type: 'complex',
-    image: 'assets/projects/atlas-complex.jpg',
+    image: 'assets/projects/atlas-complex.webp',
     description: 'طراحی معماری، سازه و تأسیسات. ۸ طبقه تجاری به‌همراه ۴ طبقه پارکینگ زیرزمین. ۳۲٬۰۰۰ متر مربع. سازه فلزی با مهاربندی هم‌مرکز.'
   },
   {
@@ -29,7 +29,7 @@ window.NSA_PROJECTS = [
     summary: 'طراحی و نظارت موزه‌های دفاع مقدس در ۷ استان کشور.',
     client: 'بنیاد حفظ آثار دفاع مقدس', location: 'اصفهان، شیراز، تبریز و ۴ استان دیگر', year: '۱۳۹۲ — ۱۴۰۴',
     category: 'فرهنگی', categorySlug: 'cultural', type: 'cultural',
-    image: 'assets/projects/saft-defense-museum.jpg',
+    image: 'assets/projects/saft-defense-museum.webp',
     description: 'مدیریت طراحی، فنی و نظارت. عضویت در کارگروه محتوایی موزه‌ها. شامل سالن‌های نمایش، گالری، آمفی‌تئاتر و بخش اداری.'
   },
   {
@@ -38,7 +38,7 @@ window.NSA_PROJECTS = [
     summary: 'بیمارستان ۲۵۰ تخت‌خوابی با سازه بتنی مقاوم.',
     client: 'دانشگاه علوم پزشکی', location: 'شیراز', year: '۱۳۹۹',
     category: 'درمانی', categorySlug: 'healthcare', type: 'healthcare',
-    image: 'assets/projects/al-zahra-hospital.jpg',
+    image: 'assets/projects/al-zahra-hospital.webp',
     description: 'طراحی معماری و سازه، نظارت عالیه. ۶ طبقه درمانی به‌همراه ۲ طبقه زیرزمین. ۲۸٬۰۰۰ متر مربع. سازه مقاوم در برابر زلزله با جداگرهای لرزه‌ای.'
   },
   {
@@ -47,7 +47,7 @@ window.NSA_PROJECTS = [
     summary: 'مرکز خرید ۵ طبقه با سالن‌های چندمنظوره.',
     client: 'گروه ونوس', location: 'کرج / گوهردشت', year: '۱۴۰۲',
     category: 'تجاری', categorySlug: 'commercial', type: 'complex',
-    image: 'assets/projects/venus-mall.jpg',
+    image: 'assets/projects/venus-mall.webp',
     description: 'طراحی معماری، سازه و تأسیسات. ۵ طبقه تجاری به‌همراه ۳ طبقه پارکینگ. ۴۵٬۰۰۰ متر مربع. سازه فلزی با دهانه‌های ۲۴ متری.'
   },
   {
@@ -56,7 +56,7 @@ window.NSA_PROJECTS = [
     summary: '۱۲ واحد ویلایی لوکس در زمینی شیب‌دار.',
     client: 'شرکت توسعه مسکن پارس', location: 'تهران / نیاوران', year: '۱۴۰۱',
     category: 'مسکونی', categorySlug: 'residential', type: 'villa',
-    image: 'assets/projects/niavaran-villa.jpg',
+    image: 'assets/projects/niavaran-villa.webp',
     description: 'طراحی معماری، محوطه‌سازی و سازه. ۱۲ واحد مستقل، هر واحد ۳۵۰ متر مربع. سازه بتنی با سقف تیرچه‌بلوک.'
   },
   {
@@ -65,7 +65,7 @@ window.NSA_PROJECTS = [
     summary: 'برج اداری ۱۵ طبقه با نمای شیشه‌ای دوپوسته.',
     client: 'سازمان سرمایه‌گذاری ستاره', location: 'تهران / ونک', year: '۱۴۰۰',
     category: 'اداری', categorySlug: 'office', type: 'office',
-    image: 'assets/projects/setareh-office.jpg',
+    image: 'assets/projects/setareh-office.webp',
     description: 'طراحی معماری و سازه. ۱۵ طبقه اداری به‌همراه ۴ طبقه پارکینگ. ۲۲٬۰۰۰ متر مربع. سازه ترکیبی فولاد و بتن.'
   },
   {
@@ -74,7 +74,7 @@ window.NSA_PROJECTS = [
     summary: 'مرمت و مقاوم‌سازی بخش‌های تاریخی بازار تهران.',
     client: 'سازمان میراث فرهنگی', location: 'تهران / بازار', year: '۱۳۹۶',
     category: 'مرمت', categorySlug: 'restoration', type: 'restoration',
-    image: 'assets/projects/bazaar-restoration.jpg',
+    image: 'assets/projects/bazaar-restoration.webp',
     description: 'مرمت و مقاوم‌سازی لرزه‌ای با حفظ اصالت معماری سنتی و استفاده از مصالح بومی. ۲٬۰۰۰ متر مربع.'
   },
   {
@@ -83,7 +83,7 @@ window.NSA_PROJECTS = [
     summary: 'پل عابر پیاده فولادی به طول ۱۲۰ متر.',
     client: 'شهرداری لاهیجان', location: 'گیلان / لاهیجان', year: '۱۴۰۲',
     category: 'زیرساخت', categorySlug: 'infrastructure', type: 'infrastructure',
-    image: 'assets/projects/lahijan-bridge.jpg',
+    image: 'assets/projects/lahijan-bridge.webp',
     description: 'طراحی سازه و نظارت. پل فولادی قوسی به طول ۱۲۰ متر و عرض ۴ متر با پوشش مقاوم در برابر خوردگی.'
   }
 ];
@@ -323,7 +323,7 @@ function drawBridge() {
 
   const card = (p, i, featured) => {
     const el = document.createElement('article');
-    el.className = 'project reveal';
+    el.className = 'project spotlight-card reveal';
     el.dataset.project = p.id;
     el.dataset.cat = p.categorySlug;
     if (i % 3) el.setAttribute('data-delay', String(i % 3));
@@ -348,6 +348,7 @@ function drawBridge() {
       if (p) featuredGrid.appendChild(card(p, i, true));
     });
     revealAll(featuredGrid);
+    window.initSpotlights && window.initSpotlights();
   }
 
   const grid = document.getElementById('projectGrid');
@@ -360,5 +361,6 @@ function drawBridge() {
     });
     window.NSA_PROJECTS.forEach((p, i) => grid.appendChild(card(p, i, false)));
     revealAll(grid);
+    window.initSpotlights && window.initSpotlights();
   }
 })();

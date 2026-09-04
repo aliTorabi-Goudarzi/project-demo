@@ -131,6 +131,8 @@
   --radius-md: 10px;
   --radius-lg: 14px;
   --radius-xl: 20px;
+  --radius-2xl: 28px;
+  --radius-3xl: 36px;
 
   /* Soft elevation — subtle, layered, never heavy */
   --shadow-xs: 0 1px 2px oklch(20% 0.02 85 / 0.05);
@@ -146,11 +148,26 @@
   --header-h: clamp(4.25rem, 6vw, 5rem);
 
   /* ---------- Motion: gentle, never bouncy ---------- */
-  --ease:      cubic-bezier(0.25, 0.8, 0.35, 1);
-  --ease-out:  cubic-bezier(0.22, 1, 0.36, 1);
-  --dur-fast:  150ms;
-  --dur-base:  260ms;
-  --dur-slow:  520ms;
+  --ease:        cubic-bezier(0.25, 0.8, 0.35, 1);
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast:    150ms;
+  --dur-base:    260ms;
+  --dur-slow:    520ms;
+
+  /* ---------- Modern Glass & 21st.dev Tokens (Light) ---------- */
+  --glass-bg:        oklch(99.2% 0.003 85 / 0.75);
+  --glass-border:    oklch(20% 0.02 85 / 0.08);
+  --glass-highlight: oklch(100% 0 0 / 0.8);
+  --glass-blur:      blur(16px);
+
+  --spotlight-glow:  oklch(54% 0.11 68 / 0.18);
+  --spotlight-border:oklch(54% 0.11 68 / 0.45);
+  --grid-line:       oklch(20% 0.02 85 / 0.05);
+
+  --glow-1:          oklch(46% 0.12 274 / 0.14);
+  --glow-2:          oklch(64% 0.11 72 / 0.12);
+  --perspective:     1000px;
 }
 
 /* ================================================================
@@ -195,6 +212,18 @@
   --shadow-xl: 0 24px 48px oklch(0% 0 0 / 0.65);
 
   --fw-body: 350;
+
+  /* ---------- Modern Glass & 21st.dev Tokens (Dark) ---------- */
+  --glass-bg:        oklch(14% 0.01 220 / 0.65);
+  --glass-border:    oklch(100% 0 0 / 0.12);
+  --glass-highlight: oklch(100% 0 0 / 0.2);
+
+  --spotlight-glow:  oklch(68% 0.14 75 / 0.16);
+  --spotlight-border:oklch(68% 0.14 75 / 0.5);
+  --grid-line:       oklch(100% 0 0 / 0.05);
+
+  --glow-1:          oklch(55% 0.16 274 / 0.28);
+  --glow-2:          oklch(70% 0.14 72 / 0.22);
 }
 
 /* ---------- Fallback for browsers without oklch() ---------- */
