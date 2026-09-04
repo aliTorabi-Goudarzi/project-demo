@@ -1,0 +1,210 @@
+/* ================================================================
+   Naji Sazan Amin — Design Tokens  [v3 · Refined Institutional]
+   Register: Arup / WSP — established, credible, calm, low-risk.
+   Palette: warm stone neutrals + logo navy + restrained brass accent.
+   Per .impeccable.md — do not introduce colours outside this file.
+   ================================================================ */
+
+:root {
+  color-scheme: light;
+
+  /* ---------- PRIMITIVES: warm stone neutrals ---------- */
+  --stone-0:   oklch(99.2% 0.003 85);
+  --stone-50:  oklch(97.5% 0.004 85);
+  --stone-100: oklch(95%  0.005 85);
+  --stone-200: oklch(90.5% 0.007 85);
+  --stone-300: oklch(83%  0.009 85);
+  --stone-400: oklch(71%  0.011 85);
+  --stone-500: oklch(58%  0.013 85);
+  --stone-600: oklch(47%  0.014 85);
+  --stone-700: oklch(38%  0.014 85);
+  --stone-800: oklch(28%  0.013 85);
+  --stone-900: oklch(20%  0.012 85);
+
+  /* ---------- PRIMITIVES: brand navy (from logo #030351) ---------- */
+  --navy-300: oklch(58% 0.07 274);
+  --navy-400: oklch(46% 0.09 274);
+  --navy-500: oklch(37% 0.105 274);
+  --navy-600: oklch(30% 0.115 274);
+  --navy-700: oklch(25% 0.12  274);
+  --navy-800: oklch(21% 0.125 274);   /* ≈ #030351 — logo dominant */
+  --navy-950: oklch(14% 0.09  274);
+
+  /* ---------- PRIMITIVES: brass accent (restrained, credible) ---------- */
+  --brass-300: oklch(83% 0.06 78);
+  --brass-400: oklch(74% 0.09 75);
+  --brass-500: oklch(64% 0.11 72);
+  --brass-600: oklch(54% 0.11 68);
+
+  /* ---------- PRIMITIVES: semantic status ---------- */
+  --status-ok:   oklch(48% 0.11 155);
+  --status-warn: oklch(62% 0.13 72);
+  --status-err:  oklch(50% 0.17 25);
+
+  /* ============================================================
+     SEMANTIC LAYER — light theme (default)
+     Dark mode redefines ONLY this block.
+     ============================================================ */
+  --bg:             #FBFAFB;
+  --bg-panel:       #FBFAFB;
+  --bg-subtle:      #FBFAFB;
+  --bg-deep:        var(--navy-800);
+
+  --fg:             var(--stone-900);
+  --fg-muted:       var(--stone-600);
+  --fg-subtle:      var(--stone-500);
+  --fg-on-deep:     var(--stone-0);
+  --fg-on-deep-muted: oklch(85% 0.02 85);
+
+  --line:           var(--stone-300);
+  --line-soft:      var(--stone-200);
+  --line-strong:    var(--stone-700);
+  --line-on-deep:   oklch(100% 0 0 / 0.16);
+
+  --accent:         var(--brass-600);
+  --accent-soft:    var(--brass-300);
+  --accent-hover:   var(--brass-500);
+  --accent-on-deep: var(--brass-400);
+
+  --brand:          var(--navy-700);
+  --brand-hover:    var(--navy-600);
+  --brand-soft:     oklch(94% 0.02 274);
+
+  --focus:          var(--navy-500);
+
+  /* ---------- Typography ---------- */
+  --font-sans: "Vazirmatn", "Segoe UI", Tahoma, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Refined scale — quiet, not shouty */
+  --text-xs:   0.8125rem;
+  --text-sm:   0.9375rem;
+  --text-base: 1.0625rem;
+  --text-md:   1.1875rem;
+  --text-lg:   1.375rem;
+  --text-xl:   1.75rem;
+  --text-2xl:  2.125rem;
+  --text-3xl:  2.75rem;
+  --text-4xl:  3.5rem;
+
+  /* Fluid, but restrained — hero tops out at 3.5rem, not 9.5rem */
+  --text-hero:  clamp(2.25rem, 5vw, var(--text-4xl));
+  --text-h2:    clamp(1.75rem, 3.2vw, var(--text-3xl));
+  --text-h3:    clamp(1.25rem, 2vw, var(--text-xl));
+
+  --lh-tight: 1.22;
+  --lh-snug:  1.4;
+  --lh-base:  1.8;    /* Persian needs generous leading */
+  --lh-loose: 1.95;
+
+  --tracking-tight:  -0.015em;
+  --tracking-normal:  0;
+  --tracking-wide:    0.04em;
+  --tracking-eyebrow: 0.12em;
+
+  --fw-body:   400;
+  --fw-medium: 500;
+  --fw-semi:   600;
+  --fw-bold:   700;
+
+  /* ---------- Spacing: 4pt base ---------- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 2.5rem;
+  --space-8: 3rem;
+  --space-9: 4rem;
+  --space-10: 5rem;
+  --space-11: 7rem;
+
+  --section-y: clamp(3.5rem, 7vw, var(--space-11));
+  --gutter:    clamp(1.25rem, 4vw, 3rem);
+  --measure:   66ch;
+  --container: 1240px;
+
+  /* ---------- Structure: soft, not harsh ---------- */
+  --radius-xs: 3px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  /* Soft elevation — subtle, layered, never heavy */
+  --shadow-xs: 0 1px 2px oklch(20% 0.02 85 / 0.05);
+  --shadow-sm: 0 1px 3px oklch(20% 0.02 85 / 0.06), 0 1px 2px oklch(20% 0.02 85 / 0.04);
+  --shadow-md: 0 4px 12px oklch(20% 0.03 85 / 0.07), 0 1px 3px oklch(20% 0.02 85 / 0.05);
+  --shadow-lg: 0 12px 28px oklch(20% 0.03 85 / 0.09), 0 3px 8px oklch(20% 0.02 85 / 0.05);
+  --shadow-xl: 0 24px 48px oklch(20% 0.04 85 / 0.12), 0 6px 14px oklch(20% 0.02 85 / 0.06);
+
+  --border-hairline: 1px;
+  --border-1:        1px;
+  --border-2:        2px;
+
+  --header-h: clamp(4.25rem, 6vw, 5rem);
+
+  /* ---------- Motion: gentle, never bouncy ---------- */
+  --ease:      cubic-bezier(0.25, 0.8, 0.35, 1);
+  --ease-out:  cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast:  150ms;
+  --dur-base:  260ms;
+  --dur-slow:  520ms;
+}
+
+/* ================================================================
+   DARK THEME — semantic layer only.
+   Cool / neutral black, no warm cast. Slight cool lean so neutrals
+   read as "black" not "brown". Brass accent lifted for legibility.
+   ================================================================ */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg:             #090C0C;
+  --bg-panel:       #090C0C;
+  --bg-subtle:      #090C0C;
+  --bg-deep:        oklch(7%  0.003 220);
+
+  --fg:             oklch(96% 0.003 220);
+  --fg-muted:       oklch(72% 0.004 220);
+  --fg-subtle:      oklch(54% 0.004 220);
+  --fg-on-deep:     oklch(96% 0.003 220);
+  --fg-on-deep-muted: oklch(70% 0.004 220);
+
+  --line:           oklch(30% 0.004 220);
+  --line-soft:      oklch(22% 0.004 220);
+  --line-strong:    oklch(52% 0.004 220);
+  --line-on-deep:   oklch(100% 0 0 / 0.14);
+
+  --accent:         var(--brass-400);
+  --accent-soft:    oklch(28% 0.04 75);
+  --accent-hover:   var(--brass-300);
+  --accent-on-deep: var(--brass-400);
+
+  --brand:          oklch(80% 0.05 274);
+  --brand-hover:    oklch(88% 0.04 274);
+  --brand-soft:     oklch(22% 0.04 274);
+
+  --focus:          var(--brass-400);
+
+  --shadow-xs: 0 1px 2px oklch(0% 0 0 / 0.4);
+  --shadow-sm: 0 1px 3px oklch(0% 0 0 / 0.5);
+  --shadow-md: 0 4px 12px oklch(0% 0 0 / 0.55);
+  --shadow-lg: 0 12px 28px oklch(0% 0 0 / 0.6);
+  --shadow-xl: 0 24px 48px oklch(0% 0 0 / 0.65);
+
+  --fw-body: 350;
+}
+
+/* ---------- Fallback for browsers without oklch() ---------- */
+@supports not (color: oklch(50% 0 0)) {
+  :root {
+    --stone-0:#fdfcfa; --stone-50:#f8f6f2; --stone-100:#f1eee8; --stone-200:#e3ded3;
+    --stone-300:#cec7b8; --stone-400:#aaa192; --stone-500:#847a6c; --stone-600:#655c50;
+    --stone-700:#4d463d; --stone-800:#383329; --stone-900:#26221c;
+    --navy-300:#6b76a8; --navy-400:#4c568a; --navy-500:#3b4473; --navy-600:#2c3358;
+    --navy-700:#232a4c; --navy-800:#030351; --navy-950:#12142b;
+    --brass-300:#dcc79a; --brass-400:#c8ab74; --brass-500:#ad8c52; --brass-600:#8f7040;
+  }
+}

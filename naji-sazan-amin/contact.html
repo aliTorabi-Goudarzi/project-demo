@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>تماس | مهندسین مشاور ناجی سازان امین</title>
+  <meta name="description" content="تماس با شرکت مهندسین مشاور ناجی سازان امین — آدرس، تلفن، ایمیل و فرم درخواست مشاوره.">
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+<header class="site-header" id="siteHeader">
+  <div class="container site-header__inner">
+    <a class="brand" href="index.html">
+      <img class="brand__logo" src="assets/logo.png" alt="لوگو">
+      <span class="brand__text">
+        <span class="brand__name">ناجی سازان امین</span>
+        <span class="brand__sub">مهندسین مشاور</span>
+      </span>
+    </a>
+    <nav class="nav" aria-label="منوی اصلی">
+      <a class="nav__link" href="index.html">خانه</a>
+      <a class="nav__link" href="about.html">درباره ما</a>
+      <a class="nav__link" href="projects.html">پروژه‌ها</a>
+      <a class="nav__link is-active" href="contact.html">تماس</a>
+    </nav>
+    <div class="header-actions">
+      <button class="theme-toggle" type="button" id="themeToggle" aria-label="تغییر پوسته">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      </button>
+      <a class="btn btn--primary" href="#form">درخواست مشاوره</a>
+      <button class="menu-btn" type="button" id="menuBtn" aria-label="منو" aria-expanded="false" aria-controls="drawer"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<div class="drawer" id="drawer" aria-hidden="true">
+  <a class="drawer__link" href="index.html">خانه</a>
+  <a class="drawer__link" href="about.html">درباره ما</a>
+  <a class="drawer__link" href="projects.html">پروژه‌ها</a>
+  <a class="drawer__link is-active" href="contact.html">تماس</a>
+  <a class="btn btn--primary btn--block" href="#form">درخواست مشاوره</a>
+</div>
+
+<section class="page-head">
+  <div class="container">
+    <p class="page-head__crumb"><a href="index.html">خانه</a> / تماس</p>
+    <h1 class="page-head__title h-hero reveal">تماس با ما</h1>
+    <p class="lead reveal" data-delay="1">
+      برای دریافت مشاوره، برآورد اولیه یا هرگونه همکاری، از طریق فرم زیر یا
+      اطلاعات تماس با ما در ارتباط باشید.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="grid grid-2" style="align-items: start; gap: var(--space-9);">
+
+      <!-- Info -->
+      <div class="reveal">
+        <h2 class="h-2" style="margin-bottom: var(--space-6);">دفتر مرکزی</h2>
+
+        <dl class="contact-list">
+          <div class="contact-row">
+            <dt>آدرس</dt>
+            <dd>تهران، خیابان مدرس، پلاک ۱۲۰، طبقه ۵</dd>
+          </div>
+          <div class="contact-row">
+            <dt>تلفن</dt>
+            <dd><a href="tel:+982188000000" dir="ltr">۰۲۱-۸۸۰۰۰۰۰۰</a></dd>
+          </div>
+          <div class="contact-row">
+            <dt>ایمیل</dt>
+            <dd><a href="mailto:info@naji-amin.ir" dir="ltr">info@naji-amin.ir</a></dd>
+          </div>
+          <div class="contact-row">
+            <dt>ساعات کاری</dt>
+            <dd>شنبه تا چهارشنبه — ۸:۰۰ تا ۱۷:۰۰</dd>
+          </div>
+        </dl>
+
+        <div class="map mt-6">
+          <div class="map__pin">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span class="map__label">تهران / خیابان مدرس</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div id="form" class="reveal" data-delay="1" style="padding: var(--space-8); background: var(--bg-panel); border: var(--border-1) solid var(--line-soft); border-radius: var(--radius-lg); box-shadow: var(--shadow-md);">
+        <h2 class="h-3" style="margin-bottom: var(--space-3);">پروژه خود را با ما در میان بگذارید</h2>
+        <p style="color: var(--fg-muted); font-size: var(--text-sm); margin-bottom: var(--space-6);">
+          فرم زیر را تکمیل کنید. کارشناسان ما در کمتر از ۲۴ ساعت با شما تماس خواهند گرفت.
+        </p>
+
+        <form class="form" id="contactForm" novalidate>
+          <div class="form__row">
+            <div class="field">
+              <label for="name">نام و نام خانوادگی <span class="req">*</span></label>
+              <input id="name" name="name" type="text" autocomplete="name" required>
+              <span class="field__error"></span>
+            </div>
+            <div class="field">
+              <label for="email">ایمیل <span class="req">*</span></label>
+              <input id="email" name="email" type="email" autocomplete="email" dir="ltr" required>
+              <span class="field__error"></span>
+            </div>
+          </div>
+
+          <div class="form__row">
+            <div class="field">
+              <label for="phone">شماره تماس</label>
+              <input id="phone" name="phone" type="tel" autocomplete="tel" dir="ltr">
+              <span class="field__error"></span>
+            </div>
+            <div class="field">
+              <label for="type">نوع خدمات</label>
+              <select id="type" name="type">
+                <option value="">انتخاب کنید</option>
+                <option>طراحی معماری و سازه</option>
+                <option>نظارت عالیه و اجرا</option>
+                <option>مدیریت طرح و کنترل پروژه</option>
+                <option>مشاوره مهندسی و مطالعات</option>
+                <option>سایر</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="message">شرح پروژه <span class="req">*</span></label>
+            <textarea id="message" name="message" placeholder="متراژ، محل، زمان‌بندی تقریبی و توضیحات تکمیلی..." required></textarea>
+            <span class="field__error"></span>
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--lg btn--block">ارسال درخواست</button>
+
+          <div class="form__success" id="formSuccess" role="status">
+            درخواست شما با موفقیت ثبت شد. کارشناسان ما به‌زودی با شما تماس خواهند گرفت.
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div>
+        <div class="footer__brand-row">
+          <img src="assets/logo.png" alt="لوگو">
+          <span class="footer__brand-name">ناجی سازان امین</span>
+        </div>
+        <p class="footer__about">
+          شرکت مهندسین مشاور ناجی سازان امین. تجربه، تخصص و تعهد در مسیر توسعه
+          صنعت عمرانی کشور، از سال ۱۳۸۳.
+        </p>
+      </div>
+      <div>
+        <h4 class="footer__title">دسترسی سریع</h4>
+        <ul class="footer__list">
+          <li><a href="index.html">خانه</a></li>
+          <li><a href="about.html">درباره ما</a></li>
+          <li><a href="projects.html">پروژه‌ها</a></li>
+          <li><a href="contact.html">تماس</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer__title">خدمات</h4>
+        <ul class="footer__list">
+          <li><a href="projects.html">طراحی معماری و سازه</a></li>
+          <li><a href="projects.html">نظارت عالیه</a></li>
+          <li><a href="projects.html">مدیریت طرح</a></li>
+          <li><a href="projects.html">مشاوره مهندسی</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer__title">دفتر مرکزی</h4>
+        <div class="footer__contact">
+          <div>تهران، خیابان مدرس، پلاک ۱۲۰</div>
+          <div>۰۲۱-۸۸۰۰۰۰۰۰</div>
+          <div>info@naji-amin.ir</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© ۱۴۰۵ — شرکت مهندسین مشاور ناجی سازان امین</span>
+      <span>تأسیس ۱۳۸۳</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
