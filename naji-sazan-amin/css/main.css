@@ -350,18 +350,18 @@ h1, h2, h3, h4, h5, h6 {
   height: auto;
   aspect-ratio: 16 / 9;
   object-fit: contain;
-  opacity: 0.65;
+  opacity: 0.40;
   transition: opacity var(--dur-normal) var(--ease), filter var(--dur-normal) var(--ease);
 }
 
 :root[data-theme="light"] .hero__bg-video {
   filter: invert(1);
-  opacity: 0.55;
+  opacity: 0.32;
 }
 
 :root[data-theme="dark"] .hero__bg-video {
   filter: brightness(1.1) contrast(1.1);
-  opacity: 0.65;
+  opacity: 0.40;
 }
 
 .hero__bg-overlay {
