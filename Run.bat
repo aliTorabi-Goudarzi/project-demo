@@ -1,37 +1,35 @@
 @echo off
 chcp 65001 >nul
-title اجرای لوکال وب‌سایت ناجی سازان امین
+title وب‌سایت مهندسین مشاور ناجی سازان امین
 
-echo ========================================================
-echo    در حال راه‌اندازی و اجرای لوکال وب‌سایت ناجی سازان امین...
-echo ========================================================
-echo.
+if exist "%~dp0naji-sazan-amin" (
+    cd /d "%~dp0naji-sazan-amin"
+) else (
+    cd /d "%~dp0"
+)
 
-cd /d "%~dp0naji-sazan-amin" 2>nul || cd /d "%~dp0"
-
-:: 1. بررسی وجود پایتون
+:: بررسی وجود پایتون (python یا py)
 python --version >nul 2>&1
 if %ERRORLEVEL% equ 0 (
-    echo [✔] پایتون روی سیستم شما شناسایی شد.
-    echo [✔] سرور لوکال روی پورت 8000 آغاز به کار کرد...
-    echo.
-    echo آدرس دسترسی در مرورگر: http://localhost:8000
-    echo برای اتمام کار، کافی است این پنجره خط فرمان را ببندید.
-    echo.
-    start "" powershell -NoProfile -Command "Start-Sleep -Milliseconds 600; Start-Process 'http://localhost:8000/index.html'"
-    python -m http.server 8000
+    python serve.py
     goto :eof
 )
 
-:: 2. بررسی وجود Node / npx
+py --version >nul 2>&1
+if %ERRORLEVEL% equ 0 (
+    py serve.py
+    goto :eof
+)
+
+:: بررسی وجود npx
 npx --version >nul 2>&1
 if %ERRORLEVEL% equ 0 (
-    echo [✔] نودجی‌اس شناسایی شد. در حال اجرای لوکال سرور...
-    start "" powershell -NoProfile -Command "Start-Sleep -Milliseconds 800; Start-Process 'http://localhost:3000/index.html'"
+    echo [✔] در حال اجرای سرور با Node...
     npx serve .
     goto :eof
 )
 
-:: 3. روش اضطراری مستقیم
-echo [i] پایتون یا نود روی سیستم شناسایی نشد. در حال باز کردن مستقیم فایل در مرورگر...
+:: باز کردن مستقیم فایل
+echo [i] پایتون یافت نشد. باز کردن مستقیم در مرورگر...
 start "" "index.html"
+pause

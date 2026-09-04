@@ -1,60 +1,90 @@
-"""Local preview server for the Naji Sazan Amin prototype.
-
-Serves naji-sazan-amin/ on 127.0.0.1 with:
-  - full MIME map (the WorkBuddy preview server 404s .webp)
-  - Cache-Control: no-store, so a stale view can never mask a fix
-
-Usage: python serve.py [port]
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-import functools
+Local Server Runner for Naji Sazan Amin Website
+- Automatically finds an available port (if 8000 is busy, tries 8080, 8081, 8888, etc.)
+- Displays clickable link in terminal
+- Automatically opens default browser
+"""
+
 import os
 import sys
-from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+import time
+import socket
+import threading
+import webbrowser
+import http.server
+import socketserver
 
-ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "naji-sazan-amin")
-
-
-class Handler(SimpleHTTPRequestHandler):
-    extensions_map = {
-        **SimpleHTTPRequestHandler.extensions_map,
-        ".webp": "image/webp",
-        ".woff2": "font/woff2",
-        ".woff": "font/woff",
-        ".jpg": "image/jpeg",
-        ".jpeg": "image/jpeg",
-        ".png": "image/png",
-        ".svg": "image/svg+xml",
-        ".js": "application/javascript",
-        ".css": "text/css",
-        ".json": "application/json",
-    }
-
-    def end_headers(self):
-        self.send_header("Cache-Control", "no-store, must-revalidate, max-age=0")
-        self.send_header("Pragma", "no-cache")
-        self.send_header("Expires", "0")
-        super().end_headers()
-
-    def log_message(self, fmt, *args):
-        code = args[1] if len(args) > 1 else "?"
-        if str(code).startswith("4") or str(code).startswith("5"):
-            sys.stderr.write("  %s %s\n" % (code, args[0]))
-        sys.stderr.flush()
-
+def get_free_port():
+    candidate_ports = [8000, 8080, 8081, 8888, 8778, 3000, 5000, 9000]
+    for p in candidate_ports:
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            s.bind(('127.0.0.1', p))
+            s.close()
+            return p
+        except OSError:
+            continue
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind(('', 0))
+    port = s.getsockname()[1]
+    s.close()
+    return port
 
 def main():
-    port = int(sys.argv[1]) if len(sys.argv) > 1 else 8777
-    httpd = ThreadingHTTPServer(
-        ("127.0.0.1", port),
-        functools.partial(Handler, directory=ROOT),
-    )
-    sys.stderr.write(f"serving {ROOT}\n  -> http://127.0.0.1:{port}/\n")
-    sys.stderr.flush()
-    try:
-        httpd.serve_forever()
-    except KeyboardInterrupt:
-        pass
+    project_dir = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(project_dir)
 
+    port = get_free_port()
+    url = f"http://localhost:{port}/index.html"
+
+    print("\n" + "=" * 64)
+    print("      وب‌سایت مهندسین مشاور ناجی سازان امین (نسخه لوکال)")
+    print("=" * 64)
+    if port != 8000:
+        print(f"  [i] پورت 8000 در سیستم شما مشغول بود.")
+        print(f"  [✔] پورت آزاد {port} به صورت خودکار جایگزین و فعال شد.")
+    else:
+        print(f"  [✔] سرور لوکال با موفقیت روی پورت {port} فعال شد.")
+
+    print("\n  🌐 لینک دسترسی به وب‌سایت:")
+    print(f"     -->  {url}  <--")
+    print("\n  (می‌توانید روی لینک بالا کلیک کنید یا در مرورگر باز کنید)")
+    print("  مرورگر پیش‌فرض سیستم نیز به صورت خودکار باز خواهد شد...")
+    print("  برای بستن سرور، کافیست کلیدهای Ctrl + C را بزنید یا پنجره را ببندید.")
+    print("=" * 64 + "\n")
+
+    def open_browser():
+        time.sleep(0.5)
+        try:
+            webbrowser.open(url)
+        except Exception:
+            pass
+
+    threading.Thread(target=open_browser, daemon=True).start()
+
+    Handler = http.server.SimpleHTTPRequestHandler
+    Handler.extensions_map.update({
+        '.woff2': 'font/woff2',
+        '.webm': 'video/webm',
+        '.mp4': 'video/mp4',
+        '.webp': 'image/webp',
+        '.svg': 'image/svg+xml',
+        '.css': 'text/css; charset=utf-8',
+        '.js': 'application/javascript; charset=utf-8',
+    })
+
+    class QuietServer(socketserver.TCPServer):
+        allow_reuse_address = True
+
+    with QuietServer(("", port), Handler) as httpd:
+        try:
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            print("\n[✔] سرور متوقف شد.")
+            sys.exit(0)
 
 if __name__ == "__main__":
     main()

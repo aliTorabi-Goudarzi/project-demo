@@ -295,14 +295,15 @@
     <div class="method-featured__header">
       <div class="method-title">
         <span class="num-pill">۱</span>
-        روش اول: اجرای ۱-کلیکی خودکار (سریع‌ترین و راحت‌ترین گزینه - پیشنهاد اصلی من)
+        روش اول: اجرای ۱-کلیکی هوشمند (پیشنهاد اصلی من - شناسایی خودکار پورت آزاد)
       </div>
-      <span class="tag-recommend">بدون نیاز به نصب چیزی</span>
+      <span class="tag-recommend">هوشمند و بدون تداخل پورت</span>
     </div>
     <p>داخل پوشه اصلی پروژه، یک فایل به اسم <strong>Run.bat</strong> (یا <strong>اجرا.bat</strong>) برات گذاشتم:</p>
     <ol class="steps-list">
-      <li>فقط کافیه روی فایل <strong>Run.bat</strong> دو بار کلیک (دابل‌کلیک) کنی.</li>
-      <li>سیستم خودکار یک وب‌سرور سبک لوکال ایجاد کرده و مرورگر پیش‌فرض شما رو باز می‌کنه و سایت رو لود می‌کنه!</li>
+      <li>فقط کافیه روی فایل <strong>Run.bat</strong> دابل‌کلیک کنی.</li>
+      <li>سیستم وضعیت پورت‌ها رو چک می‌کنه؛ اگر پورت 8000 روی سیستمت مشغول باشه، خودکار یک پورت خالی پیدا می‌کنه.</li>
+      <li>لینک کلیک‌خور در پنجره ترمینال بهت نمایش داده میشه و مرورگر پیش‌فرض سیستم هم به‌صورت خودکار باز میشه!</li>
       <li>هر زمان کارت تموم شد، فقط کافیه پنجره سیاه خط فرمان (CMD) رو ببندی تا سرور خاموش بشه.</li>
     </ol>
   </div>
@@ -314,16 +315,15 @@
     <div class="alt-card">
       <div class="method-title">
         <span class="num-pill">۲</span>
-        روش دوم: با پایتون (Python Server)
+        روش دوم: با پایتون (اسکریپت خودکار یا دستی)
       </div>
-      <p>اگر اهل توسعه و کدنویسی هستی و روی سیستمت پایتون داری:</p>
+      <p>اگر اهل توسعه هستی و می‌خوای دستی از ترمینال اجرا کنی:</p>
       <ol class="steps-list">
-        <li>وارد پوشه پروژه بشو.</li>
-        <li>کلیک راست کن و <strong>Open in Terminal</strong> (یا کلید Shift + راست‌کلیک و <em>Open PowerShell</em>) رو بزن.</li>
-        <li>این دستور رو بنویس و Enter کن:</li>
+        <li>وارد پوشه پروژه بشو و ترمینال رو باز کن.</li>
+        <li>برای پیدا کردن خودکار پورت خالی بزن:</li>
       </ol>
-      <div class="code-snippet">python -m http.server 8000</div>
-      <p>حالا توی مرورگرت برو به: <strong dir="ltr">http://localhost:8000</strong></p>
+      <div class="code-snippet">python serve.py</div>
+      <p>یا برای سرور ساده: <code dir="ltr" style="background:#f1f5f9;padding:2px 4px;border-radius:4px;">python -m http.server 8000</code></p>
     </div>
 
     <!-- Method 3 & 4: VS Code & Direct -->
