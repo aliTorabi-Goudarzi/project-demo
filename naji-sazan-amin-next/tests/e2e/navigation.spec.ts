@@ -40,6 +40,7 @@ test('header navigation exposes the four sections in order with the consultation
   );
 
   const cta = page.locator('#siteHeader .header-actions a.btn');
+  await expect(cta).toBeVisible();
   await expect(cta).toHaveText(SITE.ctaLabel);
   await expect(cta).toHaveAttribute('href', '/contact/');
 });
@@ -169,6 +170,12 @@ test.describe('mobile navigation', () => {
     await expect(menu).toHaveAttribute('aria-expanded', 'true');
     await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('hidden');
 
+    // The drawer carries the mobile call to action because the header CTA is hidden.
+    const drawerCta = drawer.locator('a.btn');
+    await expect(drawerCta).toBeVisible();
+    await expect(drawerCta).toHaveText(SITE.ctaLabel);
+    await expect(drawerCta).toHaveAttribute('href', '/contact/');
+
     await page.keyboard.press('Escape');
     await expect(drawer).not.toHaveClass(/is-open/);
     await expect(drawer).toHaveAttribute('aria-hidden', 'true');
@@ -190,16 +197,27 @@ test.describe('mobile navigation', () => {
   });
 
   test('mobile documents do not overflow the 390px viewport', async ({ page }) => {
-    test.fail(
-      true,
-      'Known defect: the shared header has a 540px min-content width at 390px, clipping the menu button and CTA. App source is frozen for this QA slice.',
-    );
-
     const results = [];
     for (const route of ROUTES) {
       await page.goto(route);
+
+      const menu = page.locator('#menuBtn');
+      const themeToggle = page.locator('#siteHeader .theme-toggle');
+      const headerCta = page.locator('#siteHeader .header-actions a.btn');
+
+      await expect(menu, `menu button on ${route}`).toBeVisible();
+      await expect(themeToggle, `theme toggle on ${route}`).toBeVisible();
+      await expect(headerCta, `header CTA on ${route}`).toBeHidden();
+
       results.push(
         await page.evaluate(() => {
+          const rectOf = (selector: string) => {
+            const element = document.querySelector(selector);
+            if (!element) throw new Error(`Missing ${selector}`);
+            const { left, right, top, bottom } = element.getBoundingClientRect();
+            return { left, right, top, bottom };
+          };
+
           const offenders = Array.from(document.querySelectorAll<HTMLElement>('body *'))
             .map((element) => ({ element, rect: element.getBoundingClientRect() }))
             .filter(
@@ -220,6 +238,8 @@ test.describe('mobile navigation', () => {
             route: window.location.pathname,
             innerWidth: window.innerWidth,
             scrollWidth: document.documentElement.scrollWidth,
+            menu: rectOf('#menuBtn'),
+            themeToggle: rectOf('#siteHeader .theme-toggle'),
             offenders,
           };
         }),
@@ -231,5 +251,17 @@ test.describe('mobile navigation', () => {
       failures,
       `Horizontal overflow at 390px:\n${JSON.stringify(failures, null, 2)}`,
     ).toEqual([]);
+
+    for (const result of results) {
+      for (const [name, rect] of [
+        ['menu button', result.menu],
+        ['theme toggle', result.themeToggle],
+      ] as const) {
+        expect(rect.left, `${name} left edge on ${result.route}`).toBeGreaterThanOrEqual(0);
+        expect(rect.right, `${name} right edge on ${result.route}`).toBeLessThanOrEqual(
+          result.innerWidth,
+        );
+      }
+    }
   });
 });

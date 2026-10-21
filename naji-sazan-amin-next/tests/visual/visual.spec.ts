@@ -49,6 +49,15 @@ html, body { scroll-behavior: auto !important; }
 video { visibility: hidden !important; }
 `;
 
+const MOBILE_MAX_WIDTH = 600;
+
+// The Next mobile header intentionally hides the header CTA below 600px so the menu and
+// theme toggle stay reachable; navigation.spec.ts covers that divergence. The legacy
+// header still overflows by 150px, which makes the whole RTL document horizontally
+// scrollable and shifts every element, so the legacy header's own overflow is clipped to
+// keep the rest of the page aligned. The differing header itself is masked in capture().
+const MOBILE_HEADER_CSS = '.site-header { overflow-x: clip; }';
+
 async function stabilize(page: Page) {
   await page.evaluate(() => {
     document.querySelectorAll('.reveal').forEach((element) => element.classList.add('is-visible'));
@@ -141,10 +150,18 @@ async function capture(
   await page.clock.pauseAt(PAUSED_TIME);
   await page.goto(url, { waitUntil: 'load' });
   await page.addStyleTag({ content: STABILITY_CSS });
+  if (options.width <= MOBILE_MAX_WIDTH) {
+    await page.addStyleTag({ content: MOBILE_HEADER_CSS });
+  }
   await stabilize(page);
 
   const theme = await page.evaluate(() => document.documentElement.getAttribute('data-theme'));
-  const buffer = await page.screenshot({ fullPage: options.fullPage, animations: 'disabled' });
+  const mask = options.width <= MOBILE_MAX_WIDTH ? [page.locator('.site-header')] : undefined;
+  const buffer = await page.screenshot({
+    fullPage: options.fullPage,
+    animations: 'disabled',
+    mask,
+  });
   await context.close();
   return { buffer, theme };
 }
