@@ -33,7 +33,7 @@ const webServer = [
 export default defineConfig({
   testDir: './tests',
   fullyParallel: false,
-  workers: 2,
+  workers: 1,
   timeout: 120_000,
   use: {
     baseURL: 'http://127.0.0.1:4174',
