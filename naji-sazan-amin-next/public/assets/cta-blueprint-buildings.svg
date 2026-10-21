@@ -1,0 +1,329 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 480" fill="none" preserveAspectRatio="xMidYEnd slice">
+  <defs>
+    <!-- Subtle gradient for delicate blueprint stroke glow -->
+    <linearGradient id="blueprintGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#93c5fd" stop-opacity="0.4"/>
+      <stop offset="60%" stop-color="#60a5fa" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.12"/>
+    </linearGradient>
+
+    <!-- Faint grid pattern representing architectural drafting paper / CAD canvas -->
+    <pattern id="cadGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#ffffff" stroke-opacity="0.04" stroke-width="0.75"/>
+      <circle cx="0" cy="0" r="1" fill="#ffffff" fill-opacity="0.12"/>
+    </pattern>
+  </defs>
+
+  <!-- Background drafting grid -->
+  <rect width="1600" height="480" fill="url(#cadGrid)"/>
+
+  <!-- =========================================================================
+       GROUND BASELINE & STRUCTURAL FOUNDATION
+       ========================================================================= -->
+  <g stroke="#ffffff" stroke-opacity="0.2" stroke-width="1.2">
+    <!-- Main ground line -->
+    <line x1="0" y1="450" x2="1600" y2="450"/>
+    <line x1="0" y1="456" x2="1600" y2="456" stroke-opacity="0.1" stroke-dasharray="8 4"/>
+    <!-- Foundation piles / ticks -->
+    <path d="M50 450v18 M150 450v18 M250 450v18 M350 450v18 M450 450v18 M550 450v18 M650 450v18 M750 450v18 M850 450v18 M950 450v18 M1050 450v18 M1150 450v18 M1250 450v18 M1350 450v18 M1450 450v18 M1550 450v18" stroke-opacity="0.14"/>
+  </g>
+
+  <!-- =========================================================================
+       LEFT WING: ARCHITECTURAL TOWERS & COMPLEX (x: 20 to 520)
+       ========================================================================= -->
+
+  <!-- Far Left Secondary Tower (x: 20 to 110, y: 190 to 450) -->
+  <g stroke="#ffffff" stroke-opacity="0.18" stroke-width="1">
+    <rect x="25" y="190" width="85" height="260"/>
+    <!-- Floor slabs -->
+    <line x1="25" y1="220" x2="110" y2="220"/>
+    <line x1="25" y1="250" x2="110" y2="250"/>
+    <line x1="25" y1="280" x2="110" y2="280"/>
+    <line x1="25" y1="310" x2="110" y2="310"/>
+    <line x1="25" y1="340" x2="110" y2="340"/>
+    <line x1="25" y1="370" x2="110" y2="370"/>
+    <line x1="25" y1="400" x2="110" y2="400"/>
+    <line x1="25" y1="430" x2="110" y2="430"/>
+    <!-- Vertical columns -->
+    <line x1="53" y1="190" x2="53" y2="450" stroke-opacity="0.12"/>
+    <line x1="82" y1="190" x2="82" y2="450" stroke-opacity="0.12"/>
+    <!-- Roof Antenna -->
+    <line x1="67" y1="150" x2="67" y2="190"/>
+    <circle cx="67" cy="148" r="2.5" stroke-opacity="0.3"/>
+  </g>
+
+  <!-- Left Mid Tower: Stepped Residential Cantilevers (x: 120 to 250, y: 130 to 450) -->
+  <g stroke="#93c5fd" stroke-opacity="0.26" stroke-width="1.1">
+    <!-- Main outer perimeter -->
+    <path d="M125 450 V200 h25 V150 h60 V130 h40 V450"/>
+    <!-- Roof pergola frames -->
+    <line x1="210" y1="115" x2="250" y2="115"/>
+    <line x1="218" y1="115" x2="218" y2="130"/>
+    <line x1="228" y1="115" x2="228" y2="130"/>
+    <line x1="238" y1="115" x2="238" y2="130"/>
+    <line x1="248" y1="115" x2="248" y2="130"/>
+
+    <!-- Stepped floor lines -->
+    <line x1="125" y1="230" x2="250" y2="230"/>
+    <line x1="125" y1="260" x2="250" y2="260"/>
+    <line x1="125" y1="290" x2="250" y2="290"/>
+    <line x1="125" y1="320" x2="250" y2="320"/>
+    <line x1="125" y1="350" x2="250" y2="350"/>
+    <line x1="125" y1="380" x2="250" y2="380"/>
+    <line x1="125" y1="410" x2="250" y2="410"/>
+
+    <!-- Balcony overhang boxes (cantilevers) -->
+    <rect x="115" y="240" width="35" height="15" stroke-opacity="0.22"/>
+    <rect x="115" y="300" width="35" height="15" stroke-opacity="0.22"/>
+    <rect x="115" y="360" width="35" height="15" stroke-opacity="0.22"/>
+
+    <!-- Window mullions (vertical) -->
+    <line x1="165" y1="150" x2="165" y2="450" stroke-opacity="0.12"/>
+    <line x1="195" y1="130" x2="195" y2="450" stroke-opacity="0.12"/>
+    <line x1="225" y1="130" x2="225" y2="450" stroke-opacity="0.12"/>
+  </g>
+
+  <!-- Left Hero Tower: Curved Diagrid Pinnacle (x: 270 to 450, y: 50 to 450) -->
+  <g stroke="#ffffff" stroke-opacity="0.32" stroke-width="1.25">
+    <!-- Sculptural Crown -->
+    <path d="M280 450 V130 C280 90, 320 50, 370 45 C410 45, 440 80, 445 130 V450"/>
+    <!-- Central architectural spine / spire -->
+    <line x1="370" y1="15" x2="370" y2="450" stroke-opacity="0.4" stroke-width="1.5"/>
+    <circle cx="370" cy="12" r="3.5" stroke-opacity="0.5"/>
+    <line x1="362" y1="28" x2="378" y2="28" stroke-opacity="0.35"/>
+    <line x1="365" y1="38" x2="375" y2="38" stroke-opacity="0.35"/>
+
+    <!-- Floor plates -->
+    <line x1="282" y1="95" x2="442" y2="95"/>
+    <line x1="280" y1="125" x2="445" y2="125"/>
+    <line x1="280" y1="155" x2="445" y2="155"/>
+    <line x1="280" y1="185" x2="445" y2="185"/>
+    <line x1="280" y1="215" x2="445" y2="215"/>
+    <line x1="280" y1="245" x2="445" y2="245"/>
+    <line x1="280" y1="275" x2="445" y2="275"/>
+    <line x1="280" y1="305" x2="445" y2="305"/>
+    <line x1="280" y1="335" x2="445" y2="335"/>
+    <line x1="280" y1="365" x2="445" y2="365"/>
+    <line x1="280" y1="395" x2="445" y2="395"/>
+    <line x1="280" y1="425" x2="445" y2="425"/>
+
+    <!-- Structural Diagrid X-bracing on facade (Hollow, lines only) -->
+    <g stroke="#93c5fd" stroke-opacity="0.22" stroke-width="1">
+      <!-- Tier 1 (125-185) -->
+      <line x1="280" y1="125" x2="370" y2="185"/><line x1="370" y1="125" x2="280" y2="185"/>
+      <line x1="370" y1="125" x2="445" y2="185"/><line x1="445" y1="125" x2="370" y2="185"/>
+      <!-- Tier 2 (185-245) -->
+      <line x1="280" y1="185" x2="370" y2="245"/><line x1="370" y1="185" x2="280" y2="245"/>
+      <line x1="370" y1="185" x2="445" y2="245"/><line x1="445" y1="185" x2="370" y2="245"/>
+      <!-- Tier 3 (245-305) -->
+      <line x1="280" y1="245" x2="370" y2="305"/><line x1="370" y1="245" x2="280" y2="305"/>
+      <line x1="370" y1="245" x2="445" y2="305"/><line x1="445" y1="245" x2="370" y2="305"/>
+      <!-- Tier 4 (305-365) -->
+      <line x1="280" y1="305" x2="370" y2="365"/><line x1="370" y1="305" x2="280" y2="365"/>
+      <line x1="370" y1="305" x2="445" y2="365"/><line x1="445" y1="305" x2="370" y2="365"/>
+      <!-- Tier 5 (365-425) -->
+      <line x1="280" y1="365" x2="370" y2="425"/><line x1="370" y1="365" x2="280" y2="425"/>
+      <line x1="370" y1="365" x2="445" y2="425"/><line x1="445" y1="365" x2="370" y2="425"/>
+    </g>
+
+    <!-- Ground colonnade / portal -->
+    <path d="M305 450 V415 H335 V450 M405 450 V415 H435 V450" stroke-opacity="0.3"/>
+  </g>
+
+  <!-- Left Construction Crane (Over Tower, x: 440 to 570) -->
+  <g stroke="#ffffff" stroke-opacity="0.28" stroke-width="1.1">
+    <!-- Crane Mast (Lattice tower) -->
+    <line x1="475" y1="90" x2="475" y2="380"/>
+    <line x1="487" y1="90" x2="487" y2="380"/>
+    <!-- Mast cross lacings -->
+    <path d="M475 380l12-15 M475 350l12 15 M475 350l12-15 M475 320l12 15 M475 320l12-15 M475 290l12 15 M475 290l12-15 M475 260l12 15 M475 260l12-15 M475 230l12 15 M475 230l12-15 M475 200l12 15 M475 200l12-15 M475 170l12 15 M475 170l12-15 M475 140l12 15 M475 140l12-15 M475 110l12 15 M475 110l12-15 M475 90l12 10" stroke-opacity="0.18"/>
+    <!-- Cab & Slewing Unit -->
+    <rect x="470" y="80" width="16" height="12"/>
+    <!-- Apex Tower Top -->
+    <path d="M475 80 L481 50 L487 80"/>
+    <!-- Working Jib (Horizontal boom reaching right) -->
+    <line x1="487" y1="74" x2="575" y2="74"/>
+    <line x1="487" y1="78" x2="575" y2="78" stroke-opacity="0.18"/>
+    <!-- Jib diagonal struts -->
+    <path d="M495 78l10-4 M515 78l10-4 M535 78l10-4 M555 78l10-4" stroke-opacity="0.18"/>
+    <!-- Counter Jib (Boom reaching left) -->
+    <line x1="475" y1="74" x2="435" y2="74"/>
+    <rect x="430" y="70" width="12" height="9" stroke-opacity="0.35"/> <!-- Counterweight -->
+    <!-- Suspension cables (Tie rods) -->
+    <line x1="481" y1="50" x2="435" y2="74" stroke-dasharray="3 2" stroke-opacity="0.22"/>
+    <line x1="481" y1="50" x2="520" y2="74" stroke-dasharray="3 2" stroke-opacity="0.22"/>
+    <line x1="481" y1="50" x2="570" y2="74" stroke-dasharray="3 2" stroke-opacity="0.22"/>
+    <!-- Hoist line with hook block -->
+    <line x1="540" y1="78" x2="540" y2="135" stroke-dasharray="2 2" stroke-opacity="0.3"/>
+    <rect x="537" y="135" width="6" height="6" stroke-opacity="0.35"/>
+  </g>
+
+  <!-- =========================================================================
+       CENTER ZONE: LOW PROFILE & ARCHITECTURAL BLUEPRINT ACCENTS (x: 550 to 1050)
+       Kept intentionally low & subtle so Persian headline & CTA stay crystal clear!
+       ========================================================================= -->
+
+  <!-- Mid-Rise Bridge / Low Civic Terraces (y: 330 to 450) -->
+  <g stroke="#ffffff" stroke-opacity="0.16" stroke-width="1">
+    <!-- Stepped civic podium -->
+    <path d="M570 450 V370 h80 V340 h100 V320 h160 V340 h100 V370 h80 V450"/>
+    <!-- Colonnade row of civic building -->
+    <path d="M760 320v30 M780 320v30 M800 320v30 M820 320v30 M840 320v30 M860 320v30 M880 320v30 M900 320v30" stroke-opacity="0.12"/>
+    <line x1="750" y1="350" x2="910" y2="350"/>
+
+    <!-- Subtle Structural Arch / Flyover bridge outline -->
+    <path d="M580 450 C 650 380, 750 360, 830 360 C 910 360, 1010 380, 1080 450" stroke="#93c5fd" stroke-opacity="0.18" stroke-dasharray="5 5" stroke-width="1.2"/>
+    <!-- Arch vertical suspenders -->
+    <path d="M680 450v-62 M730 450v-85 M780 450v-90 M830 450v-90 M880 450v-85 M930 450v-72 M980 450v-45" stroke-opacity="0.1"/>
+  </g>
+
+  <!-- Blueprint Technical Dimension String & Grid Axis Marks (Center) -->
+  <g stroke="#93c5fd" stroke-opacity="0.25" stroke-width="0.8">
+    <!-- Horizontal datum dimension line -->
+    <line x1="620" y1="430" x2="980" y2="430" stroke-dasharray="2 3"/>
+    <!-- End ticks -->
+    <line x1="620" y1="424" x2="620" y2="436"/>
+    <line x1="980" y1="424" x2="980" y2="436"/>
+    <!-- Center tick -->
+    <line x1="800" y1="424" x2="800" y2="436"/>
+
+    <!-- Technical elevation level marks -->
+    <!-- Level 1 -->
+    <path d="M605 370 l5-7 h18 M605 370 l5 7 h18" stroke-width="0.8"/>
+    <text x="632" y="373" fill="#93c5fd" fill-opacity="0.35" font-family="monospace" font-size="8">+14.20m</text>
+    <!-- Level 2 -->
+    <path d="M990 340 l-5-7 h-18 M990 340 l-5 7 h-18" stroke-width="0.8"/>
+    <text x="945" y="343" fill="#93c5fd" fill-opacity="0.35" font-family="monospace" font-size="8">+22.50m</text>
+
+    <!-- Structural Grid Axis Bubbles (Circles with letters / numbers) -->
+    <circle cx="700" cy="466" r="6" stroke-opacity="0.22"/>
+    <text x="700" y="469" fill="#ffffff" fill-opacity="0.3" font-family="sans-serif" font-size="7" text-anchor="middle">A</text>
+    <circle cx="800" cy="466" r="6" stroke-opacity="0.22"/>
+    <text x="800" y="469" fill="#ffffff" fill-opacity="0.3" font-family="sans-serif" font-size="7" text-anchor="middle">B</text>
+    <circle cx="900" cy="466" r="6" stroke-opacity="0.22"/>
+    <text x="900" y="469" fill="#ffffff" fill-opacity="0.3" font-family="sans-serif" font-size="7" text-anchor="middle">C</text>
+  </g>
+
+  <!-- =========================================================================
+       RIGHT WING: HIGH-RISE SUPERSTRUCTURES & CRANE (x: 1040 to 1580)
+       ========================================================================= -->
+
+  <!-- Right Hero Skyscraper: Modern Crown & Truss Core (x: 1120 to 1320, y: 30 to 450) -->
+  <g stroke="#ffffff" stroke-opacity="0.32" stroke-width="1.25">
+    <!-- Slanted Angled Roofline (Iconic modern skyscraper) -->
+    <path d="M1130 450 V110 L1240 35 L1310 80 V450"/>
+    <!-- Crown Spire / Lightning Rod -->
+    <line x1="1240" y1="8" x2="1240" y2="35" stroke-width="1.6" stroke-opacity="0.45"/>
+    <circle cx="1240" cy="6" r="2.5" stroke-opacity="0.5"/>
+    <!-- Structural Truss Bands (Technical floors) -->
+    <rect x="1130" y="150" width="180" height="24" stroke="#93c5fd" stroke-opacity="0.32"/>
+    <path d="M1130 150l30 24 M1160 150l-30 24 M1160 150l30 24 M1190 150l-30 24 M1190 150l30 24 M1220 150l-30 24 M1220 150l30 24 M1250 150l-30 24 M1250 150l30 24 M1280 150l-30 24 M1280 150l30 24 M1310 150l-30 24" stroke="#93c5fd" stroke-opacity="0.25" stroke-width="0.9"/>
+
+    <!-- Mid-level mechanical truss band -->
+    <rect x="1130" y="290" width="180" height="20" stroke="#93c5fd" stroke-opacity="0.28"/>
+    <path d="M1130 290l25 20 M1155 290l-25 20 M1155 290l25 20 M1180 290l-25 20 M1180 290l25 20 M1205 290l-25 20 M1205 290l25 20 M1230 290l-25 20 M1230 290l25 20 M1255 290l-25 20 M1255 290l25 20 M1280 290l-25 20 M1280 290l30 20 M1310 290l-30 20" stroke="#93c5fd" stroke-opacity="0.2" stroke-width="0.9"/>
+
+    <!-- Floor plates -->
+    <line x1="1130" y1="90" x2="1310" y2="90"/>
+    <line x1="1130" y1="120" x2="1310" y2="120"/>
+    <line x1="1130" y1="190" x2="1310" y2="190"/>
+    <line x1="1130" y1="215" x2="1310" y2="215"/>
+    <line x1="1130" y1="240" x2="1310" y2="240"/>
+    <line x1="1130" y1="265" x2="1310" y2="265"/>
+    <line x1="1130" y1="330" x2="1310" y2="330"/>
+    <line x1="1130" y1="355" x2="1310" y2="355"/>
+    <line x1="1130" y1="380" x2="1310" y2="380"/>
+    <line x1="1130" y1="405" x2="1310" y2="405"/>
+    <line x1="1130" y1="430" x2="1310" y2="430"/>
+
+    <!-- Vertical architectural mullions -->
+    <line x1="1165" y1="90" x2="1165" y2="450" stroke-opacity="0.14"/>
+    <line x1="1200" y1="60" x2="1200" y2="450" stroke-opacity="0.14"/>
+    <line x1="1240" y1="35" x2="1240" y2="450" stroke-opacity="0.22" stroke-dasharray="10 4"/> <!-- Core centerline -->
+    <line x1="1275" y1="60" x2="1275" y2="450" stroke-opacity="0.14"/>
+  </g>
+
+  <!-- Right Tower Construction Crane (x: 1020 to 1180) -->
+  <g stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.1">
+    <!-- Crane Mast (Lattice tower rising on building side) -->
+    <line x1="1070" y1="70" x2="1070" y2="420"/>
+    <line x1="1082" y1="70" x2="1082" y2="420"/>
+    <!-- Lacings -->
+    <path d="M1070 420l12-16 M1070 388l12 16 M1070 388l12-16 M1070 356l12 16 M1070 356l12-16 M1070 324l12 16 M1070 324l12-16 M1070 292l12 16 M1070 292l12-16 M1070 260l12 16 M1070 260l12-16 M1070 228l12 16 M1070 228l12-16 M1070 196l12 16 M1070 196l12-16 M1070 164l12 16 M1070 164l12-16 M1070 132l12 16 M1070 132l12-16 M1070 100l12 16 M1070 100l12-16 M1070 70l12 14" stroke-opacity="0.18"/>
+    <!-- Cab & Apex -->
+    <rect x="1066" y="62" width="16" height="11"/>
+    <path d="M1070 62 L1076 36 L1082 62"/>
+    <!-- Main Jib reaching left over the core -->
+    <line x1="1070" y1="56" x2="980" y2="56"/>
+    <line x1="1070" y1="60" x2="980" y2="60" stroke-opacity="0.16"/>
+    <path d="M1060 60l-10-4 M1040 60l-10-4 M1020 60l-10-4 M1000 60l-10-4" stroke-opacity="0.18"/>
+    <!-- Counter Jib reaching right -->
+    <line x1="1082" y1="56" x2="1125" y2="56"/>
+    <rect x="1115" y="52" width="12" height="9" stroke-opacity="0.35"/>
+    <!-- Tie cables -->
+    <line x1="1076" y1="36" x2="990" y2="56" stroke-dasharray="3 2" stroke-opacity="0.25"/>
+    <line x1="1076" y1="36" x2="1035" y2="56" stroke-dasharray="3 2" stroke-opacity="0.25"/>
+    <line x1="1076" y1="36" x2="1120" y2="56" stroke-dasharray="3 2" stroke-opacity="0.25"/>
+    <!-- Hook Line -->
+    <line x1="1015" y1="60" x2="1015" y2="120" stroke-dasharray="2 2" stroke-opacity="0.3"/>
+    <rect x="1012" y="120" width="6" height="6" stroke-opacity="0.4"/>
+  </g>
+
+  <!-- Right Mid Tower: Modern Stepped Tech Complex (x: 1330 to 1470, y: 120 to 450) -->
+  <g stroke="#93c5fd" stroke-opacity="0.26" stroke-width="1.1">
+    <!-- Stepped geometric silhouette -->
+    <path d="M1335 450 V180 h35 V135 h60 V120 h45 V450"/>
+    <!-- Floor bands -->
+    <line x1="1335" y1="210" x2="1475" y2="210"/>
+    <line x1="1335" y1="240" x2="1475" y2="240"/>
+    <line x1="1335" y1="270" x2="1475" y2="270"/>
+    <line x1="1335" y1="300" x2="1475" y2="300"/>
+    <line x1="1335" y1="330" x2="1475" y2="330"/>
+    <line x1="1335" y1="360" x2="1475" y2="360"/>
+    <line x1="1335" y1="390" x2="1475" y2="390"/>
+    <line x1="1335" y1="420" x2="1475" y2="420"/>
+
+    <!-- Vertical mullions -->
+    <line x1="1370" y1="135" x2="1370" y2="450" stroke-opacity="0.12"/>
+    <line x1="1405" y1="135" x2="1405" y2="450" stroke-opacity="0.12"/>
+    <line x1="1440" y1="120" x2="1440" y2="450" stroke-opacity="0.12"/>
+
+    <!-- Floating balcony frame outlines -->
+    <rect x="1465" y="220" width="18" height="14" stroke-opacity="0.22"/>
+    <rect x="1465" y="280" width="18" height="14" stroke-opacity="0.22"/>
+    <rect x="1465" y="340" width="18" height="14" stroke-opacity="0.22"/>
+  </g>
+
+  <!-- Far Right Horizon Towers (x: 1485 to 1585, y: 170 to 450) -->
+  <g stroke="#ffffff" stroke-opacity="0.18" stroke-width="1">
+    <rect x="1490" y="170" width="85" height="280"/>
+    <line x1="1490" y1="205" x2="1575" y2="205"/>
+    <line x1="1490" y1="240" x2="1575" y2="240"/>
+    <line x1="1490" y1="275" x2="1575" y2="275"/>
+    <line x1="1490" y1="310" x2="1575" y2="310"/>
+    <line x1="1490" y1="345" x2="1575" y2="345"/>
+    <line x1="1490" y1="380" x2="1575" y2="380"/>
+    <line x1="1490" y1="415" x2="1575" y2="415"/>
+    <line x1="1532" y1="170" x2="1532" y2="450" stroke-opacity="0.1"/>
+    <!-- Communication spire -->
+    <line x1="1532" y1="130" x2="1532" y2="170"/>
+    <circle cx="1532" cy="128" r="2.5" stroke-opacity="0.3"/>
+  </g>
+
+  <!-- =========================================================================
+       SUBTLE BLUEPRINT MEASUREMENT CALLOUTS & SYMBOLS (Scattered across sky)
+       ========================================================================= -->
+  <g stroke="#93c5fd" stroke-opacity="0.22" stroke-width="0.75">
+    <!-- North arrow symbol (Top left) -->
+    <g transform="translate(180, 50)">
+      <circle cx="0" cy="0" r="14" stroke-dasharray="2 2"/>
+      <line x1="0" y1="-18" x2="0" y2="18"/>
+      <line x1="-18" y1="0" x2="18" y2="0"/>
+      <polygon points="0,-16 4,-4 0,-7 -4,-4" stroke-width="0.8" stroke="#93c5fd" stroke-opacity="0.4" fill="none"/>
+      <text x="0" y="-21" fill="#93c5fd" fill-opacity="0.4" font-family="sans-serif" font-size="8" text-anchor="middle">N</text>
+    </g>
+
+    <!-- Structural Grid crosshairs (+) -->
+    <path d="M 700 80 v-8 m-4 4 h8 M 900 80 v-8 m-4 4 h8 M 600 200 v-8 m-4 4 h8 M 1000 200 v-8 m-4 4 h8" stroke-opacity="0.18"/>
+  </g>
+</svg>
