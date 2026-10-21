@@ -2,21 +2,25 @@
 
 import Link from 'next/link';
 import { useEffect, useRef } from 'react';
-import type { CSSProperties } from 'react';
 
 import { useProjectModal } from '@/components/layout/ProjectModalProvider';
 import { GALLERY_PROJECTS } from '@/lib/gallery';
 
 const ANGLE_STEP = 30;
 
-function itemState(index: number) {
-  let diff = (index * ANGLE_STEP) % 360;
+type ItemState = {
+  opacity: string;
+  pointerEvents: 'auto' | 'none';
+};
+
+function itemState(angle: number): ItemState {
+  let diff = angle % 360;
   if (diff < 0) diff += 360;
   const distance = Math.abs(diff <= 180 ? diff : 360 - diff);
 
   return {
     opacity: Math.max(0.18, 1 - (distance / 180) * 1.08).toFixed(3),
-    pointerEvents: (distance < 65 ? 'auto' : 'none') as CSSProperties['pointerEvents'],
+    pointerEvents: distance < 65 ? 'auto' : 'none',
   };
 }
 
@@ -46,11 +50,9 @@ export function CircularGallery() {
 
     const applyItems = (angle: number) => {
       items.forEach((item, index) => {
-        let diff = (angle + index * ANGLE_STEP) % 360;
-        if (diff < 0) diff += 360;
-        const distance = Math.abs(diff <= 180 ? diff : 360 - diff);
-        item.style.opacity = Math.max(0.18, 1 - (distance / 180) * 1.08).toFixed(3);
-        item.style.pointerEvents = distance < 65 ? 'auto' : 'none';
+        const state = itemState(angle + index * ANGLE_STEP);
+        item.style.opacity = state.opacity;
+        item.style.pointerEvents = state.pointerEvents;
       });
     };
 
@@ -80,7 +82,8 @@ export function CircularGallery() {
     };
 
     const start = () => {
-      if (frame === null) frame = requestAnimationFrame(tick);
+      if (reduced || frame !== null) return;
+      frame = requestAnimationFrame(tick);
     };
 
     const stop = () => {
@@ -92,21 +95,27 @@ export function CircularGallery() {
 
     applyAngle(currentAngle);
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          visible = entry.isIntersecting;
-          if (visible) {
-            lastScrollY = window.scrollY;
-            start();
-          } else {
-            stop();
-          }
-        });
-      },
-      { rootMargin: '100px' },
-    );
-    observer.observe(stage);
+    let observer: IntersectionObserver | null = null;
+    if (typeof IntersectionObserver === 'undefined') {
+      visible = true;
+      start();
+    } else {
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            visible = entry.isIntersecting;
+            if (visible) {
+              lastScrollY = window.scrollY;
+              start();
+            } else {
+              stop();
+            }
+          });
+        },
+        { rootMargin: '100px' },
+      );
+      observer.observe(stage);
+    }
 
     const onScroll = () => {
       const scrollY = window.scrollY;
@@ -151,11 +160,16 @@ export function CircularGallery() {
 
     const onMotionChange = () => {
       reduced = media.matches;
+      if (reduced) {
+        stop();
+      } else if (visible) {
+        start();
+      }
     };
     media.addEventListener('change', onMotionChange);
 
     return () => {
-      observer.disconnect();
+      observer?.disconnect();
       stop();
       window.removeEventListener('scroll', onScroll);
       stage.removeEventListener('mouseenter', onEnter);
@@ -186,7 +200,7 @@ export function CircularGallery() {
       >
         <div ref={rotatorRef} className="circular-gallery-rotator" id="circularGalleryRotator">
           {GALLERY_PROJECTS.map((project, index) => {
-            const state = itemState(index);
+            const state = itemState(index * ANGLE_STEP);
             return (
               <div
                 key={project.id}

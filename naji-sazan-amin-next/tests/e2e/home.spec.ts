@@ -2,8 +2,56 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import { expect, test } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
 
 test.use({ viewport: { width: 1440, height: 900 } });
+
+const FIRST_SERVICE = 'طراحی معماری و سازه';
+const SECOND_SERVICE = 'نظارت عالیه و اجرا';
+
+async function openServicesPage(page: Page) {
+  await page.clock.install();
+  await page.goto('/');
+  await page.clock.pauseAt(await page.evaluate(() => Date.now() + 100));
+
+  const section = page.locator('section#services');
+  await section.evaluate((element) => {
+    document.documentElement.style.scrollBehavior = 'auto';
+    element.scrollIntoView({ block: 'center' });
+  });
+  const item = section.locator('.svc21__item').first();
+  const box = await item.boundingBox();
+  if (!box) throw new Error('services list has no bounding box');
+
+  return {
+    section,
+    item,
+    list: section.locator('.svc21__list'),
+    title: section.locator('#svc21Title'),
+    bar: section.locator('.svc21__item.is-active .svc21__bar-fill'),
+    center: { x: box.x + box.width / 2, y: box.y + box.height / 2 },
+  };
+}
+
+async function probeBar(bar: Locator) {
+  await bar.evaluate((element) => element.setAttribute('data-pause-probe', 'before-resume'));
+}
+
+async function expectPaused(list: Locator, paused: boolean) {
+  const expectation = expect.poll(() => list.getAttribute('class'));
+  if (paused) await expectation.toContain('is-paused');
+  else await expectation.not.toContain('is-paused');
+}
+
+async function expectRestartedCycle(page: Page, title: Locator, bar: Locator) {
+  const probe = await bar.evaluate((element) => element.getAttribute('data-pause-probe'));
+  expect(probe).toBeNull();
+  await page.waitForTimeout(50);
+  await page.clock.runFor(4500);
+  await expect.poll(() => title.textContent()).toBe(FIRST_SERVICE);
+  await page.clock.runFor(700);
+  await expect.poll(() => title.textContent()).toBe(SECOND_SERVICE);
+}
 
 test('home page content is server-rendered into the static export', () => {
   const html = fs.readFileSync(path.resolve(process.cwd(), 'out/index.html'), 'utf8');
@@ -110,13 +158,68 @@ test.describe('services', () => {
     await page.clock.install();
     await page.goto('/');
 
-    await expect(page.locator('.hero__title')).toHaveClass(/is-visible/);
     const section = page.locator('section#services');
-    await expect(section.locator('#svc21Title')).toHaveText('طراحی معماری و سازه');
+    await section.scrollIntoViewIfNeeded();
+    await expect(section.locator('.svc21')).toHaveClass(/is-visible/);
+    await expect(section.locator('#svc21Title')).toHaveText(FIRST_SERVICE);
 
     await page.clock.runFor(5500);
-    await expect(section.locator('#svc21Title')).toHaveText('نظارت عالیه و اجرا');
-    await expect(section.locator('.svc21__item.is-active')).toContainText('نظارت عالیه و اجرا');
+    await expect(section.locator('#svc21Title')).toHaveText(SECOND_SERVICE);
+    await expect(section.locator('.svc21__item.is-active')).toContainText(SECOND_SERVICE);
+  });
+
+  test('hovering near the end of a cycle restarts the cycle on resume', async ({ page }) => {
+    const { list, title, bar, center } = await openServicesPage(page);
+    await probeBar(bar);
+
+    await page.clock.runFor(4000);
+    await page.mouse.move(center.x, center.y);
+    await expectPaused(list, true);
+
+    await page.clock.runFor(2000);
+    await expect.poll(() => title.textContent()).toBe(FIRST_SERVICE);
+
+    await page.mouse.move(1, 1);
+    await expectPaused(list, false);
+    await expectRestartedCycle(page, title, bar);
+  });
+
+  test('leaving the service list with the keyboard restarts the cycle on resume', async ({ page }) => {
+    const { section, item, list, title, bar } = await openServicesPage(page);
+    await probeBar(bar);
+
+    await page.clock.runFor(4000);
+    await item.evaluate((element) => (element as HTMLElement).focus());
+    await expectPaused(list, true);
+
+    await page.clock.runFor(2000);
+    await expect.poll(() => title.textContent()).toBe(FIRST_SERVICE);
+
+    await section.locator('#svc21Link').evaluate((element) => (element as HTMLElement).focus());
+    await expectPaused(list, false);
+    await expectRestartedCycle(page, title, bar);
+  });
+
+  test('returning to the tab restarts the cycle on resume', async ({ page }) => {
+    const { list, title, bar } = await openServicesPage(page);
+    await probeBar(bar);
+
+    const setDocumentHidden = (hidden: boolean) =>
+      page.evaluate((value) => {
+        Object.defineProperty(document, 'hidden', { configurable: true, get: () => value });
+        document.dispatchEvent(new Event('visibilitychange'));
+      }, hidden);
+
+    await page.clock.runFor(4000);
+    await setDocumentHidden(true);
+    await expectPaused(list, true);
+
+    await page.clock.runFor(2000);
+    await expect.poll(() => title.textContent()).toBe(FIRST_SERVICE);
+
+    await setDocumentHidden(false);
+    await expectPaused(list, false);
+    await expectRestartedCycle(page, title, bar);
   });
 });
 
@@ -239,8 +342,9 @@ test('pillars, credentials and team match the legacy content', async ({ page }) 
   ]);
   await expect(page.locator('.tl-h__item .seal-year')).toHaveText(['۱۳۸۳', '۱۳۸۹', '۱۳۹۲', '۱۳۹۰', '۱۳۹۴']);
 
-  await expect(page.locator('.teamshowcase__intro h2')).toHaveText('سرمایه انسانی شرکت');
-  await expect(page.getByRole('link', { name: 'درخواست مشاوره' }).last()).toHaveAttribute('href', /^\/contact\/?$/);
+  const team = page.locator('section#team');
+  await expect(team.locator('.teamshowcase__intro h2')).toHaveText('سرمایه انسانی شرکت');
+  await expect(team.getByRole('link', { name: 'درخواست مشاوره' })).toHaveAttribute('href', /^\/contact\/?$/);
   await expect(page.locator('.tmember')).toHaveCount(7);
   await expect(page.locator('.tmember__name')).toHaveText([
     'سعید رفیعی',

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 
 import { SERVICES } from '@/lib/services';
@@ -9,15 +9,39 @@ import { SERVICES } from '@/lib/services';
 const AUTOPLAY_MS = 5000;
 const FADE_MS = 150;
 
+type PauseField = 'hovered' | 'focused' | 'hidden';
+
+type PauseState = {
+  hovered: boolean;
+  focused: boolean;
+  hidden: boolean;
+  resume: number;
+};
+
+const INITIAL_PAUSE_STATE: PauseState = {
+  hovered: false,
+  focused: false,
+  hidden: false,
+  resume: 0,
+};
+
+function pauseReducer(state: PauseState, action: { field: PauseField; value: boolean }): PauseState {
+  if (state[action.field] === action.value) return state;
+  const next: PauseState = { ...state, [action.field]: action.value };
+  const wasPaused = state.hovered || state.focused || state.hidden;
+  const isPaused = next.hovered || next.focused || next.hidden;
+  if (wasPaused && !isPaused) next.resume = state.resume + 1;
+  return next;
+}
+
 export function Services21() {
   const [active, setActive] = useState(0);
   const [displayed, setDisplayed] = useState(0);
   const [cycle, setCycle] = useState(0);
-  const [hovered, setHovered] = useState(false);
-  const [focused, setFocused] = useState(false);
-  const [hidden, setHidden] = useState(false);
+  const [pause, dispatchPause] = useReducer(pauseReducer, INITIAL_PAUSE_STATE);
   const [reducedMotion, setReducedMotion] = useState(false);
   const fadeTimer = useRef<number | null>(null);
+  const paused = pause.hovered || pause.focused || pause.hidden;
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -25,7 +49,7 @@ export function Services21() {
     syncMotion();
     media.addEventListener('change', syncMotion);
 
-    const syncVisibility = () => setHidden(document.hidden);
+    const syncVisibility = () => dispatchPause({ field: 'hidden', value: document.hidden });
     syncVisibility();
     document.addEventListener('visibilitychange', syncVisibility);
 
@@ -45,7 +69,7 @@ export function Services21() {
   }, []);
 
   useEffect(() => {
-    if (reducedMotion || hovered || focused || hidden) return;
+    if (paused || reducedMotion) return;
     const timer = window.setTimeout(() => {
       const next = (active + 1) % SERVICES.length;
       if (fadeTimer.current !== null) {
@@ -63,7 +87,7 @@ export function Services21() {
       }, FADE_MS);
     }, AUTOPLAY_MS);
     return () => window.clearTimeout(timer);
-  }, [active, cycle, hidden, hovered, focused, reducedMotion]);
+  }, [active, cycle, paused, pause.resume, reducedMotion]);
 
   const select = (index: number) => {
     if (fadeTimer.current !== null) {
@@ -82,7 +106,6 @@ export function Services21() {
     }, FADE_MS);
   };
 
-  const paused = hovered || focused || hidden;
   const current = SERVICES[displayed];
 
   return (
@@ -101,12 +124,12 @@ export function Services21() {
             <ul
               className={paused ? 'svc21__list is-paused' : 'svc21__list'}
               id="svc21List"
-              onMouseEnter={() => setHovered(true)}
-              onMouseLeave={() => setHovered(false)}
-              onFocus={() => setFocused(true)}
+              onMouseEnter={() => dispatchPause({ field: 'hovered', value: true })}
+              onMouseLeave={() => dispatchPause({ field: 'hovered', value: false })}
+              onFocus={() => dispatchPause({ field: 'focused', value: true })}
               onBlur={(event) => {
                 if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
-                  setFocused(false);
+                  dispatchPause({ field: 'focused', value: false });
                 }
               }}
             >
@@ -119,7 +142,7 @@ export function Services21() {
                   >
                     <span className="svc21__item-title">{service.title}</span>
                     <span className="svc21__bar" aria-hidden="true">
-                      <span key={`${service.id}-${active}-${cycle}`} className="svc21__bar-fill" />
+                      <span key={`${service.id}-${active}-${cycle}-${pause.resume}`} className="svc21__bar-fill" />
                     </span>
                   </button>
                 </li>
