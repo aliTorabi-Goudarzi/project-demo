@@ -297,3 +297,26 @@ test('all about portraits resolve from the static export', async ({ page }) => {
       .toBe(true);
   }
 });
+
+test('about copy and leadership content are present in the static export', async () => {
+  const fs = await import('node:fs');
+  const path = await import('node:path');
+  const html = fs.readFileSync(path.resolve(process.cwd(), 'out/about/index.html'), 'utf8');
+
+  expect(html).toContain('سال سابقه مستمر');
+  expect(html).toContain('احمد نادری');
+  expect(html).toContain('/assets/projects/supervision-real.jpg');
+});
+
+test('about leadership images resolve with image content types', async ({ page }) => {
+  const images = [
+    '/assets/projects/supervision-real.jpg',
+    ...LEADERS.map((leader) => leader.image),
+  ];
+
+  for (const image of images) {
+    const response = await page.request.get(image);
+    expect(response.status(), image).toBe(200);
+    expect(response.headers()['content-type'] ?? '', image).toMatch(/^image\//);
+  }
+});
