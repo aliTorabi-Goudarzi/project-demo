@@ -55,7 +55,7 @@ export function SiteHeader() {
     localStorage.setItem('nsa-theme', next);
   };
 
-  const ctaHref = pathname === '/contact' ? '/contact/#form' : '/contact';
+  const ctaHref = pathname === '/contact' ? '#form' : '/contact';
 
   return (
     <>

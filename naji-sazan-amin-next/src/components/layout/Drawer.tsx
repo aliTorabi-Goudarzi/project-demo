@@ -16,6 +16,7 @@ function normalizePath(path: string) {
 
 export function Drawer({ open, onClose }: DrawerProps) {
   const pathname = normalizePath(usePathname());
+  const ctaHref = pathname === '/contact' ? '#form' : '/contact';
 
   return (
     <div className={open ? 'drawer is-open' : 'drawer'} id="drawer" aria-hidden={!open}>
@@ -30,7 +31,7 @@ export function Drawer({ open, onClose }: DrawerProps) {
           {item.label}
         </Link>
       ))}
-      <Link className="btn btn--primary btn--block" href="/contact" prefetch={false} onClick={onClose}>
+      <Link className="btn btn--primary btn--block" href={ctaHref} prefetch={false} onClick={onClose}>
         {SITE.ctaLabel}
       </Link>
     </div>
