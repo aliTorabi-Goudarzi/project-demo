@@ -81,20 +81,33 @@ snapshots. The hero video is hidden during comparison because it is time-based. 
 of viewport pixels and 3% of full-page pixels; failure screenshots are written to
 `test-results/visual/`.
 
-Known limitation: at a 390 px viewport the shared header still has a 540 px min-content width, so
-the menu button and CTA are clipped. The navigation suite records this as an expected failure
-(`test.fail`) until the header CSS is fixed.
+At 390 px the mobile header is usable. Below 600 px the header consultation button is hidden on
+purpose and the drawer carries the same call to action; the menu button and theme toggle stay
+fully inside the viewport and the document does not overflow horizontally. `navigation.spec.ts`
+asserts this on every route, including the menu and theme-toggle bounds, the hidden header CTA, the
+visible drawer CTA and `document.documentElement.scrollWidth <= window.innerWidth + 1`. Mobile
+visual comparisons mask `.site-header` because the legacy header still overflows, while the rest of
+each page is still compared pixel for pixel.
 
 ## Deployment
 
 ```bash
 npm ci
-npm run build
+NEXT_PUBLIC_CONTACT_ENDPOINT=/api/contact npm run build
 sudo mkdir -p /var/www/naji-sazan-amin-next
 sudo rsync -a --delete out/ /var/www/naji-sazan-amin-next/out/
 sudo cp deploy/nginx.conf /etc/nginx/conf.d/naji-sazan-amin.conf
 sudo nginx -t && sudo systemctl reload nginx
 ```
+
+The build above targets the production same-origin endpoint. On PowerShell, set it first:
+`$env:NEXT_PUBLIC_CONTACT_ENDPOINT='/api/contact'; npm run build`. For a demo deployment without a
+backend, use the plain demo build `npm run build` instead; the form validates and reports success
+but sends nothing. The value is inlined at build time, so rebuild to change it.
+
+Because the export is static, a same-origin `/api/contact` needs a reverse proxy in front of the
+static files that forwards that path to the backend; the supplied nginx config serves static files
+only. If the endpoint is cross-origin, add its origin to the CSP `connect-src` directive.
 
 Before enabling the config, replace `server_name`, `root` and the log paths. The provided file is
 a `server {}` block intended for `http {}` (for example `/etc/nginx/conf.d/`); it assumes the
