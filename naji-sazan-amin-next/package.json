@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && node scripts/postbuild.mjs",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "preview": "python -m http.server 4174 --bind 127.0.0.1 --directory out",

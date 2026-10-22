@@ -166,6 +166,78 @@ test('the 404 page keeps the shell and links back home', async ({ page }) => {
   await expect.poll(() => new URL(page.url()).pathname).toBe('/');
 });
 
+test('client-side navigation loads every RSC page payload without 404s', async ({ page }) => {
+  const isPayloadUrl = (url: string) => url.includes('__next.') && url.includes('__PAGE__.txt');
+  const payloadResponses: { url: string; status: number }[] = [];
+  let inFlight = 0;
+
+  page.on('request', (request) => {
+    if (isPayloadUrl(request.url())) inFlight += 1;
+  });
+  page.on('requestfinished', (request) => {
+    if (isPayloadUrl(request.url())) inFlight = Math.max(0, inFlight - 1);
+  });
+  page.on('requestfailed', (request) => {
+    if (isPayloadUrl(request.url())) inFlight = Math.max(0, inFlight - 1);
+  });
+  page.on('response', (response) => {
+    if (isPayloadUrl(response.url())) {
+      payloadResponses.push({ url: response.url(), status: response.status() });
+    }
+  });
+
+  await page.goto('/');
+
+  await page.evaluate(() => {
+    (window as unknown as Record<string, unknown>).__rscSoftNavigation = true;
+  });
+
+  const settlePayloadRequests = async () => {
+    await expect.poll(() => inFlight, { message: 'RSC payload requests must settle' }).toBe(0);
+  };
+
+  const prefetchFromCtaPanel = async () => {
+    const before = payloadResponses.length;
+    await page.evaluate(() => {
+      document.documentElement.style.scrollBehavior = 'auto';
+      window.scrollTo(0, document.documentElement.scrollHeight);
+    });
+    await expect.poll(() => payloadResponses.length, {
+      message: 'scrolling to the CTA panel must trigger RSC page payload prefetches',
+    }).toBeGreaterThan(before);
+    await settlePayloadRequests();
+  };
+
+  await prefetchFromCtaPanel();
+
+  for (const item of [NAV_ITEMS[1], NAV_ITEMS[2], NAV_ITEMS[3]]) {
+    await headerNav(page).filter({ hasText: item.label }).click();
+
+    const expectedPath = `${item.href}/`;
+    await expect.poll(() => new URL(page.url()).pathname).toBe(expectedPath);
+    await expect(page.locator('h1').first()).toBeVisible();
+    expect(
+      await page.evaluate(() => (window as unknown as Record<string, unknown>).__rscSoftNavigation),
+      `${item.label} navigation must stay client-side`,
+    ).toBe(true);
+
+    if (item === NAV_ITEMS[2]) {
+      await prefetchFromCtaPanel();
+    }
+  }
+
+  await expect.poll(() => inFlight).toBe(0);
+
+  expect(
+    payloadResponses.length,
+    'expected at least one RSC page payload response',
+  ).toBeGreaterThan(0);
+  expect(
+    payloadResponses.filter((response) => response.status < 200 || response.status >= 300),
+    'every RSC page payload response must be successful',
+  ).toEqual([]);
+});
+
 test.describe('mobile navigation', () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
