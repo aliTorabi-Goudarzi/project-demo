@@ -68,6 +68,18 @@ A static export has no API routes. Deploy the endpoint separately (or reverse-pr
 Every `NEXT_PUBLIC_*` value is inlined into the client bundle at build time and is public; never
 put credentials or secrets in these variables.
 
+## Site URL metadata
+
+`NEXT_PUBLIC_SITE_URL` is read at **build time** and controls the site's canonical and Open Graph
+metadata:
+
+- Unset (default): the export is host-agnostic; `metadataBase` and canonical links are omitted.
+- Set to an absolute URL (for example `https://naji-sazan-amin.example`): sets `metadataBase`, so
+  relative Open Graph/Twitter image URLs resolve against the real origin, and emits a canonical
+  link for each page.
+
+Rebuild after changing it; the value is baked into the static export.
+
 ## Tests
 
 `npm run test:e2e` does the following:

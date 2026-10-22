@@ -11,7 +11,7 @@ const appRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const outDir = path.join(appRoot, 'out');
 const sourceConf = path.join(appRoot, 'deploy', 'nginx.conf');
 const image = 'nginx:1.27.5-alpine';
-const opensslImage = 'alpine/openssl';
+const opensslImage = 'alpine/openssl:3.5.9';
 const containerName = `naji-nginx-smoke-${process.pid}-${Date.now()}`;
 
 // Git for Windows ships OpenSSL but does not put it on PATH.
@@ -239,11 +239,7 @@ if (!existsSync(path.join(outDir, 'index.html'))) {
 
 const openssl = resolveOpenSSL();
 
-if (docker(['image', 'inspect', image]).status !== 0) {
-  console.log(`Pulling ${image}...`);
-  const pull = docker(['pull', image], { stdio: 'inherit' });
-  if (pull.status !== 0) die(`nginx smoke test could not pull ${image}.`);
-}
+ensureImage(image);
 
 let config = readFileSync(sourceConf, 'utf8');
 for (const [from, to] of replacements) {
