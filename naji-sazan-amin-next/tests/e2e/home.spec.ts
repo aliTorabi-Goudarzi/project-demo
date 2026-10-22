@@ -239,9 +239,9 @@ test.describe('circular gallery', () => {
     await expect(cards.last()).toHaveAttribute('data-project', 'cg-12');
 
     const firstTransform = await items.nth(0).evaluate((element) => (element as HTMLElement).style.transform);
-    expect(firstTransform).toContain('rotateY(0deg) translateZ(var(--radius))');
+    expect(firstTransform).toContain('rotateY(0deg) translateZ(var(--gallery-radius))');
     const secondTransform = await items.nth(1).evaluate((element) => (element as HTMLElement).style.transform);
-    expect(secondTransform).toContain('rotateY(30deg) translateZ(var(--radius))');
+    expect(secondTransform).toContain('rotateY(30deg) translateZ(var(--gallery-radius))');
 
     const firstOpacity = Number(await items.nth(0).evaluate((element) => getComputedStyle(element).opacity));
     const secondOpacity = Number(await items.nth(1).evaluate((element) => getComputedStyle(element).opacity));

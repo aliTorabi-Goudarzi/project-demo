@@ -1,12 +1,9 @@
-import type { ReactNode } from 'react';
-
 type PageHeadProps = {
   title: string;
   lead?: string;
-  children?: ReactNode;
 };
 
-export function PageHead({ title, lead, children }: PageHeadProps) {
+export function PageHead({ title, lead }: PageHeadProps) {
   return (
     <section className="page-head">
       <div className="container">
@@ -16,7 +13,6 @@ export function PageHead({ title, lead, children }: PageHeadProps) {
             {lead}
           </p>
         )}
-        {children}
       </div>
     </section>
   );

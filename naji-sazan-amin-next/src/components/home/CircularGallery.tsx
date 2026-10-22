@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useRef } from 'react';
 
-import { useProjectModal } from '@/components/layout/ProjectModalProvider';
+import { useProjectModal } from '@/components/layout/ProjectModalContext';
 import { GALLERY_PROJECTS } from '@/lib/gallery';
 
 const ANGLE_STEP = 30;
@@ -210,7 +210,7 @@ export function CircularGallery() {
                 className="circular-gallery-item"
                 data-index={index}
                 style={{
-                  transform: `rotateY(${index * ANGLE_STEP}deg) translateZ(var(--radius))`,
+                  transform: `rotateY(${index * ANGLE_STEP}deg) translateZ(var(--gallery-radius))`,
                   opacity: state.opacity,
                   pointerEvents: state.pointerEvents,
                 }}

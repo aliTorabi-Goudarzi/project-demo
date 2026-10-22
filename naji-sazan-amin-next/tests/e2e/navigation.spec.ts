@@ -140,6 +140,19 @@ test('header navigation traverses every route without console errors', async ({ 
   expect(errors).toEqual([]);
 });
 
+test('the header marks itself scrolled while the page is scrolled', async ({ page }) => {
+  await page.goto('/');
+
+  const header = page.locator('#siteHeader');
+  await expect(header).not.toHaveClass(/is-scrolled/);
+
+  await page.evaluate(() => window.scrollTo(0, 200));
+  await expect(header).toHaveClass(/is-scrolled/);
+
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await expect(header).not.toHaveClass(/is-scrolled/);
+});
+
 test('the 404 page keeps the shell and links back home', async ({ page }) => {
   const response = await page.goto('/404.html');
   expect(response?.status()).toBe(200);
@@ -194,6 +207,70 @@ test.describe('mobile navigation', () => {
     await expect.poll(() => new URL(page.url()).pathname).toBe('/projects/');
     await expect(drawer).not.toHaveClass(/is-open/);
     await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('');
+  });
+
+  test('client-side history navigation closes the open modal and drawer', async ({ page }) => {
+    await page.goto('/');
+
+    const drawer = page.locator('#drawer');
+    const modal = page.locator('#projectModal');
+
+    await page.locator('#menuBtn').click();
+    await expect(drawer).toHaveClass(/is-open/);
+    await drawer.getByRole('link', { name: NAV_ITEMS[1].label }).click();
+    await expect.poll(() => new URL(page.url()).pathname).toBe('/projects/');
+
+    await page.locator('[data-project="parsa-tower"]').click();
+    await expect(modal).toHaveClass(/is-open/);
+    await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('hidden');
+
+    await page.evaluate(() => {
+      (window as unknown as Record<string, unknown>).__softNavigation = true;
+    });
+
+    await page.goBack();
+    await expect.poll(() => new URL(page.url()).pathname).toBe('/');
+    expect(
+      await page.evaluate(() => (window as unknown as Record<string, unknown>).__softNavigation),
+      'history navigation must stay client-side',
+    ).toBe(true);
+    await expect(modal).not.toHaveClass(/is-open/);
+    await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('');
+
+    await page.locator('#menuBtn').click();
+    await expect(drawer).toHaveClass(/is-open/);
+    await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('hidden');
+
+    await page.goForward();
+    await expect.poll(() => new URL(page.url()).pathname).toBe('/projects/');
+    await expect(drawer).not.toHaveClass(/is-open/);
+    await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('');
+  });
+
+  test('the closed drawer keeps its links out of the focus order', async ({ page }) => {
+    await page.goto('/');
+
+    const drawer = page.locator('#drawer');
+    await expect(drawer).not.toHaveClass(/is-open/);
+    await expect(drawer).toHaveAttribute('inert', '');
+
+    await page.locator('#menuBtn').focus();
+    await page.keyboard.press('Tab');
+    expect(
+      await page.evaluate(
+        () => document.querySelector('#drawer')?.contains(document.activeElement) ?? false,
+      ),
+    ).toBe(false);
+
+    expect(
+      await drawer
+        .locator('a')
+        .first()
+        .evaluate((element) => {
+          (element as HTMLElement).focus();
+          return document.activeElement === element;
+        }),
+    ).toBe(false);
   });
 
   test('mobile documents do not overflow the 390px viewport', async ({ page }) => {

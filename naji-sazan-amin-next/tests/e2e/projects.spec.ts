@@ -2,10 +2,16 @@ import { expect, test } from '@playwright/test';
 
 import { PROJECTS, PROJECT_CATEGORIES } from '../../src/lib/projects';
 
-const counts: Record<string, number> = { all: PROJECTS.length };
-for (const project of PROJECTS) {
-  counts[project.categorySlug] = (counts[project.categorySlug] ?? 0) + 1;
-}
+const expectedCounts: Record<string, number> = {
+  all: 9,
+  residential: 2,
+  commercial: 2,
+  cultural: 1,
+  healthcare: 1,
+  office: 1,
+  restoration: 1,
+  infrastructure: 1,
+};
 
 test('projects page renders head, metadata, chips and server-rendered cards', async ({ page }) => {
   await page.goto('/projects/');
@@ -24,7 +30,9 @@ test('projects page renders head, metadata, chips and server-rendered cards', as
   const chips = page.locator('#filterBar.filter-bar.filter-bar--pills .chip');
   await expect(chips).toHaveCount(8);
   for (const [index, category] of PROJECT_CATEGORIES.entries()) {
-    await expect(chips.nth(index)).toHaveText(`${category.label} (${counts[category.slug] ?? 0})`);
+    await expect(chips.nth(index)).toHaveText(
+      `${category.label} (${expectedCounts[category.slug] ?? 0})`,
+    );
   }
   await expect(chips.nth(0)).toHaveClass(/is-active/);
   await expect(chips.nth(0)).toHaveAttribute('aria-pressed', 'true');

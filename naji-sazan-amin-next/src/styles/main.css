@@ -3493,9 +3493,9 @@ h1, h2, h3, h4, h5, h6 {
 /* ================================================================
    REACT PORT — hydration-safe helpers
    ================================================================ */
-:root { --radius: 640px; }
-@media (max-width: 959px) { :root { --radius: 480px; } }
-@media (max-width: 599px) { :root { --radius: 340px; } }
+:root { --gallery-radius: 640px; }
+@media (max-width: 959px) { :root { --gallery-radius: 480px; } }
+@media (max-width: 599px) { :root { --gallery-radius: 340px; } }
 
 .form-honeypot {
   position: absolute;
