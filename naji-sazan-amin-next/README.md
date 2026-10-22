@@ -60,6 +60,9 @@ The contact form reads `NEXT_PUBLIC_CONTACT_ENDPOINT` at **build time**:
 A static export has no API routes. Deploy the endpoint separately (or reverse-proxy
 `/api/contact` to the backend) and update the CSP `connect-src` directive if it is cross-origin.
 
+Every `NEXT_PUBLIC_*` value is inlined into the client bundle at build time and is public; never
+put credentials or secrets in these variables.
+
 ## Tests
 
 `npm run test:e2e` does the following:
@@ -78,8 +81,9 @@ The suite covers the four routes, the shared shell, navigation, the mobile drawe
 form and endpoint contract, plus 32 live visual comparisons (four routes × two viewports × two
 themes × viewport/full-page). Visual tests compare against the legacy render, not stored
 snapshots. The hero video is hidden during comparison because it is time-based. Thresholds are 2%
-of viewport pixels and 3% of full-page pixels; failure screenshots are written to
-`test-results/visual/`.
+of viewport pixels and 3% of full-page pixels; the `legacy`, `next` and `diff` screenshots for every
+comparison are always retained in `test-results/visual/`, and failed comparisons also attach the
+diff to the report.
 
 At 390 px the mobile header is usable. Below 600 px the header consultation button is hidden on
 purpose and the drawer carries the same call to action; the menu button and theme toggle stay
@@ -109,13 +113,43 @@ Because the export is static, a same-origin `/api/contact` needs a reverse proxy
 static files that forwards that path to the backend; the supplied nginx config serves static files
 only. If the endpoint is cross-origin, add its origin to the CSP `connect-src` directive.
 
-Before enabling the config, replace `server_name`, `root` and the log paths. The provided file is
-a `server {}` block intended for `http {}` (for example `/etc/nginx/conf.d/`); it assumes the
-standard `mime.types` include. Add the same security headers to the TLS server or terminate TLS in
-a separate 443 block.
+Before enabling the config, replace `server_name`, `root`, the certificate paths and the log paths.
+The provided file contains two `server {}` blocks (an HTTP redirect plus the TLS site) intended for
+`http {}` (for example `/etc/nginx/conf.d/`); it assumes the standard `mime.types` include. Port 80
+only serves ACME challenges from `/var/www/certbot` and redirects every other request to HTTPS.
+The standalone `http2 on;` directive requires nginx 1.25.1 or newer; on older distro packages use
+`listen 443 ssl http2;` on the TLS `listen` line instead.
+
+### Optional `/api/contact` reverse proxy
+
+Only add this when a backend handles the contact endpoint. Define the zone once inside `http {}`
+(for example in `/etc/nginx/nginx.conf`, not in the `server {}` file):
+
+```nginx
+limit_req_zone $binary_remote_addr zone=contact:10m rate=5r/m;
+```
+
+Then add this location to the TLS `server {}` block:
+
+```nginx
+location = /api/contact {
+    client_max_body_size 64k;
+    limit_req zone=contact burst=3 nodelay;
+    limit_req_status 429;
+    proxy_pass http://127.0.0.1:8080;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
+```
+
+Adjust the upstream address and rate to the backend's capacity; the backend's own validation and
+rate limiting remain the authoritative control.
 
 Behaviour of the supplied config:
 
+- Port 80 redirects to HTTPS with `301`, except for `/.well-known/acme-challenge/`.
 - `/` and `/about/`, `/projects/`, `/contact/` are served from directory indexes.
 - `/about.html`, `/projects.html`, `/contact.html` redirect with `301` to the trailing-slash
   routes; `/index.html` redirects to `/`.
@@ -124,10 +158,15 @@ Behaviour of the supplied config:
   revalidated (`Cache-Control: no-cache`).
 - Gzip is enabled for text, JSON, JavaScript, XML and SVG.
 - Dotfiles other than `/.well-known/` are denied.
-- The CSP allows only same-origin scripts, styles, fonts, images, media and `fetch`. Next.js
-  requires `'unsafe-inline'` for its bootstrap/theme scripts and inline styles. If you add
+- The CSP allows only same-origin scripts, styles, fonts, images, media and `fetch`; inline event
+  handler attributes are blocked (`script-src-attr 'none'`) and the site cannot be framed
+  (`X-Frame-Options: DENY`, `frame-ancestors 'none'`). HSTS is one year and includes subdomains;
+  keep `includeSubDomains` only if every subdomain is HTTPS-only, otherwise drop it.
+  Next.js requires `'unsafe-inline'` for its bootstrap/theme scripts and inline styles. If you add
   analytics, a cross-origin contact endpoint, or embedded maps, extend the relevant directives.
 
 The site is RTL Persian and uses locally hosted Vazirmatn fonts; no external font or map tile
 requests are required. The map widget is CSS/SVG, and its navigation buttons are ordinary outbound
 links.
+
+The footer link labels are kept verbatim from the legacy site (legacy parity placeholders).

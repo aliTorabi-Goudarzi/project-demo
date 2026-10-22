@@ -30,5 +30,5 @@ fs.rmSync(path.join(root, 'out-endpoint'), { recursive: true, force: true });
 run(npm, ['run', 'build'], { NEXT_PUBLIC_CONTACT_ENDPOINT: '/api/contact' });
 fs.cpSync(path.join(root, 'out'), path.join(root, 'out-endpoint'), { recursive: true });
 
-run(npm, ['run', 'build']);
+run(npm, ['run', 'build'], { NEXT_PUBLIC_CONTACT_ENDPOINT: '' });
 run(npx, ['playwright', 'test']);
