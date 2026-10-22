@@ -60,6 +60,7 @@ export function ContactForm() {
 
   const successRef = useRef<HTMLDivElement>(null);
   const successTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const inFlight = useRef(false);
 
   useEffect(() => {
     if (!successVisible) return;
@@ -129,13 +130,20 @@ export function ContactForm() {
       return;
     }
 
+    if (inFlight.current) return;
+
+    inFlight.current = true;
     setSending(true);
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
 
     try {
       const response = await fetch(CONTACT_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...values, type: service, scale }),
+        signal: controller.signal,
       });
 
       if (!response.ok) throw new Error('Request failed');
@@ -145,6 +153,8 @@ export function ContactForm() {
     } catch {
       setSubmitError(SUBMIT_ERROR);
     } finally {
+      clearTimeout(timeout);
+      inFlight.current = false;
       setSending(false);
     }
   };
@@ -168,7 +178,7 @@ export function ContactForm() {
         </p>
       </div>
 
-      <form className="form" id="contactForm" noValidate onSubmit={handleSubmit}>
+      <form className="form" id="contactForm" method="post" noValidate onSubmit={handleSubmit}>
         <div className="form-honeypot" aria-hidden="true">
           <input
             type="text"
@@ -243,6 +253,7 @@ export function ContactForm() {
               type="text"
               autoComplete="name"
               placeholder="مثال: مهندس احمدی"
+              maxLength={120}
               required
               value={values.name}
               onChange={handleChange('name')}
@@ -260,6 +271,7 @@ export function ContactForm() {
               autoComplete="tel"
               dir="ltr"
               placeholder="۰۹۱۲..."
+              maxLength={20}
               required
               value={values.phone}
               onChange={handleChange('phone')}
@@ -280,6 +292,7 @@ export function ContactForm() {
               autoComplete="email"
               dir="ltr"
               placeholder="name@company.com"
+              maxLength={254}
               required
               value={values.email}
               onChange={handleChange('email')}
@@ -293,6 +306,7 @@ export function ContactForm() {
               name="city"
               type="text"
               placeholder="مثال: تهران / منطقه ۱"
+              maxLength={120}
               value={values.city}
               onChange={handleChange('city')}
             />
@@ -309,6 +323,7 @@ export function ContactForm() {
             name="message"
             rows={4}
             placeholder="متراژ تقریبی، تعداد طبقات، وضعیت فعلی پرونده شهرداری یا زمین، و زمان‌بندی مد نظر..."
+            maxLength={2000}
             required
             value={values.message}
             onChange={handleChange('message')}

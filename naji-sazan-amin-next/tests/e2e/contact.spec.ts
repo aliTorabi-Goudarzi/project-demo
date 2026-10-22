@@ -1,25 +1,13 @@
-import fs from 'node:fs';
-import path from 'node:path';
+import { expect, test } from '@playwright/test';
 
-import { expect, test, type Page } from '@playwright/test';
-
-const SERVICE_INITIAL = 'طراحی معماری و سازه';
-const SCALE_INITIAL = 'مسکونی و بلندمرتبه';
-const VALID_MESSAGE = 'متراژ تقریبی ۵۰۰۰ مترمربع، ۱۰ طبقه و پرونده شهرداری در مرحله اول.';
-const ENDPOINT_URL = process.env.CONTACT_E2E_ENDPOINT_URL ?? 'http://127.0.0.1:4175/contact/';
-const SUBMIT_ERROR =
-  'ارسال استعلام انجام نشد. لطفاً دوباره تلاش کنید یا با دفتر تماس بگیرید.';
-
-const endpointBuildExists = () =>
-  fs.existsSync(path.resolve(process.cwd(), 'out-endpoint'));
-
-async function fillValidForm(page: Page) {
-  await page.locator('#name').fill('مهندس احمدی');
-  await page.locator('#phone').fill('09121234567');
-  await page.locator('#email').fill('ahmadi@example.com');
-  await page.locator('#city').fill('تهران / منطقه ۱');
-  await page.locator('#message').fill(VALID_MESSAGE);
-}
+import {
+  ENDPOINT_URL,
+  SCALE_INITIAL,
+  SERVICE_INITIAL,
+  SUBMIT_BUTTON,
+  endpointBuildExists,
+  fillValidForm,
+} from './contact-fixtures';
 
 test('contact page renders the head, info cards and map widget', async ({ page }) => {
   const response = await page.goto('/contact/');
@@ -104,6 +92,16 @@ test('office status is closed on Thursday', async ({ page }) => {
   await expect(page.locator('#officeStatus')).toHaveClass(/is-closed/);
 });
 
+test('office status after Wednesday closing time points to Saturday', async ({ page }) => {
+  await page.clock.install({ time: new Date('2026-10-21T14:30:00Z') });
+  await page.goto('/contact/');
+
+  await expect(page.locator('#officeStatusText')).toHaveText(
+    'دفتر اکنون تعطیل است • آغاز کار: شنبه ۸:۰۰',
+  );
+  await expect(page.locator('#officeStatus')).toHaveClass(/is-closed/);
+});
+
 test('service and scale chips update the hidden values', async ({ page }) => {
   await page.goto('/contact/');
 
@@ -141,7 +139,7 @@ test('service and scale chips update the hidden values', async ({ page }) => {
 
 test('empty submit shows exactly three field errors and phone stays optional', async ({ page }) => {
   await page.goto('/contact/');
-  await page.getByRole('button', { name: 'ثبت و ارسال استعلام پروژه' }).click();
+  await page.getByRole('button', { name: SUBMIT_BUTTON }).click();
 
   await expect(page.locator('.field--error')).toHaveCount(3);
 
@@ -167,7 +165,7 @@ test('valid submission shows success, resets the form and auto-hides', async ({ 
   await page.goto('/contact/');
 
   await fillValidForm(page);
-  await page.getByRole('button', { name: 'ثبت و ارسال استعلام پروژه' }).click();
+  await page.getByRole('button', { name: SUBMIT_BUTTON }).click();
 
   const success = page.locator('#formSuccess');
   await expect(success).toHaveClass(/is-visible/);
@@ -205,50 +203,90 @@ test('copy buttons copy the value and restore their labels', async ({ page, cont
   await expect(copyAddress).not.toHaveClass(/is-copied/);
 });
 
-test('endpoint build posts the inquiry payload as JSON', async ({ page }) => {
+test('the SSR form posts natively and caps the user field lengths', async ({ page }) => {
+  await page.goto('/contact/');
+
+  const form = page.locator('#contactForm');
+  await expect(form).toHaveAttribute('method', 'post');
+
+  await expect(page.locator('#name')).toHaveAttribute('maxlength', '120');
+  await expect(page.locator('#phone')).toHaveAttribute('maxlength', '20');
+  await expect(page.locator('#email')).toHaveAttribute('maxlength', '254');
+  await expect(page.locator('#city')).toHaveAttribute('maxlength', '120');
+  await expect(page.locator('#message')).toHaveAttribute('maxlength', '2000');
+});
+
+test('a submit without JavaScript never leaks the field values into the URL', async ({
+  browser,
+  baseURL,
+}) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, baseURL });
+  const page = await context.newPage();
+
+  const navigationRequests: { method: string; url: string }[] = [];
+  page.on('request', (request) => {
+    if (request.isNavigationRequest()) {
+      navigationRequests.push({ method: request.method(), url: request.url() });
+    }
+  });
+
+  const name = 'مهندس افشاگر';
+  const phone = '09129998877';
+  const email = 'leak-check@example.com';
+  const message = 'این پیام نباید هرگز داخل نشانی صفحه ظاهر شود.';
+
+  try {
+    await page.goto('/contact/');
+    await page.locator('#name').fill(name);
+    await page.locator('#phone').fill(phone);
+    await page.locator('#email').fill(email);
+    await page.locator('#message').fill(message);
+
+    await Promise.all([
+      page.waitForEvent('framenavigated', (frame) => frame === page.mainFrame()),
+      page.getByRole('button', { name: SUBMIT_BUTTON }).click(),
+    ]);
+    await page.waitForLoadState('load');
+
+    const currentUrl = new URL(page.url());
+    expect(currentUrl.search).toBe('');
+    const decodedUrl = decodeURIComponent(page.url());
+    for (const value of [name, phone, email, message]) {
+      expect(decodedUrl).not.toContain(value);
+    }
+
+    const submission = navigationRequests.at(-1);
+    expect(submission?.method).toBe('POST');
+    expect(new URL(submission?.url ?? '').search).toBe('');
+  } finally {
+    await context.close();
+  }
+});
+
+test('a double submit produces a single network request', async ({ page }) => {
   test.skip(!endpointBuildExists(), 'endpoint build is not present');
 
-  let body: Record<string, unknown> | null = null;
-  let contentType = '';
-
+  let requests = 0;
   await page.route('**/api/contact', async (route) => {
-    body = route.request().postDataJSON();
-    contentType = route.request().headers()['content-type'] ?? '';
+    requests += 1;
+    await new Promise((resolve) => setTimeout(resolve, 800));
     await route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' });
   });
 
   await page.goto(ENDPOINT_URL);
   await fillValidForm(page);
-  await page.locator('#serviceChips .form-chip').filter({ hasText: 'مشاوره و مقاوم‌سازی' }).click();
-  await page.locator('#scaleChips .form-chip').filter({ hasText: 'تجاری و اداری' }).click();
-  await page.getByRole('button', { name: 'ثبت و ارسال استعلام پروژه' }).click();
+
+  const form = page.locator('#contactForm');
+  await form.evaluate((node) => {
+    const element = node as HTMLFormElement;
+    element.requestSubmit();
+    element.requestSubmit();
+  });
+
+  const submitButton = page.getByRole('button', { name: SUBMIT_BUTTON });
+  await expect(submitButton).toBeDisabled();
+  await expect(submitButton).toHaveAttribute('aria-busy', 'true');
 
   await expect(page.locator('#formSuccess')).toHaveClass(/is-visible/);
-  expect(contentType).toContain('application/json');
-  expect(body).toEqual({
-    name: 'مهندس احمدی',
-    phone: '09121234567',
-    email: 'ahmadi@example.com',
-    city: 'تهران / منطقه ۱',
-    message: VALID_MESSAGE,
-    type: 'مشاوره و مقاوم‌سازی',
-    scale: 'تجاری و اداری',
-  });
-});
-
-test('endpoint failure shows an error and keeps the entered values', async ({ page }) => {
-  test.skip(!endpointBuildExists(), 'endpoint build is not present');
-
-  await page.route('**/api/contact', (route) =>
-    route.fulfill({ status: 500, contentType: 'text/plain', body: 'failure' }),
-  );
-
-  await page.goto(ENDPOINT_URL);
-  await fillValidForm(page);
-  await page.getByRole('button', { name: 'ثبت و ارسال استعلام پروژه' }).click();
-
-  await expect(page.locator('.form__submit-error')).toHaveText(SUBMIT_ERROR);
-  await expect(page.locator('#formSuccess')).not.toHaveClass(/is-visible/);
-  await expect(page.locator('#name')).toHaveValue('مهندس احمدی');
-  await expect(page.locator('#message')).toHaveValue(VALID_MESSAGE);
+  expect(requests).toBe(1);
 });

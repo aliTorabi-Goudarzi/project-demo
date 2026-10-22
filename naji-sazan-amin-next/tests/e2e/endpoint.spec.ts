@@ -1,22 +1,13 @@
-import fs from 'node:fs';
-import path from 'node:path';
+import { expect, test } from '@playwright/test';
 
-import { expect, test, type Page } from '@playwright/test';
-
-const VALID_MESSAGE = 'متراژ تقریبی ۵۰۰۰ مترمربع، ۱۰ طبقه و پرونده شهرداری در مرحله اول.';
-const SUBMIT_ERROR = 'ارسال استعلام انجام نشد. لطفاً دوباره تلاش کنید یا با دفتر تماس بگیرید.';
-const ENDPOINT_URL = process.env.CONTACT_E2E_ENDPOINT_URL ?? 'http://127.0.0.1:4175/contact/';
-const SUBMIT_BUTTON = 'ثبت و ارسال استعلام پروژه';
-
-const endpointBuildExists = () => fs.existsSync(path.resolve(process.cwd(), 'out-endpoint'));
-
-async function fillValidForm(page: Page) {
-  await page.locator('#name').fill('مهندس احمدی');
-  await page.locator('#phone').fill('09121234567');
-  await page.locator('#email').fill('ahmadi@example.com');
-  await page.locator('#city').fill('تهران / منطقه ۱');
-  await page.locator('#message').fill(VALID_MESSAGE);
-}
+import {
+  ENDPOINT_URL,
+  SUBMIT_BUTTON,
+  SUBMIT_ERROR,
+  VALID_MESSAGE,
+  endpointBuildExists,
+  fillValidForm,
+} from './contact-fixtures';
 
 test('the demo build simulates success without posting to the endpoint', async ({ page }) => {
   let requests = 0;

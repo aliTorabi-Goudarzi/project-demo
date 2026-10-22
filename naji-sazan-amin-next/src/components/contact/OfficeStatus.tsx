@@ -41,12 +41,12 @@ function getOfficeStatus(now: Date): OfficeStatus {
     return { text: 'هم‌اکنون دفتر باز است • پذیرش تا ۱۷:۰۰', closed: false };
   }
 
-  if (day === 4 || day === 5) {
-    return { text: 'دفتر اکنون تعطیل است • آغاز کار: شنبه ۸:۰۰', closed: true };
+  if (isWorkDay && minutes < OPENING_MINUTES) {
+    return { text: 'دفتر اکنون تعطیل است • آغاز کار: امروز ۸:۰۰', closed: true };
   }
 
-  if (minutes < OPENING_MINUTES) {
-    return { text: 'دفتر اکنون تعطیل است • آغاز کار: امروز ۸:۰۰', closed: true };
+  if (day === 3 || day === 4 || day === 5) {
+    return { text: 'دفتر اکنون تعطیل است • آغاز کار: شنبه ۸:۰۰', closed: true };
   }
 
   return { text: 'دفتر اکنون تعطیل است • آغاز کار: فردا ۸:۰۰', closed: true };
