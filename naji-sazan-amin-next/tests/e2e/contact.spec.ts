@@ -1,10 +1,12 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Route } from '@playwright/test';
 
 import {
   ENDPOINT_URL,
   SCALE_INITIAL,
   SERVICE_INITIAL,
   SUBMIT_BUTTON,
+  SUBMIT_ERROR,
+  VALID_MESSAGE,
   endpointBuildExists,
   fillValidForm,
 } from './contact-fixtures';
@@ -98,6 +100,26 @@ test('office status after Wednesday closing time points to Saturday', async ({ p
 
   await expect(page.locator('#officeStatusText')).toHaveText(
     'دفتر اکنون تعطیل است • آغاز کار: شنبه ۸:۰۰',
+  );
+  await expect(page.locator('#officeStatus')).toHaveClass(/is-closed/);
+});
+
+test('office status before opening on a work day points to today', async ({ page }) => {
+  await page.clock.install({ time: new Date('2026-10-21T03:00:00Z') });
+  await page.goto('/contact/');
+
+  await expect(page.locator('#officeStatusText')).toHaveText(
+    'دفتر اکنون تعطیل است • آغاز کار: امروز ۸:۰۰',
+  );
+  await expect(page.locator('#officeStatus')).toHaveClass(/is-closed/);
+});
+
+test('office status on Saturday evening points to tomorrow', async ({ page }) => {
+  await page.clock.install({ time: new Date('2026-10-24T14:30:00Z') });
+  await page.goto('/contact/');
+
+  await expect(page.locator('#officeStatusText')).toHaveText(
+    'دفتر اکنون تعطیل است • آغاز کار: فردا ۸:۰۰',
   );
   await expect(page.locator('#officeStatus')).toHaveClass(/is-closed/);
 });
@@ -266,10 +288,17 @@ test('a submit without JavaScript never leaks the field values into the URL', as
 test('a double submit produces a single network request', async ({ page }) => {
   test.skip(!endpointBuildExists(), 'endpoint build is not present');
 
+  await page.clock.install({ time: new Date('2026-10-21T06:00:00Z') });
+
   let requests = 0;
+  let releaseRequest: () => void = () => {};
+  const requestGate = new Promise<void>((resolve) => {
+    releaseRequest = resolve;
+  });
+
   await page.route('**/api/contact', async (route) => {
     requests += 1;
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    await requestGate;
     await route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' });
   });
 
@@ -287,6 +316,67 @@ test('a double submit produces a single network request', async ({ page }) => {
   await expect(submitButton).toBeDisabled();
   await expect(submitButton).toHaveAttribute('aria-busy', 'true');
 
+  await expect.poll(() => requests).toBe(1);
+  releaseRequest();
+
   await expect(page.locator('#formSuccess')).toHaveClass(/is-visible/);
   expect(requests).toBe(1);
+});
+
+test('a hanging submit aborts after 15 seconds and the form can be retried', async ({ page }) => {
+  test.skip(!endpointBuildExists(), 'endpoint build is not present');
+
+  await page.clock.install({ time: new Date('2026-10-21T06:00:00Z') });
+
+  let requests = 0;
+  let releaseFirstRequest: () => void = () => {};
+  const firstRequestGate = new Promise<void>((resolve) => {
+    releaseFirstRequest = resolve;
+  });
+
+  const hangingHandler = async (route: Route) => {
+    requests += 1;
+    await firstRequestGate;
+    try {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' });
+    } catch {
+      // the browser already aborted this request when the timeout fired
+    }
+  };
+
+  await page.route('**/api/contact', hangingHandler);
+
+  await page.goto(ENDPOINT_URL);
+  await fillValidForm(page);
+
+  const submitButton = page.getByRole('button', { name: SUBMIT_BUTTON });
+  await submitButton.click();
+  await expect.poll(() => requests).toBe(1);
+  await expect(submitButton).toBeDisabled();
+
+  await page.clock.fastForward(15_000);
+
+  await expect(page.locator('.form__submit-error')).toHaveText(SUBMIT_ERROR);
+  await expect(page.locator('#formSuccess')).not.toHaveClass(/is-visible/);
+  await expect(page.locator('#name')).toHaveValue('مهندس احمدی');
+  await expect(page.locator('#phone')).toHaveValue('09121234567');
+  await expect(page.locator('#email')).toHaveValue('ahmadi@example.com');
+  await expect(page.locator('#city')).toHaveValue('تهران / منطقه ۱');
+  await expect(page.locator('#message')).toHaveValue(VALID_MESSAGE);
+  await expect(submitButton).toBeEnabled();
+
+  await page.unroute('**/api/contact', hangingHandler);
+  releaseFirstRequest();
+  await page.route('**/api/contact', (route) => {
+    requests += 1;
+    return route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' });
+  });
+
+  await submitButton.click();
+
+  await expect(page.locator('#formSuccess')).toHaveClass(/is-visible/);
+  await expect(page.locator('.form__submit-error')).toHaveCount(0);
+  await expect(page.locator('#name')).toHaveValue('');
+  await expect(page.locator('#message')).toHaveValue('');
+  expect(requests).toBe(2);
 });
