@@ -3506,3 +3506,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .form__submit-error { color: var(--status-err); font-size: var(--text-sm); }
+
+/* Below the mobile breakpoint the drawer carries the consultation CTA, so hiding the
+   header copy keeps the menu and theme toggle inside the 390px viewport. */
+@media (max-width: 600px) {
+  .site-header .header-actions .btn {
+    display: none;
+  }
+}
