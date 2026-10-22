@@ -196,10 +196,11 @@ for (const route of ROUTES) {
             legacyPng.width === nextPng.width && legacyPng.height === nextPng.height;
           const threshold = fullPage ? 0.03 : 0.02;
 
+          fs.mkdirSync(SCREENSHOT_DIR, { recursive: true });
+          fs.writeFileSync(path.join(SCREENSHOT_DIR, `${label}-legacy.png`), legacy.buffer);
+          fs.writeFileSync(path.join(SCREENSHOT_DIR, `${label}-next.png`), next.buffer);
+
           if (!dimensionsMatch) {
-            fs.mkdirSync(SCREENSHOT_DIR, { recursive: true });
-            fs.writeFileSync(path.join(SCREENSHOT_DIR, `${label}-legacy.png`), legacy.buffer);
-            fs.writeFileSync(path.join(SCREENSHOT_DIR, `${label}-next.png`), next.buffer);
             expect(
               dimensionsMatch,
               `${label}: legacy ${legacyPng.width}x${legacyPng.height}, next ${nextPng.width}x${nextPng.height}`,
@@ -217,13 +218,10 @@ for (const route of ROUTES) {
             { threshold: 0.1, includeAA: false },
           );
           const ratio = diffPixels / (legacyPng.width * legacyPng.height);
+          const diffPath = path.join(SCREENSHOT_DIR, `${label}-diff.png`);
+          fs.writeFileSync(diffPath, PNG.sync.write(diff));
 
           if (ratio > threshold) {
-            fs.mkdirSync(SCREENSHOT_DIR, { recursive: true });
-            fs.writeFileSync(path.join(SCREENSHOT_DIR, `${label}-legacy.png`), legacy.buffer);
-            fs.writeFileSync(path.join(SCREENSHOT_DIR, `${label}-next.png`), next.buffer);
-            const diffPath = path.join(SCREENSHOT_DIR, `${label}-diff.png`);
-            fs.writeFileSync(diffPath, PNG.sync.write(diff));
             await testInfo.attach(`${label}-diff`, { path: diffPath, contentType: 'image/png' });
           }
 

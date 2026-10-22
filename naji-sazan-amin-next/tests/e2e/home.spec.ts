@@ -102,6 +102,26 @@ test.describe('hero', () => {
     await expect(page.locator('.hero__ambient')).toHaveCount(1);
     await expect(page.locator('.hero__grid')).toHaveCount(1);
   });
+
+  test('background video plays while the hero is visible and pauses when it leaves the viewport', async ({ page }) => {
+    await page.goto('/');
+
+    const video = page.locator('video#heroBgVideo');
+    const isPaused = () => video.evaluate((element) => (element as HTMLVideoElement).paused);
+    const currentTime = () => video.evaluate((element) => (element as HTMLVideoElement).currentTime);
+
+    await expect.poll(isPaused, { timeout: 20_000 }).toBe(false);
+    await expect.poll(currentTime, { timeout: 20_000 }).toBeGreaterThan(0);
+
+    await page.evaluate(() => {
+      document.documentElement.style.scrollBehavior = 'auto';
+      window.scrollTo(0, document.documentElement.scrollHeight);
+    });
+    await expect.poll(isPaused, { timeout: 20_000 }).toBe(true);
+
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await expect.poll(isPaused, { timeout: 20_000 }).toBe(false);
+  });
 });
 
 test.describe('services', () => {
@@ -198,6 +218,31 @@ test.describe('services', () => {
     await section.locator('#svc21Link').evaluate((element) => (element as HTMLElement).focus());
     await expectPaused(list, false);
     await expectRestartedCycle(page, title, bar);
+  });
+
+  test('focusing a service previews it and resume cycles from the focused item', async ({ page }) => {
+    const { section, list, title } = await openServicesPage(page);
+    const items = section.locator('.svc21__item');
+    const focused = items.nth(2);
+
+    await focused.evaluate((element) => (element as HTMLElement).focus());
+    await expect(focused).toBeFocused();
+    await expectPaused(list, true);
+    await expect(focused).toHaveClass(/is-active/);
+
+    await page.clock.runFor(200);
+    await expect.poll(() => title.textContent()).toBe('مدیریت طرح و کنترل پروژه');
+    await expect(section.locator('#svc21Desc')).toHaveText(
+      'مدیریت یکپارچه طرح‌های عمرانی، برنامه‌ریزی، هماهنگی ذی‌نفعان و گزارش‌دهی دوره‌ای.',
+    );
+    await expect(section.locator('#svc21Img')).toHaveAttribute('src', '/assets/projects/setareh-office.webp');
+
+    await section.locator('#svc21Link').evaluate((element) => (element as HTMLElement).focus());
+    await expectPaused(list, false);
+    await page.clock.runFor(4500);
+    await expect.poll(() => title.textContent()).toBe('مدیریت طرح و کنترل پروژه');
+    await page.clock.runFor(700);
+    await expect.poll(() => title.textContent()).toBe('مشاوره مهندسی و مطالعات');
   });
 
   test('returning to the tab restarts the cycle on resume', async ({ page }) => {

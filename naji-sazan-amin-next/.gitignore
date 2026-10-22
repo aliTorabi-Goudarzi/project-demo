@@ -5,3 +5,5 @@ out-endpoint/
 test-results/
 playwright-report/
 *.tsbuildinfo
+.env*
+!.env.example
