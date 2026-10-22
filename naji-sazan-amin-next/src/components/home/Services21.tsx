@@ -77,10 +77,6 @@ export function Services21() {
         fadeTimer.current = null;
       }
       setActive(next);
-      if (reducedMotion) {
-        setDisplayed(next);
-        return;
-      }
       fadeTimer.current = window.setTimeout(() => {
         fadeTimer.current = null;
         setDisplayed(next);
