@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { normalizePath } from '@/lib/path';
 import { NAV_ITEMS, SITE } from '@/lib/site';
 
 type DrawerProps = {
@@ -10,16 +11,12 @@ type DrawerProps = {
   onClose: () => void;
 };
 
-function normalizePath(path: string) {
-  return path.length > 1 && path.endsWith('/') ? path.slice(0, -1) : path;
-}
-
 export function Drawer({ open, onClose }: DrawerProps) {
   const pathname = normalizePath(usePathname());
   const ctaHref = pathname === '/contact' ? '#form' : '/contact';
 
   return (
-    <div className={open ? 'drawer is-open' : 'drawer'} id="drawer" aria-hidden={!open}>
+    <div className={open ? 'drawer is-open' : 'drawer'} id="drawer" aria-hidden={!open} inert={!open}>
       {NAV_ITEMS.map((item) => (
         <Link
           key={item.href}

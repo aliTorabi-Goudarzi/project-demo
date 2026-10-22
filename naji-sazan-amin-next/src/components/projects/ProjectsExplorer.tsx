@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { useProjectModal } from '@/components/layout/ProjectModalProvider';
+import { useProjectModal } from '@/components/layout/ProjectModalContext';
 import { PROJECTS, PROJECT_CATEGORIES } from '@/lib/projects';
 
 const counts: Record<string, number> = { all: PROJECTS.length };

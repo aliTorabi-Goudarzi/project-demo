@@ -2,21 +2,25 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
+import { normalizePath } from '@/lib/path';
 import { lockBodyScroll, unlockBodyScroll } from '@/lib/scroll-lock';
 import { NAV_ITEMS, SITE } from '@/lib/site';
 
 import { Drawer } from './Drawer';
 
-function normalizePath(path: string) {
-  return path.length > 1 && path.endsWith('/') ? path.slice(0, -1) : path;
-}
-
 export function SiteHeader() {
   const pathname = normalizePath(usePathname());
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const previousPathname = useRef(pathname);
+
+  useEffect(() => {
+    if (previousPathname.current === pathname) return;
+    previousPathname.current = pathname;
+    setDrawerOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     let frame = 0;

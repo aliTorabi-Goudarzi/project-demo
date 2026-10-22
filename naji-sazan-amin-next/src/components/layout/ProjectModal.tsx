@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 
 import { lockBodyScroll, unlockBodyScroll } from '@/lib/scroll-lock';
 
-import { useProjectModal } from './ProjectModalProvider';
+import { useProjectModal } from './ProjectModalContext';
 
 export function ProjectModal() {
   const { activeItem, close } = useProjectModal();

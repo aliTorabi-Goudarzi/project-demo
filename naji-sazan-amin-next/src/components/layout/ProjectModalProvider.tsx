@@ -1,41 +1,31 @@
 'use client';
 
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 
-import { GALLERY_PROJECTS } from '@/lib/gallery';
-import { PROJECTS } from '@/lib/projects';
+import { getGalleryById } from '@/lib/gallery';
+import { getProjectById } from '@/lib/projects';
 
 import { ProjectModal } from './ProjectModal';
-
-export type ModalItem = {
-  id: string;
-  title: string;
-  image: string;
-  client: string;
-  location: string;
-  year: string;
-  category: string;
-  description: string;
-};
-
-type ProjectModalContextValue = {
-  activeItem: ModalItem | null;
-  openProject: (id: string) => void;
-  openGalleryItem: (id: string) => void;
-  close: () => void;
-};
-
-const ProjectModalContext = createContext<ProjectModalContextValue | null>(null);
+import { ProjectModalContext } from './ProjectModalContext';
+import type { ModalItem } from './ProjectModalContext';
 
 export function ProjectModalProvider({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
   const [activeItem, setActiveItem] = useState<ModalItem | null>(null);
+  const previousPathname = useRef(pathname);
+
+  useEffect(() => {
+    if (previousPathname.current === pathname) return;
+    previousPathname.current = pathname;
+    setActiveItem(null);
+  }, [pathname]);
 
   const openProject = useCallback((id: string) => {
-    const project = PROJECTS.find((item) => item.id === id);
+    const project = getProjectById(id);
     if (!project) return;
     setActiveItem({
-      id: project.id,
       title: project.title,
       image: project.image,
       client: project.client,
@@ -47,10 +37,9 @@ export function ProjectModalProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const openGalleryItem = useCallback((id: string) => {
-    const project = GALLERY_PROJECTS.find((item) => item.id === id);
+    const project = getGalleryById(id);
     if (!project) return;
     setActiveItem({
-      id: project.id,
       title: project.title,
       image: project.image,
       client: project.client,
@@ -74,12 +63,4 @@ export function ProjectModalProvider({ children }: { children: ReactNode }) {
       <ProjectModal />
     </ProjectModalContext.Provider>
   );
-}
-
-export function useProjectModal(): ProjectModalContextValue {
-  const context = useContext(ProjectModalContext);
-  if (!context) {
-    throw new Error('useProjectModal must be used within ProjectModalProvider');
-  }
-  return context;
 }
