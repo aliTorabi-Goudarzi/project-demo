@@ -139,7 +139,9 @@ export function Services21() {
                     type="button"
                     className={index === active ? 'svc21__item is-active' : 'svc21__item'}
                     onClick={() => select(index)}
-                    onFocus={() => select(index)}
+                    onFocus={() => {
+                      if (index !== active) select(index);
+                    }}
                   >
                     <span className="svc21__item-title">{service.title}</span>
                     <span className="svc21__bar" aria-hidden="true">

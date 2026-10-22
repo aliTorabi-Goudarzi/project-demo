@@ -225,7 +225,8 @@ test.describe('services', () => {
     const items = section.locator('.svc21__item');
     const focused = items.nth(2);
 
-    await focused.evaluate((element) => (element as HTMLElement).focus());
+    await items.nth(1).focus();
+    await page.keyboard.press('Tab');
     await expect(focused).toBeFocused();
     await expectPaused(list, true);
     await expect(focused).toHaveClass(/is-active/);
@@ -243,6 +244,19 @@ test.describe('services', () => {
     await expect.poll(() => title.textContent()).toBe('مدیریت طرح و کنترل پروژه');
     await page.clock.runFor(700);
     await expect.poll(() => title.textContent()).toBe('مشاوره مهندسی و مطالعات');
+  });
+
+  test('focusing the already-active service does not restart its bar', async ({ page }) => {
+    const { item, list, title, bar } = await openServicesPage(page);
+    await probeBar(bar);
+
+    await item.evaluate((element) => (element as HTMLElement).focus());
+    await expect(item).toBeFocused();
+    await expectPaused(list, true);
+    await expect.poll(() => title.textContent()).toBe(FIRST_SERVICE);
+
+    const probe = await bar.evaluate((element) => element.getAttribute('data-pause-probe'));
+    expect(probe).toBe('before-resume');
   });
 
   test('returning to the tab restarts the cycle on resume', async ({ page }) => {

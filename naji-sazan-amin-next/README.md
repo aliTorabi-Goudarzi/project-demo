@@ -117,6 +117,8 @@ Before enabling the config, replace `server_name`, `root`, the certificate paths
 The provided file contains two `server {}` blocks (an HTTP redirect plus the TLS site) intended for
 `http {}` (for example `/etc/nginx/conf.d/`); it assumes the standard `mime.types` include. Port 80
 only serves ACME challenges from `/var/www/certbot` and redirects every other request to HTTPS.
+The standalone `http2 on;` directive requires nginx 1.25.1 or newer; on older distro packages use
+`listen 443 ssl http2;` on the TLS `listen` line instead.
 
 ### Optional `/api/contact` reverse proxy
 
@@ -158,7 +160,8 @@ Behaviour of the supplied config:
 - Dotfiles other than `/.well-known/` are denied.
 - The CSP allows only same-origin scripts, styles, fonts, images, media and `fetch`; inline event
   handler attributes are blocked (`script-src-attr 'none'`) and the site cannot be framed
-  (`X-Frame-Options: DENY`, `frame-ancestors 'none'`). HSTS is one year and includes subdomains.
+  (`X-Frame-Options: DENY`, `frame-ancestors 'none'`). HSTS is one year and includes subdomains;
+  keep `includeSubDomains` only if every subdomain is HTTPS-only, otherwise drop it.
   Next.js requires `'unsafe-inline'` for its bootstrap/theme scripts and inline styles. If you add
   analytics, a cross-origin contact endpoint, or embedded maps, extend the relevant directives.
 
