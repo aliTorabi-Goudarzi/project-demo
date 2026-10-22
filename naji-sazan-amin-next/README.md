@@ -16,6 +16,10 @@ production.
 - Node.js 26.x and npm 11.x (the repository is tested with Node 26.7.0 / npm 11.17.0)
 - Python 3 on `PATH` for the Playwright static servers
 - Chromium for Playwright: `npx playwright install chromium`
+- Docker for the nginx smoke test (`npm run test:nginx`)
+- OpenSSL for the smoke test certificate: `OPENSSL_BIN`, `openssl` on `PATH`, or Git for Windows'
+  `C:\Program Files\Git\usr\bin\openssl.exe`; without any of them the test falls back to the
+  `alpine/openssl` Docker image
 
 ## Commands
 
@@ -27,6 +31,7 @@ npm run preview      # serve out/ on http://127.0.0.1:4174 (Python convenience s
 npm run typecheck    # tsc --noEmit
 npm run lint         # eslint .
 npm run test:e2e     # build both exports and run the Playwright suite
+npm run test:nginx   # nginx smoke test of deploy/nginx.conf in Docker (needs Docker and out/)
 ```
 
 `next start` is not supported with `output: 'export'`; serve `out/` with Nginx or another static
@@ -93,6 +98,24 @@ visible drawer CTA and `document.documentElement.scrollWidth <= window.innerWidt
 visual comparisons mask `.site-header` because the legacy header still overflows, while the rest of
 each page is still compared pixel for pixel.
 
+### nginx smoke test
+
+`npm run test:nginx` renders `deploy/nginx.conf` for localhost, generates a temporary self-signed
+certificate at runtime (no certificate is committed), runs the result in `nginx:1.27.5-alpine` and
+probes:
+
+- `nginx -t` accepts the substituted configuration.
+- `/` returns `200`, so resolving `index.html` internally does not loop; an external `/index.html`
+  returns `301 /`, and `/about.html` returns `301 /about/`.
+- `/.env` is denied, and a `/_next/static/` file returns `200` with `max-age=31536000` and
+  `immutable`.
+- An HTTP request with `Host: evil.example` redirects to the configured `server_name`, not to the
+  attacker-supplied host.
+- TLS 1.2 and 1.3 are accepted; TLS 1.0 and 1.1 are rejected.
+
+The command requires Docker and an existing `out/` (`npm run build`). It exits nonzero when any
+probe fails and always removes its container and temporary directory.
+
 ## Deployment
 
 ```bash
@@ -149,10 +172,15 @@ rate limiting remain the authoritative control.
 
 Behaviour of the supplied config:
 
-- Port 80 redirects to HTTPS with `301`, except for `/.well-known/acme-challenge/`.
-- `/` and `/about/`, `/projects/`, `/contact/` are served from directory indexes.
+- Port 80 redirects to HTTPS with `301` at `https://$server_name$request_uri`, except for
+  `/.well-known/acme-challenge/`; a forged `Host` header cannot change the destination.
+- `/` and `/about/`, `/projects/`, `/contact/` are served from directory indexes. The internal
+  `index.html` resolution is not redirected, so `/` cannot loop.
 - `/about.html`, `/projects.html`, `/contact.html` redirect with `301` to the trailing-slash
-  routes; `/index.html` redirects to `/`.
+  routes; an external `/index.html` redirects to `/`. Redirects are relative
+  (`absolute_redirect off`), so nginx never reflects `Host` in a `Location` header.
+- TLS is limited to 1.2/1.3 with `ssl_prefer_server_ciphers off`; `server_tokens off` is set on
+  both server blocks.
 - Unknown paths return the internal `404.html` with status 404; there is no SPA fallback.
 - `/_next/static/` is immutable for one year; `/assets/` is cached for thirty days; HTML is
   revalidated (`Cache-Control: no-cache`).
