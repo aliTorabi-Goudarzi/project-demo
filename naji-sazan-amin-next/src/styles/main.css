@@ -1562,7 +1562,6 @@ h1, h2, h3, h4, h5, h6 {
    FOOTER
    ================================================================ */
 /* ================================================================
-/* ================================================================
    FLOATING ISLAND FOOTER (MODERN CARD DESIGN)
    ================================================================ */
 .site-footer-floating {
@@ -1740,7 +1739,9 @@ h1, h2, h3, h4, h5, h6 {
   gap: 0.75rem;
 }
 
-/* ---------- EXTERIOR BOTTOM BAR (LIKE IMAGE 2) ---------- */
+/* ================================================================
+   MODAL
+   ================================================================ */
 .modal {
   position: fixed; inset: 0; z-index: 200;
   display: none;
@@ -1897,8 +1898,6 @@ h1, h2, h3, h4, h5, h6 {
 .page-head + .section {
   padding-block-start: clamp(1.5rem, 3vw, 2.25rem);
 }
-.page-head__crumb { font-size: var(--text-xs); color: var(--fg-subtle); margin-bottom: var(--space-4); letter-spacing: var(--tracking-wide); }
-.page-head__crumb a:hover { color: var(--accent); }
 .page-head__title { margin-bottom: var(--space-4); }
 
 /* ================================================================
@@ -2015,10 +2014,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ---------- Utilities ---------- */
 .text-center { text-align: center; }
-.mt-5 { margin-top: var(--space-5); }
 .mt-6 { margin-top: var(--space-6); }
-.mt-8 { margin-top: var(--space-8); }
-.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* ================================================================
    SERVICES SECTION SPACING & FLOW
@@ -2141,36 +2137,6 @@ h1, h2, h3, h4, h5, h6 {
   transform: scale(1.06);
 }
 
-/* Badge at top of card */
-.circular-gallery-badge {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.3rem 0.65rem;
-  border-radius: 999px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  z-index: 2;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.circular-gallery-badge--3d {
-  background: rgba(217, 119, 6, 0.88);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.circular-gallery-badge--real {
-  background: rgba(5, 150, 105, 0.88);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
 /* Card bottom gradient scrim */
 .circular-gallery-scrim {
   position: absolute;
@@ -2249,25 +2215,6 @@ h1, h2, h3, h4, h5, h6 {
   background: rgba(30, 41, 59, 0.8);
   border-color: rgba(255, 255, 255, 0.12);
   color: #f8fafc;
-}
-
-/* Drag indicator hint */
-.circular-gallery-hint {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.82rem;
-  color: var(--fg-subtle, #64748b);
-  padding: 0.45rem 1rem;
-  background: rgba(0, 0, 0, 0.03);
-  border-radius: 999px;
-  border: 1px dashed var(--line-soft, #cbd5e1);
-}
-
-[data-theme="dark"] .circular-gallery-hint {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(255, 255, 255, 0.1);
-  color: #94a3b8;
 }
 
 /* Responsive adjustments */
