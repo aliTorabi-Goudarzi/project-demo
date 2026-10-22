@@ -4,7 +4,6 @@ export type GalleryProject = {
   cat: string;
   loc: string;
   image: string;
-  code: string;
   client: string;
   year: string;
   description: string;
@@ -17,7 +16,6 @@ export const GALLERY_PROJECTS: GalleryProject[] = [
     cat: 'طرح سه‌بعدی معماری · ۲۲ طبقه',
     loc: 'تهران / الهیه',
     image: '/assets/projects/1769976149673.webp',
-    code: 'NSA-3D-01',
     client: 'سرمایه‌گذاری بخش خصوصی',
     year: '۱۴۰۲',
     description:
@@ -29,7 +27,6 @@ export const GALLERY_PROJECTS: GalleryProject[] = [
     cat: 'تصویر واقعی کارگاه · نظارت مقیم',
     loc: 'تهران',
     image: '/assets/projects/1770011545995.webp',
-    code: 'NSA-SITE-02',
     client: 'سازمان مجری ساختمان‌های دولتی',
     year: '۱۴۰۱',
     description:
@@ -41,7 +38,6 @@ export const GALLERY_PROJECTS: GalleryProject[] = [
     cat: 'طرح سه‌بعدی و مدلسازی BIM',
     loc: 'تهران / بزرگراه حقانی',
     image: '/assets/projects/DIDAR_113542.webp',
-    code: 'NSA-3D-03',
     client: 'هلدینگ عمران دیدار',
     year: '۱۴۰۳',
     description:
@@ -53,7 +49,6 @@ export const GALLERY_PROJECTS: GalleryProject[] = [
     cat: 'طراحی معماری و سازه',
     loc: 'گیلان / رشت',
     image: '/assets/projects/1787629992134.webp',
-    code: 'NSA-3D-04',
     client: 'شرکت سرمایه‌گذاری سپیدرود',
     year: '۱۴۰۱',
     description:
@@ -65,7 +60,6 @@ export const GALLERY_PROJECTS: GalleryProject[] = [
     cat: 'طرح سه‌بعدی جامع و محوطه‌سازی',
     loc: 'تهران / پردیس',
     image: '/assets/projects/elm%20fanavari_113531.webp',
-    code: 'NSA-3D-05',
     client: 'معاونت علمی و فناوری ریاست جمهوری',
     year: '۱۴۰۰',
     description:
@@ -77,7 +71,6 @@ export const GALLERY_PROJECTS: GalleryProject[] = [
     cat: 'تصویر واقعی کارگاه · آزمایشگاه مقیم',
     loc: 'اصفهان',
     image: '/assets/projects/IMG_20260614_091140_548.webp',
-    code: 'NSA-SITE-06',
     client: 'شهرداری اصفهان',
     year: '۱۴۰۲',
     description:
@@ -89,7 +82,6 @@ export const GALLERY_PROJECTS: GalleryProject[] = [
     cat: 'طرح سه‌بعدی معماری',
     loc: 'مازندران / رامسر',
     image: '/assets/projects/1769976149661.webp',
-    code: 'NSA-3D-07',
     client: 'شرکت توسعه گردشگری آرین',
     year: '۱۴۰۱',
     description:
@@ -101,7 +93,6 @@ export const GALLERY_PROJECTS: GalleryProject[] = [
     cat: 'تصویر واقعی کارگاه · نظارت کارگاهی',
     loc: 'شیراز',
     image: '/assets/projects/1770024107531.webp',
-    code: 'NSA-SITE-08',
     client: 'سازمان مسکن و شهرسازی',
     year: '۱۴۰۰',
     description:
@@ -113,7 +104,6 @@ export const GALLERY_PROJECTS: GalleryProject[] = [
     cat: 'طرح سه‌بعدی و سایت‌پلان',
     loc: 'کیش',
     image: '/assets/projects/01%20ok_072527.webp',
-    code: 'NSA-3D-09',
     client: 'سازمان منطقه آزاد کیش',
     year: '۱۳۹۹',
     description:
@@ -125,7 +115,6 @@ export const GALLERY_PROJECTS: GalleryProject[] = [
     cat: 'تصویر واقعی پروژه · تحویل قطعی',
     loc: 'تهران',
     image: '/assets/projects/polic_102036.webp',
-    code: 'NSA-SITE-10',
     client: 'فرماندهی انتظامی کل کشور',
     year: '۱۴۰۲',
     description:
@@ -137,7 +126,6 @@ export const GALLERY_PROJECTS: GalleryProject[] = [
     cat: 'طرح سه‌بعدی و طراحی داخلی',
     loc: 'مشهد',
     image: '/assets/projects/InShot_20260201_214433625.webp',
-    code: 'NSA-3D-11',
     client: 'موسسه آموزش عالی فردوس',
     year: '۱۴۰۲',
     description:
@@ -149,7 +137,6 @@ export const GALLERY_PROJECTS: GalleryProject[] = [
     cat: 'تصویر واقعی نما و بهره‌برداری',
     loc: 'تبریز',
     image: '/assets/projects/1770021679871%20(1).webp',
-    code: 'NSA-SITE-12',
     client: 'شرکت سرمایه‌گذاری آریا',
     year: '۱۴۰۰',
     description:
