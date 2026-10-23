@@ -119,11 +119,12 @@ probes:
 - `nginx -t` accepts the substituted configuration.
 - `/` returns `200`, so resolving `index.html` internally does not loop; an external `/index.html`
   returns `301 /`, and `/about.html` returns `301 /about/`.
-- `/.env` is denied, and a `/_next/static/` file returns `200` with `max-age=31536000` and
-  `immutable`.
+- `/.env` is denied, and a `/_next/static/` file returns `200` with `max-age=31536000`,
+  `immutable`, and the COOP/CORP headers; `/` also returns COOP/CORP.
 - An HTTP request with `Host: evil.example` redirects to the configured `server_name`, not to the
   attacker-supplied host.
-- TLS 1.2 and 1.3 are accepted; TLS 1.0 and 1.1 are rejected.
+- TLS 1.2 and 1.3 are accepted; TLS 1.0 and 1.1 are rejected. An AEAD-only TLS 1.2 client
+  (`ECDHE-RSA-AES256-GCM-SHA384`) is accepted and a CBC-only client (`AES128-SHA`) is rejected.
 
 The command requires Docker and an existing `out/` (`npm run build`). It exits nonzero when any
 probe fails and always removes its container and temporary directory.
@@ -191,8 +192,9 @@ Behaviour of the supplied config:
 - `/about.html`, `/projects.html`, `/contact.html` redirect with `301` to the trailing-slash
   routes; an external `/index.html` redirects to `/`. Redirects are relative
   (`absolute_redirect off`), so nginx never reflects `Host` in a `Location` header.
-- TLS is limited to 1.2/1.3 with `ssl_prefer_server_ciphers off`; `server_tokens off` is set on
-  both server blocks.
+- TLS is limited to 1.2/1.3 with `ssl_prefer_server_ciphers off`. The TLS 1.2 cipher list is
+  AEAD-only (ECDHE ECDSA/RSA AES-GCM and CHACHA20-POLY1305), so CBC suites are rejected.
+  `server_tokens off` is set on both server blocks.
 - Unknown paths return the internal `404.html` with status 404; there is no SPA fallback.
 - `/_next/static/` is immutable for one year; `/assets/` is cached for thirty days; HTML is
   revalidated (`Cache-Control: no-cache`).
@@ -200,7 +202,10 @@ Behaviour of the supplied config:
 - Dotfiles other than `/.well-known/` are denied.
 - The CSP allows only same-origin scripts, styles, fonts, images, media and `fetch`; inline event
   handler attributes are blocked (`script-src-attr 'none'`) and the site cannot be framed
-  (`X-Frame-Options: DENY`, `frame-ancestors 'none'`). HSTS is one year and includes subdomains;
+  (`X-Frame-Options: DENY`, `frame-ancestors 'none'`). Every response, including
+  `/_next/static/` and `/assets/`, also sends `Cross-Origin-Opener-Policy: same-origin` and
+  `Cross-Origin-Resource-Policy: same-origin`; COEP is deliberately not enabled because it can
+  block media. HSTS is one year and includes subdomains;
   keep `includeSubDomains` only if every subdomain is HTTPS-only, otherwise drop it.
   Next.js requires `'unsafe-inline'` for its bootstrap/theme scripts and inline styles. If you add
   analytics, a cross-origin contact endpoint, or embedded maps, extend the relevant directives.
