@@ -2,11 +2,7 @@
 chcp 65001 >nul
 title وب‌سایت مهندسین مشاور ناجی سازان امین
 
-if exist "%~dp0naji-sazan-amin" (
-    cd /d "%~dp0naji-sazan-amin"
-) else (
-    cd /d "%~dp0"
-)
+cd /d "%~dp0"
 
 :: بررسی وجود پایتون (python یا py)
 python --version >nul 2>&1
@@ -25,11 +21,11 @@ if %ERRORLEVEL% equ 0 (
 npx --version >nul 2>&1
 if %ERRORLEVEL% equ 0 (
     echo [✔] در حال اجرای سرور با Node...
-    npx serve .
+    npx serve naji-sazan-amin-next/out
     goto :eof
 )
 
 :: باز کردن مستقیم فایل
 echo [i] پایتون یافت نشد. باز کردن مستقیم در مرورگر...
-start "" "index.html"
+start "" "naji-sazan-amin-next\out\index.html"
 pause

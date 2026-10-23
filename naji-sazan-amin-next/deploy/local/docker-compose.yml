@@ -1,0 +1,15 @@
+# Local test server: nginx serving the static Next.js export from ../../out.
+#
+#   docker compose up -d      start (site on http://localhost:8080)
+#   npm run build             rebuild; the bind mount serves new files as-is
+#   docker compose down       stop
+services:
+  web:
+    image: nginx:1.27.5-alpine
+    container_name: naji-sazan-amin
+    ports:
+      - "8080:80"
+    volumes:
+      - ../../out:/usr/share/nginx/html:ro
+      - ./nginx-local.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: unless-stopped

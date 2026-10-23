@@ -34,11 +34,16 @@ def get_free_port():
     return port
 
 def main():
-    project_dir = os.path.dirname(os.path.abspath(__file__))
+    project_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'naji-sazan-amin-next', 'out')
+    if not os.path.isfile(os.path.join(project_dir, 'index.html')):
+        print("\n  [✖] خروجی بیلد یافت نشد: naji-sazan-amin-next/out")
+        print("  [i] ابتدا در پوشه naji-sazan-amin-next دستور زیر را اجرا کنید:")
+        print("      npm run build")
+        sys.exit(1)
     os.chdir(project_dir)
 
     port = get_free_port()
-    url = f"http://localhost:{port}/index.html"
+    url = f"http://localhost:{port}/"
 
     print("\n" + "=" * 64)
     print("      وب‌سایت مهندسین مشاور ناجی سازان امین (نسخه لوکال)")

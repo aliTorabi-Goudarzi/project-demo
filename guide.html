@@ -6,7 +6,7 @@
   <style>
     @font-face {
       font-family: 'Vazirmatn';
-      src: url('naji-sazan-amin/assets/fonts/vazirmatn-0.woff2') format('woff2');
+      src: url('naji-sazan-amin-next/out/assets/fonts/vazirmatn-0.woff2') format('woff2');
       font-weight: 100 900;
       font-style: normal;
       font-display: swap;
@@ -275,96 +275,97 @@
   <div class="header-card">
     <div class="header-card__info">
       <h1>راهنمای اجرای لوکال وب‌سایت مهندسین مشاور ناجی سازان امین</h1>
-      <p>دستورالعمل تست و مشاهده نسخه نهایی روی سیستم شخصی • آماده بررسی و پرزنت</p>
+      <p>دستورالعمل بیلد و اجرای نسخه Next.js روی سیستم شخصی • نسخه استاتیک</p>
     </div>
-    <div class="badge-status">نسخه نهایی وب‌سایت</div>
+    <div class="badge-status">نسخه Next.js</div>
   </div>
 
-  <!-- Intro Note (Conversational) -->
+  <!-- Intro Note -->
   <div class="intro-box">
-    <p><strong>سلام رفیق جان،</strong></p>
-    <p>این فایل‌ها خروجی نسخه نهایی وب‌سایته که برات آماده کردم. همه صفحات (خانه، پروژه‌ها، درباره ما، تماس) همراه با انیمیشن تعاملی سه‌بعدی هیرو سکشن، قابلیت سوئیچ تم شب و روز، فیلتر پروژه‌ها و فرم استعلام آنلاین تکمیل شده‌اند.</p>
-    <p>برای اینکه روی سیستم خودت هم دقیقاً مشابه سیستم من، با بالاترین کیفیت، بدون به هم ریختگی فونت‌ها و با لود آنی انیمیشن ببینی، چند روش ساده برات آماده کردم:</p>
+    <p>وب‌سایت الان با <strong>Next.js</strong> توسعه داده می‌شود و بعد از بیلد، خروجی کاملاً استاتیک در پوشه <code dir="ltr">naji-sazan-amin-next/out</code> ساخته می‌شود؛ همین خروجی روی هاست واقعی هم آپلود می‌شود، پس چیزی که لوکال می‌بینی دقیقاً نسخه نهایی است.</p>
+    <p><strong>پیش‌نیازها:</strong> برای بیلد، <strong>Node.js</strong> لازم است. برای روش اجرای اول، <strong>Docker Desktop</strong> هم باید نصب و روشن باشد.</p>
+    <p>اولین بار یک بار بیلد بگیر (روی سیستم من همین الان انجام شده)، بعدش با هر کدوم از روش‌های زیر سایت رو بالا بیاور:</p>
   </div>
 
   <!-- Section Title -->
   <div class="section-title">روش‌های اجرای وب‌سایت روی سیستم شما</div>
 
-  <!-- Method 1: The One-Click Batch -->
+  <!-- Method 1: Docker (featured) -->
   <div class="method-featured">
     <div class="method-featured__header">
       <div class="method-title">
         <span class="num-pill">۱</span>
-        روش اول: اجرای ۱-کلیکی هوشمند (پیشنهاد اصلی من - شناسایی خودکار پورت آزاد)
+        روش اول: اجرا با داکر (پیشنهاد اصلی من — دقیقاً مثل سرور واقعی)
       </div>
-      <span class="tag-recommend">هوشمند و بدون تداخل پورت</span>
+      <span class="tag-recommend">لینک ثابت: localhost:8080</span>
     </div>
-    <p>داخل پوشه اصلی پروژه، یک فایل به اسم <strong>Run.bat</strong> (یا <strong>اجرا.bat</strong>) برات گذاشتم:</p>
+    <p>یک کانتینر nginx با همان تنظیمات، هدرهای امنیتی و قوانین کش سرور اصلی سایت را سرو می‌کند:</p>
     <ol class="steps-list">
-      <li>فقط کافیه روی فایل <strong>Run.bat</strong> دابل‌کلیک کنی.</li>
-      <li>سیستم وضعیت پورت‌ها رو چک می‌کنه؛ اگر پورت 8000 روی سیستمت مشغول باشه، خودکار یک پورت خالی پیدا می‌کنه.</li>
-      <li>لینک کلیک‌خور در پنجره ترمینال بهت نمایش داده میشه و مرورگر پیش‌فرض سیستم هم به‌صورت خودکار باز میشه!</li>
-      <li>هر زمان کارت تموم شد، فقط کافیه پنجره سیاه خط فرمان (CMD) رو ببندی تا سرور خاموش بشه.</li>
+      <li>اولین بار (فقط یک بار) بیلد را بساز:
+        <div class="code-snippet">cd naji-sazan-amin-next && npm ci && npm run build</div>
+      </li>
+      <li>سرور را روشن کن و در مرورگر <strong dir="ltr">http://localhost:8080</strong> را باز کن:
+        <div class="code-snippet">cd naji-sazan-amin-next\deploy\local && docker compose up -d</div>
+      </li>
+      <li>برای به‌روزرسانی سایت بعد از تغییرات، فقط <strong dir="ltr">npm run build</strong> بزن؛ نیازی به ری‌استارت کانتینر نیست.</li>
+      <li>برای خاموش کردن: <code dir="ltr" style="background:#f1f5f9;padding:2px 4px;border-radius:4px;">docker compose down</code></li>
     </ol>
   </div>
 
   <!-- Alternate Methods (Grid 2-Col) -->
   <div class="alt-methods-grid">
 
-    <!-- Method 2: Python HTTP Server -->
+    <!-- Method 2: Run.bat -->
     <div class="alt-card">
       <div class="method-title">
         <span class="num-pill">۲</span>
-        روش دوم: با پایتون (اسکریپت خودکار یا دستی)
+        روش دوم: اجرای بدون داکر (با پایتون)
       </div>
-      <p>اگر اهل توسعه هستی و می‌خوای دستی از ترمینال اجرا کنی:</p>
-      <ol class="steps-list">
-        <li>وارد پوشه پروژه بشو و ترمینال رو باز کن.</li>
-        <li>برای پیدا کردن خودکار پورت خالی بزن:</li>
-      </ol>
-      <div class="code-snippet">python serve.py</div>
-      <p>یا برای سرور ساده: <code dir="ltr" style="background:#f1f5f9;padding:2px 4px;border-radius:4px;">python -m http.server 8000</code></p>
+      <p>در پوشه اصلی پروژه روی فایل <strong>Run.bat</strong> (یا <strong>اجرا.bat</strong>) دابل‌کلیک کن؛ پورت خالی (معمولاً ۸۰۰۰) خودکار پیدا می‌شود، سرور روشن می‌شود و مرورگر هم خودش باز می‌شود.</p>
+      <p>از ترمینال هم می‌شود:
+        <div class="code-snippet">python serve.py</div>
+      </p>
+      <p>این روش همان پوشه <code dir="ltr">out</code> را سرو می‌کند؛ فقط پشت‌صحنه‌اش سرویس وب ساده پایتون است، بدون هدرهای امنیتی nginx.</p>
     </div>
 
-    <!-- Method 3 & 4: VS Code & Direct -->
+    <!-- Method 3: dev -->
     <div class="alt-card">
       <div class="method-title">
         <span class="num-pill">۳</span>
-        روش سوم: ادیتور VS Code یا باز کردن مستقیم
+        روش سوم: حالت توسعه (برای تغییر دادن سایت)
       </div>
-      <p><strong>با افزونه Live Server در VS Code:</strong><br>
-      پوشه پروژه رو با VS Code باز کن، روی <code>index.html</code> کلیک راست کن و <strong>Open with Live Server</strong> رو بزن.</p>
-      <p style="margin-top: 5px;"><strong>روش چهارم (باز کردن مستقیم):</strong><br>
-      اگر هیچ‌کدوم رو نداشتی، کافیه مستقیم روی <strong>index.html</strong> دابل کلیک کنی تا باز بشه (ولی ترجیحاً از روش ۱ استفاده کن تا ویدیوها و فونت‌ها بدون محدودیت امنیتی مرورگر لود بشن).</p>
+      <p>اگر خواستی کد سایت را عوض کنی، به‌جای خروجی استاتیک، سرور توسعه Next.js را اجرا کن تا تغییرات همان لحظه دیده شوند:</p>
+      <div class="code-snippet">cd naji-sazan-amin-next && npm run dev</div>
+      <p>بعد از اتمام کار، برای گرفتن خروجی نهایی <code dir="ltr">npm run build</code> را اجرا کن.</p>
     </div>
 
   </div>
 
   <!-- Highlights Section -->
-  <div class="section-title">بخش‌های ویژه‌ای که حتماً توی سایت امتحان کن</div>
+  <div class="section-title">نکته‌های کلیدی این نسخه</div>
   <div class="highlights-grid">
     <div class="highlight-card">
-      <h4>⚡ انیمیشن ۳ بعدی هیرو</h4>
-      <p>انیمیشن مدرن وایرلس ساختمانی در صفحه اصلی با کنتراست بهینه برای متن‌ها.</p>
+      <h4>📄 چهار صفحه کامل</h4>
+      <p>خانه، درباره ما، پروژه‌ها و تماس با ما — همه فارسی و راست‌چین با فونت وزیرمتن.</p>
     </div>
     <div class="highlight-card">
-      <h4>🌓 سوئیچر تم شب / روز</h4>
-      <p>آیکون ماه و خورشید در منو؛ کل پالت رنگی و ویدیوها با یک کلیک تغییر وضعیت میدن.</p>
+      <h4>🔒 هدرهای امنیتی</h4>
+      <p>سرور داکری همان CSP و سیاست‌های کش و امنیت نسخه پروداکشن را اعمال می‌کند.</p>
     </div>
     <div class="highlight-card">
-      <h4>🏢 فیلتر دسته‌بندی پروژه‌ها</h4>
-      <p>در صفحه پروژه‌ها می‌تونی بر اساس مسکونی، تجاری، درمانی و... سریع فیلتر کنی.</p>
+      <h4>🧪 تست‌های خودکار</h4>
+      <p>تست‌های E2E و دود nginx داخل پروژه آماده‌اند و موقع بیلد اجرا می‌شوند.</p>
     </div>
     <div class="highlight-card">
-      <h4>📞 مرکز تماس و مشاوره</h4>
-      <p>فرم پویا، کارت‌های تماس مستقیم و وضعیت آنلاین ساعات اداری شرکت.</p>
+      <h4>🔄 به‌روزرسانی ساده</h4>
+      <p>بعد از هر تغییر فقط npm run build؛ کانتینر داکر خروجی تازه را همان لحظه سرو می‌کند.</p>
     </div>
   </div>
 
   <!-- Pro Tips -->
   <div class="tips-box">
     <h4>💡 یک نکته کاربردی:</h4>
-    <p>اگر احساس کردی فایلی بعد از تغییرات کش شده، کافیه توی مرورگر یک‌بار <strong>Ctrl + F5</strong> بزنی تا تمام استایل‌ها تازه بشن. هر سوالی داشتی یا هر جاش خواستی تغییری بدیم حتماً بهم خبر بده!</p>
+    <p>اگر احساس کردی تغییرات بعد از بیلد در مرورگر دیده نمی‌شود، یک‌بار <strong>Ctrl + F5</strong> بزن تا کش مرورگر خالی شود. هر سوالی داشتی یا هر جاش خواستی تغییری بدیم حتماً بهم خبر بده!</p>
   </div>
 
 </div>
