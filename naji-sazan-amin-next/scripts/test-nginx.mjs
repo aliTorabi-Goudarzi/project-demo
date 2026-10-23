@@ -315,6 +315,12 @@ try {
 
   const root = await send(true, httpsPort, '/', { Host: 'localhost' });
   check(root.status === 200, 'GET / over HTTPS returns 200 (no index redirect loop)', `status ${root.status}`);
+  check(
+    root.headers['cross-origin-opener-policy'] === 'same-origin' &&
+      root.headers['cross-origin-resource-policy'] === 'same-origin',
+    'GET / returns COOP and CORP same-origin',
+    `COOP ${root.headers['cross-origin-opener-policy'] ?? '-'}, CORP ${root.headers['cross-origin-resource-policy'] ?? '-'}`,
+  );
 
   const indexHtml = await send(true, httpsPort, '/index.html', { Host: 'localhost' });
   check(
@@ -346,6 +352,12 @@ try {
       'fingerprinted asset returns immutable cache headers',
       `${assetUrl} status ${assetResponse.status}, cache-control ${cacheControl || '-'}`,
     );
+    check(
+      assetResponse.headers['cross-origin-opener-policy'] === 'same-origin' &&
+        assetResponse.headers['cross-origin-resource-policy'] === 'same-origin',
+      'fingerprinted asset returns COOP and CORP same-origin',
+      `${assetUrl} COOP ${assetResponse.headers['cross-origin-opener-policy'] ?? '-'}, CORP ${assetResponse.headers['cross-origin-resource-policy'] ?? '-'}`,
+    );
   }
 
   const injected = await send(false, httpPort, '/', { Host: 'evil.example' });
@@ -364,6 +376,22 @@ try {
       `curl exit ${result.exitCode}, HTTP ${result.httpCode || '-'}, ${result.stderrDetail || 'no stderr'}`,
     );
   }
+
+  // Positive control: an AEAD-only cipher is negotiated over TLS 1.2.
+  const aead = curlTls('1.2', ['--ciphers', 'ECDHE-RSA-AES256-GCM-SHA384']);
+  check(
+    aead.exitCode === 0 && aead.httpCode === '200',
+    'TLS 1.2 AEAD cipher ECDHE-RSA-AES256-GCM-SHA384 is accepted',
+    `curl exit ${aead.exitCode}, HTTP ${aead.httpCode || '-'}, ${aead.stderrDetail || 'no stderr'}`,
+  );
+
+  // Negative control: the AEAD-only policy rejects a CBC-only TLS 1.2 client.
+  const cbc = curlTls('1.2', ['--ciphers', 'AES128-SHA']);
+  check(
+    cbc.exitCode !== 0 || cbc.httpCode !== '200',
+    'TLS 1.2 CBC cipher AES128-SHA is rejected by the AEAD-only policy',
+    `curl exit ${cbc.exitCode}, HTTP ${cbc.httpCode || '-'}, ${cbc.stderrDetail || 'no stderr'}`,
+  );
 
   for (const version of ['1.0', '1.1']) {
     const result = curlTls(version, ['--ciphers', 'DEFAULT@SECLEVEL=0']);
