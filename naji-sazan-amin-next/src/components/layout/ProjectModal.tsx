@@ -2,12 +2,14 @@
 
 import { useEffect, useRef } from 'react';
 
+import { trapTabKey } from '@/lib/focus';
 import { lockBodyScroll, unlockBodyScroll } from '@/lib/scroll-lock';
 
 import { useProjectModal } from './ProjectModalContext';
 
 export function ProjectModal() {
   const { activeItem, close } = useProjectModal();
+  const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
@@ -17,7 +19,11 @@ export function ProjectModal() {
     lockBodyScroll();
     closeButtonRef.current?.focus();
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') close();
+      if (event.key === 'Escape') {
+        close();
+        return;
+      }
+      if (dialogRef.current) trapTabKey(event, dialogRef.current);
     };
     document.addEventListener('keydown', onKeyDown);
     return () => {
@@ -29,11 +35,14 @@ export function ProjectModal() {
 
   return (
     <div
+      ref={dialogRef}
       className={activeItem ? 'modal is-open' : 'modal'}
       id="projectModal"
       role="dialog"
       aria-modal="true"
       aria-labelledby="modalTitle"
+      aria-hidden={!activeItem}
+      inert={!activeItem}
       onClick={(event) => {
         if (event.target === event.currentTarget) close();
       }}
