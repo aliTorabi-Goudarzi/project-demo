@@ -252,6 +252,9 @@ test.describe('mobile navigation', () => {
     await menu.click();
     await expect(drawer).toHaveClass(/is-open/);
     await expect(drawer).toHaveAttribute('aria-hidden', 'false');
+    await expect(drawer).toHaveAttribute('role', 'dialog');
+    await expect(drawer).toHaveAttribute('aria-modal', 'true');
+    await expect(drawer).toHaveAttribute('aria-label', SITE.navAria);
     await expect(menu).toHaveAttribute('aria-expanded', 'true');
     await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('hidden');
 
@@ -266,6 +269,29 @@ test.describe('mobile navigation', () => {
     await expect(drawer).toHaveAttribute('aria-hidden', 'true');
     await expect(menu).toHaveAttribute('aria-expanded', 'false');
     await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('');
+  });
+
+  test('the drawer traps keyboard focus and restores it on close', async ({ page }) => {
+    await page.goto('/');
+
+    const drawer = page.locator('#drawer');
+    const menu = page.locator('#menuBtn');
+    const firstLink = drawer.locator('.drawer__link').first();
+    const drawerCta = drawer.locator('a.btn');
+
+    await menu.click();
+    await expect(drawer).toHaveClass(/is-open/);
+    await expect(firstLink).toBeFocused();
+
+    await page.keyboard.press('Shift+Tab');
+    await expect(drawerCta).toBeFocused();
+
+    await page.keyboard.press('Tab');
+    await expect(firstLink).toBeFocused();
+
+    await page.keyboard.press('Escape');
+    await expect(drawer).not.toHaveClass(/is-open/);
+    await expect(menu).toBeFocused();
   });
 
   test('the drawer closes after navigating to a route', async ({ page }) => {

@@ -116,6 +116,34 @@ test('project card click opens the modal and Escape restores scrolling', async (
   await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('');
 });
 
+test('the modal traps keyboard focus, hides itself when closed and restores focus', async ({ page }) => {
+  await page.goto('/projects/');
+
+  const card = page.locator('[data-project="parsa-tower"]');
+  const modal = page.locator('#projectModal');
+  const close = page.locator('#modalClose');
+
+  await expect(modal).toHaveAttribute('inert', '');
+  await expect(modal).toHaveAttribute('aria-hidden', 'true');
+
+  await card.focus();
+  await page.keyboard.press('Enter');
+  await expect(modal).toHaveClass(/is-open/);
+  await expect(modal).not.toHaveAttribute('inert');
+  await expect(close).toBeFocused();
+
+  await page.keyboard.press('Tab');
+  await expect(close).toBeFocused();
+  await page.keyboard.press('Shift+Tab');
+  await expect(close).toBeFocused();
+
+  await page.keyboard.press('Escape');
+  await expect(modal).not.toHaveClass(/is-open/);
+  await expect(modal).toHaveAttribute('inert', '');
+  await expect(modal).toHaveAttribute('aria-hidden', 'true');
+  await expect(card).toBeFocused();
+});
+
 test('project cards are keyboard operable', async ({ page }) => {
   await page.goto('/projects/');
 
