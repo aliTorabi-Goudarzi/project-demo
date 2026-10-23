@@ -1,0 +1,23 @@
+import nextVitals from 'eslint-config-next/core-web-vitals';
+
+const config = [
+  ...nextVitals,
+  {
+    rules: {
+      '@next/next/no-img-element': 'off',
+    },
+  },
+  {
+    ignores: [
+      '.next/**',
+      'out/**',
+      'out-endpoint/**',
+      'test-results/**',
+      'playwright-report/**',
+      'node_modules/**',
+      'next-env.d.ts',
+    ],
+  },
+];
+
+export default config;
