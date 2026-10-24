@@ -48,7 +48,7 @@ export const GALLERY_PROJECTS: GalleryProject[] = [
     title: 'برج تجاری چندمنظوره',
     cat: 'طراحی معماری و سازه',
     loc: 'گیلان / رشت',
-    image: '/assets/projects/1787629992134.webp',
+    image: '/assets/projects/consulting-real.webp',
     client: 'شرکت سرمایه‌گذاری سپیدرود',
     year: '۱۴۰۱',
     description:
@@ -70,7 +70,7 @@ export const GALLERY_PROJECTS: GalleryProject[] = [
     title: 'آرماتوربندی و کنترل کیفی',
     cat: 'تصویر واقعی کارگاه · آزمایشگاه مقیم',
     loc: 'اصفهان',
-    image: '/assets/projects/IMG_20260614_091140_548.webp',
+    image: '/assets/projects/supervision-real.webp',
     client: 'شهرداری اصفهان',
     year: '۱۴۰۲',
     description:

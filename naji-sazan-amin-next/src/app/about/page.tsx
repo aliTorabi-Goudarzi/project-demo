@@ -128,7 +128,7 @@ export default function AboutPage() {
           <div className="about-bento-grid">
             <div
               className="bento-card bento-card--hero reveal"
-              style={{ backgroundImage: "url('/assets/projects/supervision-real.jpg')" }}
+              style={{ backgroundImage: "url('/assets/projects/supervision-real.webp')" }}
             >
               <div className="bento-overlay" />
               <div className="bento-content">
