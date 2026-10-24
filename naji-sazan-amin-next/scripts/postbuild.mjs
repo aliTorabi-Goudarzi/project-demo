@@ -1,4 +1,4 @@
-import { copyFileSync, existsSync, lstatSync, readFileSync, readdirSync, statSync, unlinkSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, lstatSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -77,6 +77,12 @@ function fingerprintAssets(replacements) {
       const hashedPath = publicPath.replace(`${file.base}${file.ext}`, hashedName);
       manifest[publicPath] = hashedPath;
 
+      // Keep the unhashed original next to the hashed copy: browsers holding
+      // a pre-rebuild page in memory (open tab) or cache still request the
+      // old paths, and a visible stale image beats a 404. Hashed names remain
+      // the canonical cache-busting URLs written into the build output.
+      copyFileSync(file.absolutePath, path.join(file.dir, hashedName));
+
       // Names may contain spaces: the raw form lives in inline styles/HTML,
       // the URL-encoded form in JS string literals.
       for (const variant of new Set([publicPath, encodeURI(publicPath)])) {
@@ -85,18 +91,9 @@ function fingerprintAssets(replacements) {
     }
   }
 
-  // Rewrite references everywhere text is emitted, then drop the originals.
+  // Rewrite references everywhere text is emitted.
   const referencedExtensions = /\.(html|js|css|txt|webmanifest|xml)$/;
   rewriteReferences(outDir, referencedExtensions, replacements);
-
-  for (const assetRoot of assetRoots) {
-    if (!existsSync(assetRoot)) continue;
-    const files = [];
-    collectFiles(assetRoot, files);
-    for (const file of files) {
-      if (!/-[a-f0-9]{8}\.[^.]+$/.test(file.name)) unlinkSync(file.absolutePath);
-    }
-  }
 
   dedupePreloads(outDir);
   return manifest;
