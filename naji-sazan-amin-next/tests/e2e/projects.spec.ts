@@ -2,6 +2,8 @@ import { expect, test } from '@playwright/test';
 
 import { PROJECTS, PROJECT_CATEGORIES } from '../../src/lib/projects';
 
+import { assetUrl } from './assets';
+
 const expectedCounts: Record<string, number> = {
   all: 9,
   residential: 2,
@@ -51,7 +53,7 @@ test('projects page renders head, metadata, chips and server-rendered cards', as
     await expect(card.locator('.project__cat')).toHaveText(project.category);
     await expect(card.locator('.project__title')).toHaveText(project.title);
     await expect(card.locator('.project__summary')).toHaveText(project.summary);
-    await expect(card.locator('.project__media img')).toHaveAttribute('src', project.image);
+    await expect(card.locator('.project__media img')).toHaveAttribute('src', assetUrl(project.image));
     await expect(card.locator('.project__media img')).toHaveAttribute('alt', project.title);
   }
 

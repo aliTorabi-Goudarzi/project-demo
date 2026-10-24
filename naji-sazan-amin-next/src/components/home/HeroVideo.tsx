@@ -29,7 +29,10 @@ export function HeroVideo() {
   }, []);
 
   return (
-    <video
+    <>
+      {/* The poster is the LCP element until the video's first frame paints. */}
+      <link rel="preload" href="/assets/hero-poster.webp" as="image" fetchPriority="high" />
+      <video
       ref={videoRef}
       id="heroBgVideo"
       className="hero__bg-video"
@@ -37,11 +40,14 @@ export function HeroVideo() {
       loop
       muted
       playsInline
-      preload="auto"
+      // metadata is enough: the loop re-encodes at ~2.3 MB and autoplay starts
+      // buffering immediately, no need to also force preload of the full file.
+      preload="metadata"
       poster="/assets/hero-poster.webp"
     >
       <source src="/assets/hero-building-loop.webm" type="video/webm" />
       <source src="/assets/hero-building-loop.mp4" type="video/mp4" />
-    </video>
+      </video>
+    </>
   );
 }

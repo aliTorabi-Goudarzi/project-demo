@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test';
 
+import { assetUrl } from './assets';
+
 const STATS = [
   {
     num: '۲۲+',
@@ -133,7 +135,7 @@ test('bento grid renders the hero and the two service cards', async ({ page }) =
   const hero = grid.locator('.bento-card.bento-card--hero');
   await expect(hero).toHaveCount(1);
   await expect(hero).toHaveClass(/reveal/);
-  expect(await hero.getAttribute('style')).toContain('/assets/projects/supervision-real.jpg');
+  expect(await hero.getAttribute('style')).toContain(assetUrl('/assets/projects/supervision-real.webp'));
   await expect(hero.locator('.bento-overlay')).toHaveCount(1);
 
   const heroPill = hero.locator('.bento-content > .bento-pill');
@@ -196,7 +198,7 @@ test('executive spotlight presents the CEO profile matrix', async ({ page }) => 
   await expect(spot).toHaveClass(/reveal/);
 
   const photo = spot.locator('.executive-photo-wrap img');
-  await expect(photo).toHaveAttribute('src', '/assets/team/ceo.webp');
+  await expect(photo).toHaveAttribute('src', assetUrl('/assets/team/ceo.webp'));
   await expect(photo).toHaveAttribute('alt', 'محمد منزوی — مدیر عامل');
   await expect(photo).toHaveAttribute('width', '600');
   await expect(photo).toHaveAttribute('height', '800');
@@ -243,7 +245,7 @@ test('leadership grid lists six senior engineers in order without the CEO', asyn
   for (const [index, leader] of LEADERS.entries()) {
     const card = cards.nth(index);
     const photo = card.locator('.editorial-leader-photo img');
-    await expect(photo).toHaveAttribute('src', leader.image);
+    await expect(photo).toHaveAttribute('src', assetUrl(leader.image));
     await expect(photo).toHaveAttribute('alt', leader.name);
     await expect(photo).toHaveAttribute('width', '600');
     await expect(photo).toHaveAttribute('height', '800');
@@ -305,13 +307,13 @@ test('about copy and leadership content are present in the static export', async
 
   expect(html).toContain('سال سابقه مستمر');
   expect(html).toContain('احمد نادری');
-  expect(html).toContain('/assets/projects/supervision-real.jpg');
+  expect(html).toContain(assetUrl('/assets/projects/supervision-real.webp'));
 });
 
 test('about leadership images resolve with image content types', async ({ page }) => {
   const images = [
-    '/assets/projects/supervision-real.jpg',
-    ...LEADERS.map((leader) => leader.image),
+    assetUrl('/assets/projects/supervision-real.webp'),
+    ...LEADERS.map((leader) => assetUrl(leader.image)),
   ];
 
   for (const image of images) {

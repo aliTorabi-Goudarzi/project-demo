@@ -26,6 +26,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="fa" dir="rtl" data-theme="light" suppressHydrationWarning>
       <head>
+        {/* Preload the arabic (Persian) variable subset — Next only auto-preloads
+            static-weight @font-face, so this is manual; postbuild rewrites the
+            path to the content-hashed file and it must stay a single tag. */}
         <link
           rel="preload"
           href="/assets/fonts/vazirmatn-0.woff2"

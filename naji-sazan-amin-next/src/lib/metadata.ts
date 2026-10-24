@@ -11,7 +11,9 @@ export const rootMetadata: Metadata = {
     'شرکت مهندسین مشاور ناجی سازان امین. طراحی، نظارت، مدیریت طرح و مشاوره مهندسی — از سال ۱۳۸۳.',
   icons: {
     icon: '/assets/logo.png',
+    apple: '/icons/apple-touch-icon.png',
   },
+  manifest: '/manifest.webmanifest',
 };
 
 type PageMetadataInput = {

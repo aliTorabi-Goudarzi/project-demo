@@ -4,6 +4,8 @@ import path from 'node:path';
 import { expect, test } from '@playwright/test';
 import type { Locator, Page } from '@playwright/test';
 
+import { assetUrl } from './assets';
+
 test.use({ viewport: { width: 1440, height: 900 } });
 
 const FIRST_SERVICE = 'طراحی معماری و سازه';
@@ -84,8 +86,8 @@ test.describe('hero', () => {
 
     const video = page.locator('video#heroBgVideo');
     await expect(video).toHaveClass(/hero__bg-video/);
-    await expect(video).toHaveAttribute('poster', '/assets/hero-poster.webp');
-    await expect(video).toHaveAttribute('preload', 'auto');
+    await expect(video).toHaveAttribute('poster', assetUrl('/assets/hero-poster.webp'));
+    await expect(video).toHaveAttribute('preload', 'metadata');
     expect(await video.evaluate((element) => (element as HTMLVideoElement).autoplay)).toBe(true);
     expect(await video.evaluate((element) => (element as HTMLVideoElement).loop)).toBe(true);
     expect(await video.evaluate((element) => (element as HTMLVideoElement).muted)).toBe(true);
@@ -93,9 +95,9 @@ test.describe('hero', () => {
 
     const sources = video.locator('source');
     await expect(sources).toHaveCount(2);
-    await expect(sources.nth(0)).toHaveAttribute('src', '/assets/hero-building-loop.webm');
+    await expect(sources.nth(0)).toHaveAttribute('src', assetUrl('/assets/hero-building-loop.webm'));
     await expect(sources.nth(0)).toHaveAttribute('type', 'video/webm');
-    await expect(sources.nth(1)).toHaveAttribute('src', '/assets/hero-building-loop.mp4');
+    await expect(sources.nth(1)).toHaveAttribute('src', assetUrl('/assets/hero-building-loop.mp4'));
     await expect(sources.nth(1)).toHaveAttribute('type', 'video/mp4');
 
     await expect(page.locator('.hero__bg-overlay')).toHaveCount(1);
@@ -147,7 +149,7 @@ test.describe('services', () => {
     await expect(section.locator('.svc21__item.is-active')).toHaveCount(1);
     await expect(section.locator('.svc21__item.is-active')).toContainText('طراحی معماری و سازه');
     await expect(section.locator('#svc21Title')).toHaveText('طراحی معماری و سازه');
-    await expect(section.locator('#svc21Img')).toHaveAttribute('src', '/assets/projects/parsa-tower.webp');
+    await expect(section.locator('#svc21Img')).toHaveAttribute('src', assetUrl('/assets/projects/parsa-tower.webp'));
     await expect(section.locator('#svc21Link')).toHaveAttribute('href', /^\/projects\/?$/);
     await expect(section.locator('#svc21Link')).toHaveText('نمونه پروژه‌ها');
   });
@@ -162,13 +164,13 @@ test.describe('services', () => {
     await expect(section.locator('#svc21Desc')).toHaveText(
       'نظارت دقیق بر اجرا با استقرار دفاتر فنی در محل پروژه و کنترل کیفیت، زمان و هزینه.',
     );
-    await expect(section.locator('#svc21Img')).toHaveAttribute('src', '/assets/projects/supervision-real.webp');
+    await expect(section.locator('#svc21Img')).toHaveAttribute('src', assetUrl('/assets/projects/supervision-real.webp'));
     await expect(section.locator('#svc21Link')).toHaveAttribute('href', /^\/projects\/?$/);
     await expect(items.nth(1)).toHaveClass(/is-active/);
 
     await items.nth(3).click();
     await expect(section.locator('#svc21Title')).toHaveText('مشاوره مهندسی و مطالعات');
-    await expect(section.locator('#svc21Img')).toHaveAttribute('src', '/assets/projects/consulting-real.webp');
+    await expect(section.locator('#svc21Img')).toHaveAttribute('src', assetUrl('/assets/projects/consulting-real.webp'));
     await expect(section.locator('#svc21Link')).toHaveAttribute('href', /^\/contact\/?$/);
     await expect(section.locator('#svc21Link')).toHaveText('درخواست مشاوره');
     await expect(items.nth(3)).toHaveClass(/is-active/);
@@ -236,7 +238,7 @@ test.describe('services', () => {
     await expect(section.locator('#svc21Desc')).toHaveText(
       'مدیریت یکپارچه طرح‌های عمرانی، برنامه‌ریزی، هماهنگی ذی‌نفعان و گزارش‌دهی دوره‌ای.',
     );
-    await expect(section.locator('#svc21Img')).toHaveAttribute('src', '/assets/projects/setareh-office.webp');
+    await expect(section.locator('#svc21Img')).toHaveAttribute('src', assetUrl('/assets/projects/setareh-office.webp'));
 
     await section.locator('#svc21Link').evaluate((element) => (element as HTMLElement).focus());
     await expectPaused(list, false);
@@ -425,7 +427,7 @@ test('pillars, credentials and team match the legacy content', async ({ page }) 
   ]);
 
   const leadImage = page.locator('.tmember img').first();
-  await expect(leadImage).toHaveAttribute('src', '/assets/team/lead-structure.jpg');
+  await expect(leadImage).toHaveAttribute('src', assetUrl('/assets/team/lead-structure.webp'));
   await expect(leadImage).toHaveAttribute('width', '600');
   await expect(leadImage).toHaveAttribute('height', '800');
 
