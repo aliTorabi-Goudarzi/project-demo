@@ -3,9 +3,13 @@
 #   docker compose up -d      start (site on http://localhost:8080)
 #   npm run build             rebuild; the bind mount serves new files as-is
 #   docker compose down       stop
+#
+# The image is built from ./Dockerfile so brotli_static can serve the .br
+# files that scripts/postbuild.mjs writes next to every text asset.
 services:
   web:
-    image: nginx:1.27.5-alpine
+    build: .
+    image: naji-nginx-brotli:1.27.5
     container_name: naji-sazan-amin
     ports:
       - "8080:80"

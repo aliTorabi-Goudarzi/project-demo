@@ -10,7 +10,10 @@ import { fileURLToPath } from 'node:url';
 const appRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outDir = path.join(appRoot, 'out');
 const sourceConf = path.join(appRoot, 'deploy', 'nginx.conf');
-const image = 'nginx:1.27.5-alpine';
+const localDeployDir = path.join(appRoot, 'deploy', 'local');
+// deploy/nginx.conf uses brotli_static, so the smoke test must run the same
+// brotli-enabled image that deploy/local/docker-compose.yml builds.
+const image = 'naji-nginx-brotli:1.27.5';
 const opensslImage = 'alpine/openssl:3.5.9';
 const containerName = `naji-nginx-smoke-${process.pid}-${Date.now()}`;
 
@@ -136,9 +139,10 @@ function validateOpenSSL(candidate) {
 
 function ensureImage(name) {
   if (docker(['image', 'inspect', name]).status === 0) return;
-  console.log(`Pulling ${name}...`);
-  const pull = docker(['pull', name], { stdio: 'inherit' });
-  if (pull.status !== 0) die(`could not pull ${name}.`);
+  // The brotli image is built locally, not pulled: build it from deploy/local.
+  console.log(`Building ${name} from deploy/local...`);
+  const build = docker(['build', '-t', name, localDeployDir], { stdio: 'inherit' });
+  if (build.status !== 0) die(`could not build ${name} from ${localDeployDir}.`);
 }
 
 // OPENSSL_BIN, then a local openssl, then Git for Windows, then a container.
