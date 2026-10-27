@@ -3,6 +3,17 @@
    VARIABLE fonts (wght 100–900), so one @font-face per subset covers every
    weight — the browser instances real weights, no faux bold. */
 @font-face {
+  font-family: 'Vazirmatn Fallback';
+  font-style: normal;
+  font-weight: 100 900;
+  src: local('Tahoma'), local('Segoe UI'), local('Arial'), local('Arial Unicode MS');
+  size-adjust: 97%;
+  ascent-override: 103%;
+  descent-override: 54%;
+  line-gap-override: 0%;
+}
+
+@font-face {
   font-family: 'Vazirmatn';
   font-style: normal;
   font-weight: 100 900;

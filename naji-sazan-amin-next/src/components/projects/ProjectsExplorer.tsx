@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { useProjectModal } from '@/components/layout/ProjectModalContext';
+import { ResponsiveImage } from '@/components/shared/ResponsiveImage';
 import { PROJECTS, PROJECT_CATEGORIES } from '@/lib/projects';
 
 const counts: Record<string, number> = { all: PROJECTS.length };
@@ -61,13 +62,15 @@ export function ProjectsExplorer() {
               }}
             >
               <div className="project__media">
-                <img
+                <ResponsiveImage
                   src={project.image}
                   alt={project.title}
-                  loading="lazy"
-                  decoding="async"
                   width={800}
                   height={600}
+                  widths={[400, 600]}
+                  sizes="(max-width: 900px) 100vw, 50vw"
+                  loading={index < 2 ? 'eager' : 'lazy'}
+                  fetchPriority={index === 0 ? 'high' : undefined}
                 />
               </div>
               <div className="project__body">

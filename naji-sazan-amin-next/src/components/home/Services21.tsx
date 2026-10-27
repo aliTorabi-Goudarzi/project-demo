@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useReducer, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 
+import { ResponsiveImage } from '@/components/shared/ResponsiveImage';
 import { SERVICES } from '@/lib/services';
 
 const AUTOPLAY_MS = 5000;
@@ -150,15 +151,15 @@ export function Services21() {
 
             <div className="svc21__preview">
               <div className="svc21__media">
-                <img
+                <ResponsiveImage
                   id="svc21Img"
                   className={active !== displayed ? 'is-fading' : undefined}
                   src={current.img}
                   alt={current.alt}
                   width={800}
                   height={600}
-                  loading="lazy"
-                  decoding="async"
+                  widths={[400, 800]}
+                  sizes="(max-width: 900px) 100vw, 50vw"
                 />
               </div>
               <div className="svc21__cap">
@@ -168,7 +169,7 @@ export function Services21() {
                 <p className="svc21__cap-desc" id="svc21Desc">
                   {current.desc}
                 </p>
-                <Link className="svc21__cap-link" id="svc21Link" href={current.href} prefetch={false}>
+                <Link className="svc21__cap-link" id="svc21Link" href={current.href}>
                   {current.link}
                 </Link>
               </div>

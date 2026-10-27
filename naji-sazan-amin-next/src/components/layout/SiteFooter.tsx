@@ -23,7 +23,7 @@ export function SiteFooter() {
               <ul className="footer-col__nav">
                 {FOOTER_QUICK_LINKS.map((item) => (
                   <li key={item.href}>
-                    <Link href={item.href} prefetch={false}>
+                    <Link href={item.href}>
                       {item.label}
                     </Link>
                   </li>
@@ -36,7 +36,7 @@ export function SiteFooter() {
               <ul className="footer-col__nav">
                 {FOOTER_SERVICE_LINKS.map((item) => (
                   <li key={item.href}>
-                    <Link href={item.href} prefetch={false}>
+                    <Link href={item.href}>
                       {item.label}
                     </Link>
                   </li>

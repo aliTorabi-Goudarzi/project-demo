@@ -73,7 +73,7 @@
   --focus:          var(--navy-500);
 
   /* ---------- Typography ---------- */
-  --font-sans: "Vazirmatn", "Segoe UI", Tahoma, sans-serif;
+  --font-sans: "Vazirmatn", "Vazirmatn Fallback", "Segoe UI", Tahoma, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
   /* Refined scale — quiet, not shouty */

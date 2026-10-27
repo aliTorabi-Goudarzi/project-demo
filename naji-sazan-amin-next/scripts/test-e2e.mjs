@@ -12,7 +12,7 @@ function run(command, args, env = {}) {
   const result = spawnSync(command, args, {
     cwd: root,
     stdio: 'inherit',
-    env: { ...process.env, ...env },
+    env: { NEXT_TELEMETRY_DISABLED: '1', ...process.env, ...env },
     shell: isWin,
   });
   if (result.error) {

@@ -1,13 +1,22 @@
 import type { Metadata } from 'next';
+import dynamic from 'next/dynamic';
 
-import { CircularGallery } from '@/components/home/CircularGallery';
 import { Credentials } from '@/components/home/Credentials';
 import { HomeHero } from '@/components/home/HomeHero';
 import { HomePillars } from '@/components/home/HomePillars';
-import { Services21 } from '@/components/home/Services21';
 import { Team } from '@/components/home/Team';
 import { CtaPanel } from '@/components/shared/CtaPanel';
 import { pageMetadata } from '@/lib/metadata';
+
+const Services21 = dynamic(
+  () => import('@/components/home/Services21').then((module) => module.Services21),
+  { ssr: true },
+);
+
+const CircularGallery = dynamic(
+  () => import('@/components/home/CircularGallery').then((module) => module.CircularGallery),
+  { ssr: true },
+);
 
 export const metadata: Metadata = pageMetadata({
   title: 'مهندسین مشاور ناجی سازان امین',

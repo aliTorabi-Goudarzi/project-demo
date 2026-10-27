@@ -1,9 +1,14 @@
 import type { Metadata } from 'next';
+import dynamic from 'next/dynamic';
 
-import { ContactForm } from '@/components/contact/ContactForm';
 import { ContactInfo } from '@/components/contact/ContactInfo';
 import { PageHead } from '@/components/shared/PageHead';
 import { pageMetadata } from '@/lib/metadata';
+
+const ContactForm = dynamic(
+  () => import('@/components/contact/ContactForm').then((module) => module.ContactForm),
+  { ssr: true },
+);
 
 export const metadata: Metadata = pageMetadata({
   title: 'تماس | مهندسین مشاور ناجی سازان امین',

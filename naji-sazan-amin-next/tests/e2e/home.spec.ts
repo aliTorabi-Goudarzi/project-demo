@@ -12,9 +12,9 @@ const FIRST_SERVICE = 'طراحی معماری و سازه';
 const SECOND_SERVICE = 'نظارت عالیه و اجرا';
 
 async function openServicesPage(page: Page) {
-  await page.clock.install();
+  await page.clock.install({ time: 0 });
+  await page.clock.pauseAt(100);
   await page.goto('/');
-  await page.clock.pauseAt(await page.evaluate(() => Date.now() + 100));
 
   const section = page.locator('section#services');
   await section.evaluate((element) => {

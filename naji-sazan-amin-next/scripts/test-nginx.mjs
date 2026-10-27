@@ -28,6 +28,10 @@ const replacements = [
   ['/etc/letsencrypt/live/example.com/fullchain.pem', '/etc/nginx/certs/fullchain.pem'],
   ['/etc/letsencrypt/live/example.com/privkey.pem', '/etc/nginx/certs/privkey.pem'],
   ['root /var/www/naji-sazan-amin-next/out;', 'root /usr/share/nginx/html;'],
+  [
+    'include /var/www/naji-sazan-amin-next/out/assets-redirects.map;',
+    'include /usr/share/nginx/html/assets-redirects.map;',
+  ],
 ];
 
 const childEnv = { ...process.env, MSYS_NO_PATHCONV: '1' };
@@ -50,7 +54,7 @@ function freePort() {
     const server = net.createServer();
     server.unref();
     server.once('error', reject);
-    server.listen(0, '127.0.0.1', () => {
+    server.listen(0, '0.0.0.0', () => {
       const { port } = server.address();
       server.close(() => resolve(port));
     });
@@ -361,6 +365,66 @@ try {
         assetResponse.headers['cross-origin-resource-policy'] === 'same-origin',
       'fingerprinted asset returns COOP and CORP same-origin',
       `${assetUrl} COOP ${assetResponse.headers['cross-origin-opener-policy'] ?? '-'}, CORP ${assetResponse.headers['cross-origin-resource-policy'] ?? '-'}`,
+    );
+  }
+
+  const manifestPath = path.join(outDir, 'assets-manifest.json');
+  const redirectMapPath = path.join(outDir, 'assets-redirects.map');
+  check(
+    existsSync(redirectMapPath),
+    'postbuild writes the stale-asset redirect map',
+    path.relative(appRoot, redirectMapPath),
+  );
+
+  if (existsSync(manifestPath)) {
+    const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+    const unhashedUrl = '/assets/logo.png';
+    const hashedUrl = manifest[unhashedUrl];
+    check(
+      typeof hashedUrl === 'string' && hashedUrl !== unhashedUrl,
+      'assets manifest maps the unhashed logo to its hashed copy',
+      `${unhashedUrl} -> ${hashedUrl ?? '-'}`,
+    );
+    check(
+      !existsSync(path.join(outDir, unhashedUrl.slice(1))),
+      'postbuild prunes unhashed originals from out/',
+      unhashedUrl,
+    );
+
+    if (typeof hashedUrl === 'string') {
+      const stale = await send(true, httpsPort, unhashedUrl, { Host: 'localhost' });
+      check(
+        stale.status === 302 && stale.headers.location === hashedUrl,
+        'stale unhashed asset URL redirects to the hashed copy',
+        `status ${stale.status}, location ${stale.headers.location ?? '-'}`,
+      );
+
+      const hashed = await send(true, httpsPort, hashedUrl, { Host: 'localhost' });
+      const hashedCache = hashed.headers['cache-control'] ?? '';
+      check(
+        hashed.status === 200 && hashedCache.includes('max-age=31536000') && hashedCache.includes('immutable'),
+        'hashed asset URL is immutable',
+        `${hashedUrl} status ${hashed.status}, cache-control ${hashedCache || '-'}`,
+      );
+    }
+  } else {
+    check(false, 'assets manifest exists', path.relative(appRoot, manifestPath));
+  }
+
+  const generatedAsset = findAsset(
+    path.join(outDir, 'assets', 'generated'),
+    (name) => name.endsWith('.avif') || name.endsWith('.webp'),
+  );
+  if (!generatedAsset) {
+    check(false, 'generated responsive image is present', 'assets/generated');
+  } else {
+    const generatedUrl = `/${path.relative(outDir, generatedAsset).split(path.sep).join('/')}`;
+    const generated = await send(true, httpsPort, generatedUrl, { Host: 'localhost' });
+    const generatedCache = generated.headers['cache-control'] ?? '';
+    check(
+      generated.status === 200 && generatedCache.includes('max-age=604800') && !generatedCache.includes('immutable'),
+      'generated responsive image uses a short-lived cache',
+      `${generatedUrl} status ${generated.status}, cache-control ${generatedCache || '-'}`,
     );
   }
 

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 
 import { CtaPanel } from '@/components/shared/CtaPanel';
 import { PageHead } from '@/components/shared/PageHead';
+import { ResponsiveImage } from '@/components/shared/ResponsiveImage';
 import { pageMetadata } from '@/lib/metadata';
 
 export const metadata: Metadata = pageMetadata({
@@ -191,13 +192,13 @@ export default function AboutPage() {
 
           <div className="executive-glass reveal">
             <div className="executive-photo-wrap">
-              <img
+              <ResponsiveImage
                 src="/assets/team/ceo.webp"
                 alt="محمد منزوی — مدیر عامل"
-                width="600"
-                height="800"
-                loading="lazy"
-                decoding="async"
+                width={600}
+                height={800}
+                widths={[300, 600]}
+                sizes="(max-width: 900px) 80vw, 280px"
               />
             </div>
             <div className="executive-details">
@@ -233,13 +234,13 @@ export default function AboutPage() {
             {LEADERS.map((leader) => (
               <article key={leader.name} className="editorial-leader-card">
                 <div className="editorial-leader-photo">
-                  <img
+                  <ResponsiveImage
                     src={leader.image}
                     alt={leader.name}
-                    width="600"
-                    height="800"
-                    loading="lazy"
-                    decoding="async"
+                    width={600}
+                    height={800}
+                    widths={[300, 600]}
+                    sizes="(max-width: 900px) 100vw, 33vw"
                   />
                 </div>
                 <div className="editorial-leader-info">

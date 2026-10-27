@@ -6,6 +6,7 @@ import '@/styles/tokens.css';
 import '@/styles/main.css';
 
 import { ProjectModalProvider } from '@/components/layout/ProjectModalProvider';
+import { ServiceWorkerRegistration } from '@/components/layout/ServiceWorkerRegistration';
 import { SiteEffects } from '@/components/layout/SiteEffects';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
@@ -22,6 +23,10 @@ export const viewport: Viewport = {
 const themeScript =
   "try{var t=localStorage.getItem('nsa-theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t);}else if(window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.setAttribute('data-theme','dark');}}catch(e){}";
 
+const speculationRules = JSON.stringify({
+  prefetch: [{ source: 'document', where: { href_matches: '/*' }, eagerness: 'conservative' }],
+});
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="fa" dir="rtl" data-theme="light" suppressHydrationWarning>
@@ -36,7 +41,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           type="font/woff2"
           crossOrigin="anonymous"
         />
+        <link
+          rel="preload"
+          href="/assets/fonts/vazirmatn-2.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script type="speculationrules" dangerouslySetInnerHTML={{ __html: speculationRules }} />
       </head>
       <body>
         <ProjectModalProvider>
@@ -45,6 +58,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <SiteFooter />
         </ProjectModalProvider>
         <SiteEffects />
+        <ServiceWorkerRegistration />
       </body>
     </html>
   );

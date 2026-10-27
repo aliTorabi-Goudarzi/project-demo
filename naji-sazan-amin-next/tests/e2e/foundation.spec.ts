@@ -36,6 +36,33 @@ test('static export emits index.html and 404.html', () => {
   expect(fs.existsSync(path.resolve(process.cwd(), 'out/404.html'))).toBe(true);
 });
 
+test('non-hero navigation keeps App Router prefetch enabled', () => {
+  const componentDir = path.resolve(process.cwd(), 'src/components');
+  const files = [
+    'layout/SiteHeader.tsx',
+    'layout/Drawer.tsx',
+    'layout/SiteFooter.tsx',
+    'home/Team.tsx',
+    'home/CircularGallery.tsx',
+    'home/Services21.tsx',
+  ];
+
+  for (const file of files) {
+    const source = fs.readFileSync(path.join(componentDir, file), 'utf8');
+    expect(source, `${file} must not disable Link prefetch`).not.toContain('prefetch={false}');
+  }
+
+  const hero = fs.readFileSync(path.join(componentDir, 'home/HomeHero.tsx'), 'utf8');
+  expect(hero).toContain('prefetch={false}');
+});
+
+test('static export ships styles, the service worker and speculation rules', () => {
+  const html = fs.readFileSync(path.resolve(process.cwd(), 'out/index.html'), 'utf8');
+  expect(html).toMatch(/<link[^>]+rel="stylesheet"/);
+  expect(html).toContain('speculationrules');
+  expect(fs.existsSync(path.resolve(process.cwd(), 'out/sw.js'))).toBe(true);
+});
+
 test('home renders the shared shell without console errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => {

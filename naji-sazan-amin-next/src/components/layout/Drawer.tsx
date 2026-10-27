@@ -46,13 +46,12 @@ export function Drawer({ open, onClose }: DrawerProps) {
           key={item.href}
           className={normalizePath(item.href) === pathname ? 'drawer__link is-active' : 'drawer__link'}
           href={item.href}
-          prefetch={false}
           onClick={onClose}
         >
           {item.label}
         </Link>
       ))}
-      <Link className="btn btn--primary btn--block" href={ctaHref} prefetch={false} onClick={onClose}>
+      <Link className="btn btn--primary btn--block" href={ctaHref} onClick={onClose}>
         {SITE.ctaLabel}
       </Link>
     </div>

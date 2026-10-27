@@ -65,7 +65,7 @@ export function SiteHeader() {
     <>
       <header className={scrolled ? 'site-header is-scrolled' : 'site-header'} id="siteHeader">
         <div className="container site-header__inner">
-          <Link className="brand" href="/" aria-label={SITE.brandAria} prefetch={false}>
+          <Link className="brand" href="/" aria-label={SITE.brandAria}>
             <img className="brand__logo" src="/assets/logo.png" alt={SITE.logoAlt} />
             <span className="brand__text">
               <span className="brand__name">{SITE.name}</span>
@@ -78,7 +78,6 @@ export function SiteHeader() {
                 key={item.href}
                 className={normalizePath(item.href) === pathname ? 'nav__link is-active' : 'nav__link'}
                 href={item.href}
-                prefetch={false}
               >
                 {item.label}
               </Link>
@@ -94,7 +93,7 @@ export function SiteHeader() {
                 <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
               </svg>
             </button>
-            <Link className="btn btn--primary" href={ctaHref} prefetch={false}>
+            <Link className="btn btn--primary" href={ctaHref}>
               {SITE.ctaLabel}
             </Link>
             <button

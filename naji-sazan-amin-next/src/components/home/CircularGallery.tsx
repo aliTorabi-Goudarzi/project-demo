@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useRef } from 'react';
 
 import { useProjectModal } from '@/components/layout/ProjectModalContext';
+import { ResponsiveImage } from '@/components/shared/ResponsiveImage';
 import { GALLERY_PROJECTS } from '@/lib/gallery';
 
 const ANGLE_STEP = 30;
@@ -229,14 +230,14 @@ export function CircularGallery() {
                     }
                   }}
                 >
-                  <img
+                  <ResponsiveImage
                     className="circular-gallery-img"
                     src={project.image}
                     alt={project.title}
-                    loading="lazy"
-                    decoding="async"
                     width={290}
                     height={400}
+                    widths={[290, 580]}
+                    sizes="290px"
                   />
                   <div className="circular-gallery-scrim">
                     <h3 className="circular-gallery-title">{project.title}</h3>
@@ -311,7 +312,7 @@ export function CircularGallery() {
       </div>
 
       <div className="text-center mt-6 reveal">
-        <Link className="btn btn--outline btn--lg" href="/projects" prefetch={false}>
+        <Link className="btn btn--outline btn--lg" href="/projects">
           مشاهده مشخصات و آرشیو کامل پروژه‌ها
         </Link>
       </div>

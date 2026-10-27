@@ -196,19 +196,15 @@ test('client-side navigation loads every RSC page payload without 404s', async (
     await expect.poll(() => inFlight, { message: 'RSC payload requests must settle' }).toBe(0);
   };
 
-  const prefetchFromCtaPanel = async () => {
-    const before = payloadResponses.length;
+  const scrollToCtaPanel = async () => {
     await page.evaluate(() => {
       document.documentElement.style.scrollBehavior = 'auto';
       window.scrollTo(0, document.documentElement.scrollHeight);
     });
-    await expect.poll(() => payloadResponses.length, {
-      message: 'scrolling to the CTA panel must trigger RSC page payload prefetches',
-    }).toBeGreaterThan(before);
     await settlePayloadRequests();
   };
 
-  await prefetchFromCtaPanel();
+  await scrollToCtaPanel();
 
   for (const item of [NAV_ITEMS[1], NAV_ITEMS[2], NAV_ITEMS[3]]) {
     await headerNav(page).filter({ hasText: item.label }).click();
@@ -222,7 +218,7 @@ test('client-side navigation loads every RSC page payload without 404s', async (
     ).toBe(true);
 
     if (item === NAV_ITEMS[2]) {
-      await prefetchFromCtaPanel();
+      await scrollToCtaPanel();
     }
   }
 

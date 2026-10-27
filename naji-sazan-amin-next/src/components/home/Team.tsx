@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import { ResponsiveImage } from '@/components/shared/ResponsiveImage';
+
 type Member = {
   name: string;
   role: string;
@@ -34,7 +36,7 @@ export function Team() {
               تیمی از مهندسان مجرب که سال‌ها در کنار یکدیگر پروژه‌های بزرگ را به سرانجام رسانده‌اند؛ از طراحی و نظارت
               تا مدیریت طرح و کنترل کیفیت.
             </p>
-            <Link className="btn btn--primary" href="/contact" prefetch={false}>
+            <Link className="btn btn--primary" href="/contact">
               درخواست مشاوره
             </Link>
           </div>
@@ -49,12 +51,13 @@ export function Team() {
                 {column.map((member) => (
                   <article key={member.name} className={member.ceo ? 'tmember tmember--ceo' : 'tmember'}>
                     <div className="tmember__media">
-                      <img
+                      <ResponsiveImage
                         src={member.image}
                         alt={`${member.name} — ${member.role}`}
-                        loading="lazy"
                         width={600}
                         height={800}
+                        widths={[300, 600]}
+                        sizes="(max-width: 900px) 50vw, 300px"
                       />
                       <div className="tmember__card">
                         <h3 className="tmember__name">{member.name}</h3>

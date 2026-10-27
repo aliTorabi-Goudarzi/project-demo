@@ -1,19 +1,36 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 
 import { getGalleryById } from '@/lib/gallery';
 import { getProjectById } from '@/lib/projects';
 
-import { ProjectModal } from './ProjectModal';
 import { ProjectModalContext } from './ProjectModalContext';
 import type { ModalItem } from './ProjectModalContext';
+
+const ProjectModal = dynamic(
+  () => import('./ProjectModal').then((module) => module.ProjectModal),
+  { ssr: true },
+);
+
+const modalPlaceholder = (
+  <div
+    id="projectModal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modalTitle"
+    aria-hidden="true"
+    inert
+  />
+);
 
 export function ProjectModalProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [activeItem, setActiveItem] = useState<ModalItem | null>(null);
+  const [modalReady, setModalReady] = useState(false);
   const previousPathname = useRef(pathname);
 
   useEffect(() => {
@@ -25,6 +42,7 @@ export function ProjectModalProvider({ children }: { children: ReactNode }) {
   const openProject = useCallback((id: string) => {
     const project = getProjectById(id);
     if (!project) return;
+    setModalReady(true);
     setActiveItem({
       title: project.title,
       image: project.image,
@@ -39,6 +57,7 @@ export function ProjectModalProvider({ children }: { children: ReactNode }) {
   const openGalleryItem = useCallback((id: string) => {
     const project = getGalleryById(id);
     if (!project) return;
+    setModalReady(true);
     setActiveItem({
       title: project.title,
       image: project.image,
@@ -60,7 +79,13 @@ export function ProjectModalProvider({ children }: { children: ReactNode }) {
   return (
     <ProjectModalContext.Provider value={value}>
       {children}
-      <ProjectModal />
+      {modalReady ? (
+        <Suspense fallback={modalPlaceholder}>
+          <ProjectModal />
+        </Suspense>
+      ) : (
+        modalPlaceholder
+      )}
     </ProjectModalContext.Provider>
   );
 }
