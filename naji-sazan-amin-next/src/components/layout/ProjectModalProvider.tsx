@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation';
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 
-import { getGalleryById } from '@/lib/gallery';
 import { getProjectById } from '@/lib/projects';
 
 import { ProjectModalContext } from './ProjectModalContext';
@@ -45,26 +44,11 @@ export function ProjectModalProvider({ children }: { children: ReactNode }) {
     setModalReady(true);
     setActiveItem({
       title: project.title,
-      image: project.image,
-      client: project.client,
+      images: project.images,
+      service: project.service,
+      type: project.type,
       location: project.location,
-      year: project.year,
-      category: project.category,
-      description: project.description,
-    });
-  }, []);
-
-  const openGalleryItem = useCallback((id: string) => {
-    const project = getGalleryById(id);
-    if (!project) return;
-    setModalReady(true);
-    setActiveItem({
-      title: project.title,
-      image: project.image,
-      client: project.client,
-      location: project.loc,
-      year: project.year,
-      category: project.cat,
+      scope: project.scope,
       description: project.description,
     });
   }, []);
@@ -72,8 +56,8 @@ export function ProjectModalProvider({ children }: { children: ReactNode }) {
   const close = useCallback(() => setActiveItem(null), []);
 
   const value = useMemo(
-    () => ({ activeItem, openProject, openGalleryItem, close }),
-    [activeItem, openProject, openGalleryItem, close],
+    () => ({ activeItem, openProject, close }),
+    [activeItem, openProject, close],
   );
 
   return (

@@ -2,7 +2,6 @@ import { expect, test, type Page } from '@playwright/test';
 
 import {
   FOOTER_QUICK_LINKS,
-  FOOTER_SERVICE_LINKS,
   NAV_ITEMS,
   SITE,
 } from '../../src/lib/site';
@@ -74,14 +73,19 @@ test('the header CTA targets the contact form only on the contact route', async 
   );
 });
 
-test('footer navigation keeps both link groups on every route', async ({ page }) => {
-  const expected = [...FOOTER_QUICK_LINKS, ...FOOTER_SERVICE_LINKS];
+test('footer keeps the quick links and contact details on every route', async ({ page }) => {
+  const expected = FOOTER_QUICK_LINKS;
 
   for (const route of ROUTES) {
     await page.goto(route);
 
     const footer = page.locator('#siteFooter');
     await expect(footer, `footer on ${route}`).toBeVisible();
+    await expect(footer.locator('.footer-col'), `footer columns on ${route}`).toHaveCount(3);
+    await expect(
+      footer.getByRole('heading', { name: 'خدمات مهندسی' }),
+      `footer services column on ${route}`,
+    ).toHaveCount(0);
 
     const links = footer.locator('.footer-col__nav a');
     await expect(links, `footer links on ${route}`).toHaveCount(expected.length);
@@ -314,7 +318,7 @@ test.describe('mobile navigation', () => {
     await drawer.getByRole('link', { name: NAV_ITEMS[1].label }).click();
     await expect.poll(() => new URL(page.url()).pathname).toBe('/projects/');
 
-    await page.locator('[data-project="parsa-tower"]').click();
+    await page.locator('[data-project="france-market-kish"]').click();
     await expect(modal).toHaveClass(/is-open/);
     await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('hidden');
 

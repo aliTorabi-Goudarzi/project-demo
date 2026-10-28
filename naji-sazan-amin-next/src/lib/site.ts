@@ -34,15 +34,15 @@ export const NAV_ITEMS = [
 ];
 
 export const FOOTER_QUICK_LINKS = [
-  { label: 'نمونه : ناجی سازان', href: '/' },
-  { label: 'نمونه : ناجی سازان', href: '/projects' },
-  { label: 'نمونه : ناجی سازان', href: '/about' },
-  { label: 'نمونه : ناجی سازان', href: '/contact' },
+  { label: 'خانه', href: '/' },
+  { label: 'پروژه‌ها', href: '/projects' },
+  { label: 'درباره ما', href: '/about' },
+  { label: 'تماس با ما', href: '/contact' },
 ];
 
 export const FOOTER_SERVICE_LINKS = [
-  { label: 'نمونه : ناجی سازان', href: '/#services' },
-  { label: 'نمونه : ناجی سازان', href: '/projects' },
-  { label: 'نمونه : ناجی سازان', href: '/about' },
-  { label: 'نمونه : ناجی سازان', href: '/contact/#form' },
+  { label: 'مشاوره و طراحی', href: '/#services' },
+  { label: 'نظارت کارگاهی و عالیه', href: '/#services' },
+  { label: 'مدیریت طرح و کنترل پروژه', href: '/#services' },
+  { label: 'خدمات آزمایشگاهی', href: '/#services' },
 ];

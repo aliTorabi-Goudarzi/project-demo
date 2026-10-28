@@ -3,32 +3,22 @@ import path from 'node:path';
 
 import { expect, test } from '@playwright/test';
 
-import { GALLERY_PROJECTS, getGalleryById } from '../../src/lib/gallery';
 import { PROJECTS, PROJECT_CATEGORIES, getProjectById } from '../../src/lib/projects';
 import { SERVICES } from '../../src/lib/services';
 
 test.use({ viewport: { width: 390, height: 844 } });
 
-test('data contracts match the legacy site', () => {
-  expect(PROJECTS).toHaveLength(9);
-  expect(GALLERY_PROJECTS).toHaveLength(12);
+test('data contracts match the current site', () => {
+  expect(PROJECTS).toHaveLength(36);
   expect(SERVICES).toHaveLength(4);
   expect(PROJECT_CATEGORIES.map((category) => category.slug)).toEqual([
     'all',
-    'residential',
-    'commercial',
-    'cultural',
-    'healthcare',
-    'office',
-    'restoration',
-    'infrastructure',
+    'design',
+    'supervision',
   ]);
   expect(new Set(PROJECTS.map((project) => project.id)).size).toBe(PROJECTS.length);
-  expect(new Set(GALLERY_PROJECTS.map((project) => project.id)).size).toBe(GALLERY_PROJECTS.length);
-  expect(getProjectById('parsa-tower')?.title).toBe('برج مسکونی پارسا');
-  expect(getGalleryById('cg-1')?.title).toBe('برج مسکونی لوکس پارسا');
+  expect(getProjectById('france-market-kish')?.title).toBe('بازار فرانسه کیش');
   expect(getProjectById('missing')).toBeUndefined();
-  expect(getGalleryById('missing')).toBeUndefined();
 });
 
 test('static export emits index.html and 404.html', () => {

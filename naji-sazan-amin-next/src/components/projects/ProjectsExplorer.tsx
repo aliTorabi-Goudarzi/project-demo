@@ -8,7 +8,7 @@ import { PROJECTS, PROJECT_CATEGORIES } from '@/lib/projects';
 
 const counts: Record<string, number> = { all: PROJECTS.length };
 for (const project of PROJECTS) {
-  counts[project.categorySlug] = (counts[project.categorySlug] ?? 0) + 1;
+  counts[project.serviceSlug] = (counts[project.serviceSlug] ?? 0) + 1;
 }
 
 export function ProjectsExplorer() {
@@ -42,14 +42,14 @@ export function ProjectsExplorer() {
               key={project.id}
               className="project spotlight-card reveal"
               data-project={project.id}
-              data-cat={project.categorySlug}
+              data-cat={project.serviceSlug}
               data-delay={index % 3 ? String(index % 3) : undefined}
               role="button"
               tabIndex={0}
               aria-label={`مشاهده پروژه ${project.title}`}
               style={{
                 display:
-                  activeCategory === 'all' || project.categorySlug === activeCategory
+                  activeCategory === 'all' || project.serviceSlug === activeCategory
                     ? undefined
                     : 'none',
               }}
@@ -74,12 +74,12 @@ export function ProjectsExplorer() {
                 />
               </div>
               <div className="project__body">
-                <span className="project__cat">{project.category}</span>
+                <span className="project__cat">{project.service} · {project.type}</span>
                 <h3 className="project__title">{project.title}</h3>
                 <p className="project__summary">{project.summary}</p>
                 <div className="project__foot">
-                  <span>{project.location}</span>
-                  <span>{project.year}</span>
+                  <span>{project.location || project.type}</span>
+                  <span>{project.scope || project.service}</span>
                 </div>
               </div>
             </article>

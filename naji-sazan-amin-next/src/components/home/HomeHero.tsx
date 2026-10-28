@@ -24,11 +24,11 @@ export function HomeHero() {
             طراحی، نظارت عالیه، مدیریت طرح و کنترل کیفیت پروژه‌های عمرانی کشور.
           </p>
           <div className="hero__actions reveal" data-delay="3">
-            <Link className="btn btn--primary btn--lg" href="/projects" prefetch={false}>
-              مشاهده پروژه‌ها
+            <Link className="btn btn--primary btn--lg" href="/contact" prefetch={false}>
+              مشاوره و تماس با ما
             </Link>
             <Link className="btn btn--outline btn--lg" href="/about" prefetch={false}>
-              آشنایی با شرکت
+              درباره ما
             </Link>
           </div>
         </div>

@@ -4,12 +4,14 @@ import path from 'node:path';
 import { expect, test } from '@playwright/test';
 import type { Locator, Page } from '@playwright/test';
 
+import { imageVariant } from '../../src/components/shared/ResponsiveImage';
+
 import { assetUrl } from './assets';
 
 test.use({ viewport: { width: 1440, height: 900 } });
 
-const FIRST_SERVICE = 'طراحی معماری و سازه';
-const SECOND_SERVICE = 'نظارت عالیه و اجرا';
+const FIRST_SERVICE = 'مشاوره و طراحی';
+const SECOND_SERVICE = 'نظارت کارگاهی و عالیه';
 
 async function openServicesPage(page: Page) {
   await page.clock.install({ time: 0 });
@@ -81,8 +83,15 @@ test.describe('hero', () => {
       'شرکت مهندسین مشاور ناجی سازان امین با تکیه بر دانش فنی روز و سرمایه انسانی متخصص، پیشرو در خدمات جامع طراحی، نظارت عالیه، مدیریت طرح و کنترل کیفیت پروژه‌های عمرانی کشور.',
     );
 
-    await expect(page.getByRole('link', { name: 'مشاهده پروژه‌ها' })).toHaveAttribute('href', /^\/projects\/?$/);
-    await expect(page.getByRole('link', { name: 'آشنایی با شرکت' })).toHaveAttribute('href', /^\/about\/?$/);
+    const heroActions = page.locator('.hero__actions');
+    await expect(heroActions.getByRole('link', { name: 'مشاوره و تماس با ما' })).toHaveAttribute(
+      'href',
+      /^\/contact\/?$/,
+    );
+    await expect(heroActions.getByRole('link', { name: 'درباره ما' })).toHaveAttribute(
+      'href',
+      /^\/about\/?$/,
+    );
 
     const video = page.locator('video#heroBgVideo');
     await expect(video).toHaveClass(/hero__bg-video/);
@@ -140,16 +149,19 @@ test.describe('services', () => {
     const items = section.locator('.svc21__item');
     await expect(items).toHaveCount(4);
     await expect(items.locator('.svc21__item-title')).toHaveText([
-      'طراحی معماری و سازه',
-      'نظارت عالیه و اجرا',
+      'مشاوره و طراحی',
+      'نظارت کارگاهی و عالیه',
       'مدیریت طرح و کنترل پروژه',
-      'مشاوره مهندسی و مطالعات',
+      'خدمات آزمایشگاهی',
     ]);
 
     await expect(section.locator('.svc21__item.is-active')).toHaveCount(1);
-    await expect(section.locator('.svc21__item.is-active')).toContainText('طراحی معماری و سازه');
-    await expect(section.locator('#svc21Title')).toHaveText('طراحی معماری و سازه');
-    await expect(section.locator('#svc21Img')).toHaveAttribute('src', assetUrl('/assets/projects/parsa-tower.webp'));
+    await expect(section.locator('.svc21__item.is-active')).toContainText('مشاوره و طراحی');
+    await expect(section.locator('#svc21Title')).toHaveText('مشاوره و طراحی');
+    await expect(section.locator('#svc21Img')).toHaveAttribute(
+      'src',
+      imageVariant('/assets/projects/real/baran-design/cover.webp', 800, 'webp'),
+    );
     await expect(section.locator('#svc21Link')).toHaveAttribute('href', /^\/projects\/?$/);
     await expect(section.locator('#svc21Link')).toHaveText('نمونه پروژه‌ها');
   });
@@ -160,17 +172,23 @@ test.describe('services', () => {
     const items = section.locator('.svc21__item');
 
     await items.nth(1).click();
-    await expect(section.locator('#svc21Title')).toHaveText('نظارت عالیه و اجرا');
+    await expect(section.locator('#svc21Title')).toHaveText('نظارت کارگاهی و عالیه');
     await expect(section.locator('#svc21Desc')).toHaveText(
-      'نظارت دقیق بر اجرا با استقرار دفاتر فنی در محل پروژه و کنترل کیفیت، زمان و هزینه.',
+      'استقرار دفاتر فنی و ناظران مقیم در محل پروژه، کنترل کیفیت اجرا، ایمنی و انطباق با نقشه‌ها و ضوابط.',
     );
-    await expect(section.locator('#svc21Img')).toHaveAttribute('src', assetUrl('/assets/projects/supervision-real.webp'));
+    await expect(section.locator('#svc21Img')).toHaveAttribute(
+      'src',
+      imageVariant('/assets/projects/real/arg-kish/cover.webp', 800, 'webp'),
+    );
     await expect(section.locator('#svc21Link')).toHaveAttribute('href', /^\/projects\/?$/);
     await expect(items.nth(1)).toHaveClass(/is-active/);
 
     await items.nth(3).click();
-    await expect(section.locator('#svc21Title')).toHaveText('مشاوره مهندسی و مطالعات');
-    await expect(section.locator('#svc21Img')).toHaveAttribute('src', assetUrl('/assets/projects/consulting-real.webp'));
+    await expect(section.locator('#svc21Title')).toHaveText('خدمات آزمایشگاهی');
+    await expect(section.locator('#svc21Img')).toHaveAttribute(
+      'src',
+      imageVariant('/assets/projects/real/qiam-dasht/cover.webp', 800, 'webp'),
+    );
     await expect(section.locator('#svc21Link')).toHaveAttribute('href', /^\/contact\/?$/);
     await expect(section.locator('#svc21Link')).toHaveText('درخواست مشاوره');
     await expect(items.nth(3)).toHaveClass(/is-active/);
@@ -236,16 +254,19 @@ test.describe('services', () => {
     await page.clock.runFor(200);
     await expect.poll(() => title.textContent()).toBe('مدیریت طرح و کنترل پروژه');
     await expect(section.locator('#svc21Desc')).toHaveText(
-      'مدیریت یکپارچه طرح‌های عمرانی، برنامه‌ریزی، هماهنگی ذی‌نفعان و گزارش‌دهی دوره‌ای.',
+      'برنامه‌ریزی و زمان‌بندی، کنترل پیشرفت، تهیه گزارش‌های دوره‌ای و مدیریت تأخیرات در پروژه‌های عمرانی.',
     );
-    await expect(section.locator('#svc21Img')).toHaveAttribute('src', assetUrl('/assets/projects/setareh-office.webp'));
+    await expect(section.locator('#svc21Img')).toHaveAttribute(
+      'src',
+      imageVariant('/assets/projects/real/majlesi-isfahan/cover.webp', 800, 'webp'),
+    );
 
     await section.locator('#svc21Link').evaluate((element) => (element as HTMLElement).focus());
     await expectPaused(list, false);
     await page.clock.runFor(4500);
     await expect.poll(() => title.textContent()).toBe('مدیریت طرح و کنترل پروژه');
     await page.clock.runFor(700);
-    await expect.poll(() => title.textContent()).toBe('مشاوره مهندسی و مطالعات');
+    await expect.poll(() => title.textContent()).toBe('خدمات آزمایشگاهی');
   });
 
   test('focusing the already-active service does not restart its bar', async ({ page }) => {
@@ -293,11 +314,11 @@ test.describe('circular gallery', () => {
 
     const cards = page.locator('.circular-gallery-card');
     await expect(cards).toHaveCount(12);
-    await expect(cards.first()).toHaveAttribute('data-project', 'cg-1');
+    await expect(cards.first()).toHaveAttribute('data-project', 'baran-design');
     await expect(cards.first()).toHaveAttribute('role', 'button');
     await expect(cards.first()).toHaveAttribute('tabindex', '0');
-    await expect(cards.first()).toHaveAttribute('aria-label', 'برج مسکونی لوکس پارسا');
-    await expect(cards.last()).toHaveAttribute('data-project', 'cg-12');
+    await expect(cards.first()).toHaveAttribute('aria-label', 'پروژه اداری تجاری باران');
+    await expect(cards.last()).toHaveAttribute('data-project', 'parnian-andisheh');
 
     const firstTransform = await items.nth(0).evaluate((element) => (element as HTMLElement).style.transform);
     expect(firstTransform).toContain('rotateY(0deg) translateZ(var(--gallery-radius))');
@@ -364,10 +385,10 @@ test.describe('circular gallery', () => {
         .poll(async () => rotator.evaluate((element) => (element as HTMLElement).style.transform))
         .toBe('rotateY(-30deg)');
 
-      const card = page.locator('.circular-gallery-card[data-project="cg-1"]');
+      const card = page.locator('.circular-gallery-card[data-project="baran-design"]');
       await card.click();
       await expect(page.locator('#projectModal')).toHaveClass(/is-open/);
-      await expect(page.locator('#modalTitle')).toHaveText('برج مسکونی لوکس پارسا');
+      await expect(page.locator('#modalTitle')).toHaveText('پروژه اداری تجاری باران');
       await page.keyboard.press('Escape');
       await expect(page.locator('#projectModal')).not.toHaveClass(/is-open/);
 
@@ -427,7 +448,10 @@ test('pillars, credentials and team match the legacy content', async ({ page }) 
   ]);
 
   const leadImage = page.locator('.tmember img').first();
-  await expect(leadImage).toHaveAttribute('src', assetUrl('/assets/team/lead-structure.webp'));
+  await expect(leadImage).toHaveAttribute(
+    'src',
+    imageVariant('/assets/team/lead-structure.webp', 600, 'webp'),
+  );
   await expect(leadImage).toHaveAttribute('width', '600');
   await expect(leadImage).toHaveAttribute('height', '800');
 

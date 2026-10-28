@@ -33,8 +33,6 @@ for (const file of files) {
   if (!metadata.width) continue;
 
   for (const width of widths) {
-    if (width > metadata.width) continue;
-
     for (const format of formats) {
       const sourceRelative = relative(root, file);
       const parsed = sourceRelative.match(/^(.*?)([^\\/]+)(\.[^.]+)$/);

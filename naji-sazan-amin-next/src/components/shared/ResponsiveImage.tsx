@@ -33,6 +33,7 @@ export function ResponsiveImage({
   fetchPriority,
 }: ResponsiveImageProps) {
   const availableWidths = [...new Set(widths)].sort((a, b) => a - b);
+  const fallbackWidth = availableWidths[availableWidths.length - 1];
   const srcSet = (format: 'avif' | 'webp') =>
     availableWidths.map((size) => `${imageVariant(src, size, format)} ${size}w`).join(', ');
 
@@ -41,7 +42,7 @@ export function ResponsiveImage({
       <source type="image/avif" srcSet={srcSet('avif')} sizes={sizes} />
       <source type="image/webp" srcSet={srcSet('webp')} sizes={sizes} />
       <img
-        src={src}
+        src={imageVariant(src, fallbackWidth, 'webp')}
         alt={alt}
         width={width}
         height={height}

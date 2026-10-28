@@ -5,9 +5,10 @@ import { useEffect, useRef } from 'react';
 
 import { useProjectModal } from '@/components/layout/ProjectModalContext';
 import { ResponsiveImage } from '@/components/shared/ResponsiveImage';
-import { GALLERY_PROJECTS } from '@/lib/gallery';
+import { PROJECTS } from '@/lib/projects';
 
 const ANGLE_STEP = 30;
+const FEATURED_PROJECTS = PROJECTS.filter((project) => project.featured);
 
 type ItemState = {
   opacity: string;
@@ -26,7 +27,7 @@ function itemState(angle: number): ItemState {
 }
 
 export function CircularGallery() {
-  const { openGalleryItem } = useProjectModal();
+  const { openProject } = useProjectModal();
   const stageRef = useRef<HTMLDivElement>(null);
   const rotatorRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<Array<HTMLDivElement | null>>([]);
@@ -200,7 +201,7 @@ export function CircularGallery() {
         aria-label="گالری سه‌بعدی پروژه‌ها"
       >
         <div ref={rotatorRef} className="circular-gallery-rotator" id="circularGalleryRotator">
-          {GALLERY_PROJECTS.map((project, index) => {
+          {FEATURED_PROJECTS.map((project, index) => {
             const state = itemState(index * ANGLE_STEP);
             return (
               <div
@@ -222,11 +223,11 @@ export function CircularGallery() {
                   tabIndex={0}
                   role="button"
                   aria-label={project.title}
-                  onClick={() => openGalleryItem(project.id)}
+                  onClick={() => openProject(project.id)}
                   onKeyDown={(event) => {
                     if (event.key === 'Enter' || event.key === ' ') {
                       event.preventDefault();
-                      openGalleryItem(project.id);
+                      openProject(project.id);
                     }
                   }}
                 >
@@ -255,7 +256,7 @@ export function CircularGallery() {
                         <path d="M12 21s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 7.2c0 7.3-8 11.8-8 11.8z" />
                         <circle cx="12" cy="10" r="3" />
                       </svg>
-                      <span>{project.loc}</span>
+                      <span>{project.location}</span>
                     </div>
                   </div>
                 </div>

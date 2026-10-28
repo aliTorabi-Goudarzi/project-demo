@@ -4,18 +4,17 @@ import { createContext, useContext } from 'react';
 
 export type ModalItem = {
   title: string;
-  image: string;
-  client: string;
+  images: string[];
+  service: string;
+  type: string;
   location: string;
-  year: string;
-  category: string;
+  scope: string;
   description: string;
 };
 
 export type ProjectModalContextValue = {
   activeItem: ModalItem | null;
   openProject: (id: string) => void;
-  openGalleryItem: (id: string) => void;
   close: () => void;
 };
 

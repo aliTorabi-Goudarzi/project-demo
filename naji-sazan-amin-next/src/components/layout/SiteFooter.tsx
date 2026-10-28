@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { FOOTER_QUICK_LINKS, FOOTER_SERVICE_LINKS, SITE } from '@/lib/site';
+import { FOOTER_QUICK_LINKS, SITE } from '@/lib/site';
 
 export function SiteFooter() {
   return (
@@ -22,19 +22,6 @@ export function SiteFooter() {
               <h4 className="footer-col__title">دسترسی سریع</h4>
               <ul className="footer-col__nav">
                 {FOOTER_QUICK_LINKS.map((item) => (
-                  <li key={item.href}>
-                    <Link href={item.href}>
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="footer-col">
-              <h4 className="footer-col__title">خدمات مهندسی</h4>
-              <ul className="footer-col__nav">
-                {FOOTER_SERVICE_LINKS.map((item) => (
                   <li key={item.href}>
                     <Link href={item.href}>
                       {item.label}
