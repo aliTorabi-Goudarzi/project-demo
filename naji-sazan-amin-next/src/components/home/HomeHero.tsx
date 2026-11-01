@@ -28,7 +28,7 @@ export function HomeHero() {
               مشاوره و تماس با ما
             </Link>
             <Link className="btn btn--outline btn--lg" href="/about" prefetch={false}>
-              درباره ما
+              درباره شرکت
             </Link>
           </div>
         </div>

@@ -29,14 +29,14 @@ export const SITE = {
 export const NAV_ITEMS = [
   { label: 'خانه', href: '/' },
   { label: 'پروژه‌ها', href: '/projects' },
-  { label: 'درباره ما', href: '/about' },
+  { label: 'درباره شرکت', href: '/about' },
   { label: 'تماس', href: '/contact' },
 ];
 
 export const FOOTER_QUICK_LINKS = [
   { label: 'خانه', href: '/' },
   { label: 'پروژه‌ها', href: '/projects' },
-  { label: 'درباره ما', href: '/about' },
+  { label: 'درباره شرکت', href: '/about' },
   { label: 'تماس با ما', href: '/contact' },
 ];
 

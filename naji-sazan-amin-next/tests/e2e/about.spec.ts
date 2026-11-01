@@ -100,19 +100,19 @@ const CHART_ROWS: { className: string | null; leaders: TestLeader[] }[] = [
     leaders: [
       {
         name: 'مهدی نوری',
-        image: '/assets/team/head-design.webp',
+        image: '/assets/team/mehdi-nouri.webp',
         title: 'مدیر مطالعات و طراحی',
         sub: 'مدیریت طراحی مفهومی، فاز یک و دو و BIM',
       },
       {
         name: 'سعید رفیعی',
-        image: '/assets/team/lead-structure.webp',
+        image: '/assets/team/saeid-rafiei.webp',
         title: 'مدیر نظارت و امور کارگاهی',
         sub: 'هدایت کادر ناظران مقیم و پایش HSE کارگاه‌ها',
       },
       {
         name: 'امیر ربیعی فر',
-        image: '/assets/team/lead-mep.webp',
+        image: '/assets/team/amir-rabiee-far.webp',
         title: 'مدیر آزمایشگاه مقاومت مصالح',
         sub: 'مدیریت آزمون‌های کیفی بتن، خاک و مصالح',
       },
@@ -123,23 +123,25 @@ const CHART_ROWS: { className: string | null; leaders: TestLeader[] }[] = [
     leaders: [
       {
         name: 'حامد یزدان پناه',
-        image: '/assets/team/project-manager.webp',
+        image: '/assets/team/hamed-yazdanpanah.webp',
         title: 'مدیر طرح و برنامه',
         sub: 'کنترل پروژه، زمان‌بندی و برنامه‌ریزی اجرایی',
       },
       {
         name: 'کامیار بینا',
+        image: '/assets/team/kamyar-bina.webp',
         title: 'مدیر مالی',
         sub: 'راهبری بودجه، گزارش‌های مالی و انضباط مالی',
       },
       {
         name: 'محمد رحیمی',
+        image: '/assets/team/mohammad-rahimi.webp',
         title: 'مدیر اداری و پشتیبانی',
         sub: 'مدیریت منابع انسانی، امور اداری و پشتیبانی',
       },
       {
         name: 'وحید جمالی',
-        image: '/assets/team/qa-qc.webp',
+        image: '/assets/team/vahid-jamali.webp',
         title: 'مدیر امور قراردادها',
         sub: 'رسیدگی به امور حقوقی، قراردادها و اسناد مناقصه',
       },
@@ -153,7 +155,7 @@ test('about page renders metadata and the centered page head', async ({ page }) 
   const response = await page.goto('/about/');
   expect(response?.status()).toBe(200);
 
-  await expect(page).toHaveTitle('درباره ما | مهندسین مشاور ناجی سازان امین');
+  await expect(page).toHaveTitle('درباره شرکت | مهندسین مشاور ناجی سازان امین');
   await expect(page.locator('meta[name="description"]')).toHaveAttribute(
     'content',
     'درباره شرکت مهندسین مشاور ناجی سازان امین — بیش از دو دهه تجربه در طراحی، نظارت و مدیریت طرح.',

@@ -2243,13 +2243,13 @@ h1, h2, h3, h4, h5, h6 {
 
 @media (max-width: 600px) {
   .circular-gallery-stage {
-    height: 480px;
+    height: 440px;
   }
   .circular-gallery-item {
-    width: 205px;
-    height: 295px;
-    margin-left: -102px;
-    margin-top: -147px;
+    width: 180px;
+    height: 260px;
+    margin-left: -90px;
+    margin-top: -130px;
   }
   .circular-gallery-title {
     font-size: 1rem;
@@ -2760,8 +2760,8 @@ h1, h2, h3, h4, h5, h6 {
    REACT PORT — hydration-safe helpers
    ================================================================ */
 :root { --gallery-radius: 640px; }
-@media (max-width: 959px) { :root { --gallery-radius: 480px; } }
-@media (max-width: 599px) { :root { --gallery-radius: 340px; } }
+@media (max-width: 959px) { :root { --gallery-radius: 400px; } }
+@media (max-width: 599px) { :root { --gallery-radius: 250px; } }
 
 .form-honeypot {
   position: absolute;

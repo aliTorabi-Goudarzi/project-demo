@@ -9,7 +9,7 @@ import { ResponsiveImage } from '@/components/shared/ResponsiveImage';
 import { pageMetadata } from '@/lib/metadata';
 
 export const metadata: Metadata = pageMetadata({
-  title: 'درباره ما | مهندسین مشاور ناجی سازان امین',
+  title: 'درباره شرکت | مهندسین مشاور ناجی سازان امین',
   description:
     'درباره شرکت مهندسین مشاور ناجی سازان امین — بیش از دو دهه تجربه در طراحی، نظارت و مدیریت طرح.',
   path: '/about',

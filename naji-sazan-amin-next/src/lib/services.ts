@@ -38,7 +38,7 @@ export const SERVICES: Service[] = [
   },
   {
     id: 'lab',
-    img: '/assets/projects/real/qiam-dasht/cover.webp',
+    img: '/assets/lab/lab-hall.webp',
     alt: 'خدمات آزمایشگاهی و کنترل کیفیت',
     title: 'خدمات آزمایشگاهی',
     desc: 'آزمون‌های ژئوتکنیک، بتن، میلگرد و جوش با تجهیزات تخصصی؛ پشتیبان کنترل کیفیت طراحی و اجرا.',

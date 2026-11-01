@@ -12,6 +12,7 @@ const FEATURED_PROJECTS = PROJECTS.filter((project) => project.featured);
 
 type ItemState = {
   opacity: string;
+  zIndex: string;
   pointerEvents: 'auto' | 'none';
 };
 
@@ -22,6 +23,10 @@ function itemState(angle: number): ItemState {
 
   return {
     opacity: Math.max(0.18, 1 - (distance / 180) * 1.08).toFixed(3),
+    // opacity < 1 flattens each card into its own plane, which defeats the
+    // browser's 3D depth sorting — layer explicitly by angular distance so the
+    // front card always paints above its neighbours.
+    zIndex: String(1000 - Math.round(distance)),
     pointerEvents: distance < 65 ? 'auto' : 'none',
   };
 }
@@ -214,6 +219,7 @@ export function CircularGallery() {
                 style={{
                   transform: `rotateY(${index * ANGLE_STEP}deg) translateZ(var(--gallery-radius))`,
                   opacity: state.opacity,
+                  zIndex: state.zIndex,
                   pointerEvents: state.pointerEvents,
                 }}
               >

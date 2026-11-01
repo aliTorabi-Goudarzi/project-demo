@@ -88,7 +88,7 @@ test.describe('hero', () => {
       'href',
       /^\/contact\/?$/,
     );
-    await expect(heroActions.getByRole('link', { name: 'درباره ما' })).toHaveAttribute(
+    await expect(heroActions.getByRole('link', { name: 'درباره شرکت' })).toHaveAttribute(
       'href',
       /^\/about\/?$/,
     );
@@ -187,7 +187,7 @@ test.describe('services', () => {
     await expect(section.locator('#svc21Title')).toHaveText('خدمات آزمایشگاهی');
     await expect(section.locator('#svc21Img')).toHaveAttribute(
       'src',
-      imageVariant('/assets/projects/real/qiam-dasht/cover.webp', 800, 'webp'),
+      imageVariant('/assets/lab/lab-hall.webp', 800, 'webp'),
     );
     await expect(section.locator('#svc21Link')).toHaveAttribute('href', /^\/contact\/?$/);
     await expect(section.locator('#svc21Link')).toHaveText('درخواست مشاوره');
@@ -450,7 +450,7 @@ test('pillars, credentials and team match the legacy content', async ({ page }) 
   const leadImage = page.locator('.tmember img').first();
   await expect(leadImage).toHaveAttribute(
     'src',
-    imageVariant('/assets/team/lead-structure.webp', 600, 'webp'),
+    imageVariant('/assets/team/saeid-rafiei.webp', 600, 'webp'),
   );
   await expect(leadImage).toHaveAttribute('width', '600');
   await expect(leadImage).toHaveAttribute('height', '800');

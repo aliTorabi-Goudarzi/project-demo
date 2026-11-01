@@ -11,17 +11,17 @@ type Member = {
 
 const TEAM_COLUMNS: Member[][] = [
   [
-    { name: 'سعید رفیعی', role: 'مدیر نظارت', image: '/assets/team/lead-structure.webp' },
-    { name: 'حامد یزدان پناه', role: 'مدیر طرح و برنامه', image: '/assets/team/project-manager.webp' },
+    { name: 'سعید رفیعی', role: 'مدیر نظارت', image: '/assets/team/saeid-rafiei.webp' },
+    { name: 'حامد یزدان پناه', role: 'مدیر طرح و برنامه', image: '/assets/team/hamed-yazdanpanah.webp' },
   ],
   [
     { name: 'محمد منزوی', role: 'مدیر عامل', image: '/assets/team/ceo.webp', ceo: true },
-    { name: 'امیر ربیعی فر', role: 'مدیر آزمایشگاه', image: '/assets/team/lead-mep.webp' },
-    { name: 'وحید جمالی', role: 'مدیر امور قراردادها', image: '/assets/team/qa-qc.webp' },
+    { name: 'امیر ربیعی فر', role: 'مدیر آزمایشگاه', image: '/assets/team/amir-rabiee-far.webp' },
+    { name: 'وحید جمالی', role: 'مدیر امور قراردادها', image: '/assets/team/vahid-jamali.webp' },
   ],
   [
     { name: 'احمد نادری', role: 'معاونت فنی و نظارت', image: '/assets/team/vp-engineering.webp' },
-    { name: 'مهدی نوری', role: 'مدیر مطالعات و طراحی', image: '/assets/team/head-design.webp' },
+    { name: 'مهدی نوری', role: 'مدیر مطالعات و طراحی', image: '/assets/team/mehdi-nouri.webp' },
   ],
 ];
 

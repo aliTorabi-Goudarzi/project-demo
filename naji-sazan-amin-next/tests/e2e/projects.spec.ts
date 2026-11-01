@@ -90,6 +90,15 @@ test('filters hide and restore the server-rendered cards', async ({ page }) => {
   await expect(page.locator('[data-project="arg-kish"]')).toBeVisible();
   await expect(page.locator('[data-project="france-market-kish"]')).toBeHidden();
 
+  const labChip = page.locator('#filterBar .chip[data-cat="lab"]');
+  await labChip.click();
+  await expect(labChip).toHaveClass(/is-active/);
+  await expect(labChip).toHaveAttribute('aria-pressed', 'true');
+  await expect(supervisionChip).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('.project:visible')).toHaveCount(expectedCounts.lab);
+  await expect(page.locator('[data-project="lab-consolidation"]')).toBeVisible();
+  await expect(page.locator('[data-project="arg-kish"]')).toBeHidden();
+
   await allChip.click();
   await expect(allChip).toHaveClass(/is-active/);
   await expect(allChip).toHaveAttribute('aria-pressed', 'true');

@@ -9,12 +9,13 @@ import { SERVICES } from '../../src/lib/services';
 test.use({ viewport: { width: 390, height: 844 } });
 
 test('data contracts match the current site', () => {
-  expect(PROJECTS).toHaveLength(36);
+  expect(PROJECTS).toHaveLength(46);
   expect(SERVICES).toHaveLength(4);
   expect(PROJECT_CATEGORIES.map((category) => category.slug)).toEqual([
     'all',
     'design',
     'supervision',
+    'lab',
   ]);
   expect(new Set(PROJECTS.map((project) => project.id)).size).toBe(PROJECTS.length);
   expect(getProjectById('france-market-kish')?.title).toBe('بازار فرانسه کیش');
