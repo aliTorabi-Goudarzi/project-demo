@@ -37,20 +37,13 @@ export function ChartConnectors() {
           };
         });
 
-      const ceo = boxes('ceo')[0];
       const vp = boxes('vp')[0];
       const managers = boxes('managers');
-      const staff = boxes('staff');
-      if (!ceo || !vp || managers.length === 0 || staff.length === 0) return;
+      if (!vp || managers.length === 0) return;
 
       const railGap = 22;
-      // Matches the 10px inset of the gold frame around the CEO card in main.css.
-      const ceoFrameGap = 10;
       const managersRail = Math.min(...managers.map((box) => box.top)) - railGap;
-      const staffRail = Math.min(...staff.map((box) => box.top)) - railGap;
       const paths: string[] = [];
-
-      paths.push(`M ${ceo.cx} ${ceo.bottom + ceoFrameGap} L ${ceo.cx} ${vp.top}`);
 
       paths.push(`M ${vp.cx} ${vp.bottom} L ${vp.cx} ${managersRail}`);
       paths.push(
@@ -58,18 +51,6 @@ export function ChartConnectors() {
       );
       for (const manager of managers) {
         paths.push(`M ${manager.cx} ${managersRail} L ${manager.cx} ${manager.top}`);
-      }
-
-      const spineX = chartRect.width - 18;
-      const staffBranchY = ceo.bottom + (vp.top - ceo.bottom) / 2;
-      paths.push(
-        `M ${ceo.cx} ${staffBranchY} L ${spineX} ${staffBranchY} L ${spineX} ${staffRail}`,
-      );
-      paths.push(
-        `M ${spineX} ${staffRail} L ${Math.min(...staff.map((box) => box.cx))} ${staffRail}`,
-      );
-      for (const member of staff) {
-        paths.push(`M ${member.cx} ${staffRail} L ${member.cx} ${member.top}`);
       }
 
       setDrawing({ width: chartRect.width, height: chartRect.height, paths });

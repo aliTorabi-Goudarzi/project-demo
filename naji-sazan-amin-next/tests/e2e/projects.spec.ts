@@ -19,20 +19,19 @@ test('projects page renders head, metadata, chips and server-rendered cards', as
     'نمونه پروژه‌های شرکت مهندسین مشاور ناجی سازان امین.',
   );
 
-  await expect(page.locator('.page-head__title')).toHaveText('نمونه پروژه‌های شاخص');
-  await expect(page.locator('.page-head .lead')).toHaveText(
-    'گزیده‌ای از پروژه‌های شاخص شرکت در حوزه‌های مختلف طراحی، نظارت و مدیریت طرح در سراسر کشور.',
+  await expect(page.locator('main [data-cat-head]:visible .page-head__title')).toHaveText('پروژه‌های طراحی');
+  await expect(page.locator('main [data-cat-head]:visible .page-head .lead')).toHaveText(
+    'گزیده‌ای از پروژه‌های طراحی معماری و سازه؛ از مطالعات فاز صفر و یک تا مدلسازی سه‌بعدی، نقشه‌های اجرایی و هماهنگی تأسیسات.',
   );
 
-  const chips = page.locator('#filterBar.filter-bar.filter-bar--pills .chip');
-  await expect(chips).toHaveCount(PROJECT_CATEGORIES.length);
+  const heads = page.locator('main [data-cat-head]');
+  await expect(heads).toHaveCount(PROJECT_CATEGORIES.length);
   for (const [index, category] of PROJECT_CATEGORIES.entries()) {
-    await expect(chips.nth(index)).toHaveText(
-      `${category.label} (${expectedCounts[category.slug] ?? 0})`,
-    );
+    await expect(heads.nth(index).locator('.page-head__title')).toHaveText(category.title);
+    await expect(heads.nth(index).locator('.page-head .lead')).toHaveText(category.lead);
   }
-  await expect(chips.nth(0)).toHaveClass(/is-active/);
-  await expect(chips.nth(0)).toHaveAttribute('aria-pressed', 'true');
+  await expect(heads.nth(0).locator('.page-head')).toBeVisible();
+  await expect(heads.nth(1).locator('.page-head')).toBeHidden();
 
   const cards = page.locator('#projectGrid.grid.grid-2 .project.spotlight-card.reveal');
   await expect(cards).toHaveCount(PROJECTS.length);
@@ -63,46 +62,27 @@ test('projects page renders head, metadata, chips and server-rendered cards', as
   expect(html.match(/data-project="/g)).toHaveLength(PROJECTS.length);
 });
 
-test('filters hide and restore the server-rendered cards', async ({ page }) => {
-  await page.goto('/projects/');
-
-  const allChip = page.locator('#filterBar .chip[data-cat="all"]');
-  const designChip = page.locator('#filterBar .chip[data-cat="design"]');
-  const supervisionChip = page.locator('#filterBar .chip[data-cat="supervision"]');
+test('the ?cat param selects the category, its cards and its page head', async ({ page }) => {
   const cards = page.locator('#projectGrid .project');
 
-  await designChip.click();
-  await expect(designChip).toHaveClass(/is-active/);
-  await expect(designChip).toHaveAttribute('aria-pressed', 'true');
-  await expect(allChip).not.toHaveClass(/is-active/);
-  await expect(allChip).toHaveAttribute('aria-pressed', 'false');
-
+  await page.goto('/projects/');
+  await expect(page.locator('main [data-cat-head]:visible .page-head__title')).toHaveText('پروژه‌های طراحی');
   await expect(page.locator('.project:visible')).toHaveCount(expectedCounts.design);
   await expect(page.locator('[data-project="france-market-kish"]')).toBeVisible();
   await expect(page.locator('[data-project="arg-kish"]')).toBeHidden();
   await expect(cards).toHaveCount(PROJECTS.length);
 
-  await supervisionChip.click();
-  await expect(supervisionChip).toHaveClass(/is-active/);
-  await expect(supervisionChip).toHaveAttribute('aria-pressed', 'true');
-  await expect(designChip).toHaveAttribute('aria-pressed', 'false');
+  await page.goto('/projects/?cat=supervision');
+  await expect(page.locator('main [data-cat-head]:visible .page-head__title')).toHaveText('پروژه‌های نظارت');
   await expect(page.locator('.project:visible')).toHaveCount(expectedCounts.supervision);
   await expect(page.locator('[data-project="arg-kish"]')).toBeVisible();
   await expect(page.locator('[data-project="france-market-kish"]')).toBeHidden();
 
-  const labChip = page.locator('#filterBar .chip[data-cat="lab"]');
-  await labChip.click();
-  await expect(labChip).toHaveClass(/is-active/);
-  await expect(labChip).toHaveAttribute('aria-pressed', 'true');
-  await expect(supervisionChip).toHaveAttribute('aria-pressed', 'false');
+  await page.goto('/projects/?cat=lab');
+  await expect(page.locator('main [data-cat-head]:visible .page-head__title')).toHaveText('خدمات آزمایشگاهی');
   await expect(page.locator('.project:visible')).toHaveCount(expectedCounts.lab);
   await expect(page.locator('[data-project="lab-consolidation"]')).toBeVisible();
   await expect(page.locator('[data-project="arg-kish"]')).toBeHidden();
-
-  await allChip.click();
-  await expect(allChip).toHaveClass(/is-active/);
-  await expect(allChip).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.locator('.project:visible')).toHaveCount(PROJECTS.length);
   await expect(cards).toHaveCount(PROJECTS.length);
 });
 
@@ -172,20 +152,20 @@ test('the modal traps keyboard focus, hides itself when closed and restores focu
 test('project cards are keyboard operable', async ({ page }) => {
   await page.goto('/projects/');
 
-  const card = page.locator('[data-project="arg-kish"]');
+  const card = page.locator('[data-project="france-market-kish"]');
   const modal = page.locator('#projectModal');
 
   await card.focus();
   await page.keyboard.press('Enter');
   await expect(modal).toHaveClass(/is-open/);
-  await expect(page.locator('#modalTitle')).toHaveText('مجتمع مسکونی ارگ کیش');
+  await expect(page.locator('#modalTitle')).toHaveText('بازار فرانسه کیش');
 
   await page.keyboard.press('Escape');
   await expect(modal).not.toHaveClass(/is-open/);
 
   await page.keyboard.press('Space');
   await expect(modal).toHaveClass(/is-open/);
-  await expect(page.locator('#modalTitle')).toHaveText('مجتمع مسکونی ارگ کیش');
+  await expect(page.locator('#modalTitle')).toHaveText('بازار فرانسه کیش');
 });
 
 test('CTA points to the contact page', async ({ page }) => {

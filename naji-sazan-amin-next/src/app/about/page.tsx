@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
 import { AnimatedStat } from '@/components/about/AnimatedStat';
+import { CollapsibleText } from '@/components/about/CollapsibleText';
 import { LeadershipChart } from '@/components/about/LeadershipChart';
 import { CtaPanel } from '@/components/shared/CtaPanel';
 import { PageHead } from '@/components/shared/PageHead';
@@ -168,8 +169,10 @@ export default function AboutPage() {
           </div>
 
           <div className="about-resume about-resume--top reveal">
-            <p>{RESUME_PARAGRAPHS[0]}</p>
-            <p>{RESUME_PARAGRAPHS[1]}</p>
+            <CollapsibleText>
+              <p>{RESUME_PARAGRAPHS[0]}</p>
+              <p>{RESUME_PARAGRAPHS[1]}</p>
+            </CollapsibleText>
           </div>
 
           <div className="about-bento-grid about-bento-grid--cards">
@@ -202,8 +205,10 @@ export default function AboutPage() {
           </div>
 
           <div className="about-resume about-resume--bottom reveal">
-            <p>{RESUME_PARAGRAPHS[2]}</p>
-            <p>{RESUME_PARAGRAPHS[3]}</p>
+            <CollapsibleText>
+              <p>{RESUME_PARAGRAPHS[2]}</p>
+              <p>{RESUME_PARAGRAPHS[3]}</p>
+            </CollapsibleText>
           </div>
 
           <div className="about-vision reveal" id="vision">
@@ -222,7 +227,9 @@ export default function AboutPage() {
           </div>
 
           <div className="about-resume about-resume--closing reveal">
-            <p>{RESUME_PARAGRAPHS[4]}</p>
+            <CollapsibleText>
+              <p>{RESUME_PARAGRAPHS[4]}</p>
+            </CollapsibleText>
           </div>
 
           <div className="executive-glass reveal">
@@ -238,7 +245,7 @@ export default function AboutPage() {
             </div>
             <div className="executive-details">
               <h3>مهندس محمد منزوی</h3>
-              <span className="executive-role-pill">بنیان‌گذار و مدیر عامل مهندسین مشاور</span>
+              <span className="executive-role-pill">مدیر عامل مهندسین مشاور</span>
               <p className="executive-bio">
                 فوق لیسانس معماری از دانشگاه تهران با بیش از ۳۲ سال سابقه ارشد مدیریتی و اجرایی در
                 کلان‌پروژه‌های کشور. دارای پروانه اشتغال به کار مهندسی پایه ارشد در سه صلاحیت نظارت،

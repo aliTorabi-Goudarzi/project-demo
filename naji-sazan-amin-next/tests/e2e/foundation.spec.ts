@@ -12,7 +12,6 @@ test('data contracts match the current site', () => {
   expect(PROJECTS).toHaveLength(46);
   expect(SERVICES).toHaveLength(4);
   expect(PROJECT_CATEGORIES.map((category) => category.slug)).toEqual([
-    'all',
     'design',
     'supervision',
     'lab',

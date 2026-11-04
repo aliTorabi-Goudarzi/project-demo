@@ -1,41 +1,15 @@
 'use client';
 
-import { useState } from 'react';
-
 import { useProjectModal } from '@/components/layout/ProjectModalContext';
 import { ResponsiveImage } from '@/components/shared/ResponsiveImage';
-import { PROJECTS, PROJECT_CATEGORIES } from '@/lib/projects';
-
-const counts: Record<string, number> = { all: PROJECTS.length };
-for (const project of PROJECTS) {
-  counts[project.serviceSlug] = (counts[project.serviceSlug] ?? 0) + 1;
-}
+import { PROJECTS } from '@/lib/projects';
 
 export function ProjectsExplorer() {
-  const [activeCategory, setActiveCategory] = useState('all');
   const { openProject } = useProjectModal();
 
   return (
     <section className="section">
       <div className="container">
-        <div className="filter-bar filter-bar--pills reveal" id="filterBar">
-          {PROJECT_CATEGORIES.map((category) => {
-            const active = category.slug === activeCategory;
-            return (
-              <button
-                key={category.slug}
-                type="button"
-                className={active ? 'chip is-active' : 'chip'}
-                data-cat={category.slug}
-                aria-pressed={active}
-                onClick={() => setActiveCategory(category.slug)}
-              >
-                {category.label} <span className="n">({counts[category.slug] ?? 0})</span>
-              </button>
-            );
-          })}
-        </div>
-
         <div className="grid grid-2" id="projectGrid">
           {PROJECTS.map((project, index) => (
             <article
@@ -47,12 +21,6 @@ export function ProjectsExplorer() {
               role="button"
               tabIndex={0}
               aria-label={`مشاهده پروژه ${project.title}`}
-              style={{
-                display:
-                  activeCategory === 'all' || project.serviceSlug === activeCategory
-                    ? undefined
-                    : 'none',
-              }}
               onClick={() => openProject(project.id)}
               onKeyDown={(event) => {
                 if (event.key === 'Enter' || event.key === ' ') {

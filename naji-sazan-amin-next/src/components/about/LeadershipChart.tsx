@@ -10,14 +10,6 @@ type Leader = {
   ceo?: boolean;
 };
 
-const CEO: Leader = {
-  name: 'محمد منزوی',
-  image: '/assets/team/ceo.webp',
-  title: 'مدیر عامل',
-  sub: 'بنیان‌گذار و راهبر ارشد مجموعه',
-  ceo: true,
-};
-
 const VP: Leader = {
   name: 'احمد نادری',
   image: '/assets/team/vp-engineering.webp',
@@ -123,13 +115,6 @@ export function LeadershipChart() {
       <ChartConnectors />
 
       <div
-        className="org-chart__row org-chart__row--single org-chart__row--ceo reveal"
-        data-tier="ceo"
-      >
-        <LeaderCard leader={CEO} />
-      </div>
-
-      <div
         className="org-chart__row org-chart__row--single reveal"
         data-tier="vp"
         data-delay="1"
@@ -148,7 +133,7 @@ export function LeadershipChart() {
       </div>
 
       <div
-        className="org-chart__row org-chart__row--branched org-chart__row--staff reveal"
+        className="org-chart__row org-chart__row--staff reveal"
         data-tier="staff"
         data-delay="3"
       >

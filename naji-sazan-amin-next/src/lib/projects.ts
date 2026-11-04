@@ -645,10 +645,24 @@ const PROJECT_SEEDS: ProjectSeed[] = [
 export const PROJECTS: Project[] = PROJECT_SEEDS.map(buildProject);
 
 export const PROJECT_CATEGORIES = [
-  { slug: 'all', label: 'همه' },
-  { slug: 'design', label: 'طراحی' },
-  { slug: 'supervision', label: 'نظارت' },
-  { slug: 'lab', label: 'آزمایشگاهی' },
+  {
+    slug: 'design',
+    label: 'طراحی',
+    title: 'پروژه‌های طراحی',
+    lead: 'گزیده‌ای از پروژه‌های طراحی معماری و سازه؛ از مطالعات فاز صفر و یک تا مدلسازی سه‌بعدی، نقشه‌های اجرایی و هماهنگی تأسیسات.',
+  },
+  {
+    slug: 'supervision',
+    label: 'نظارت',
+    title: 'پروژه‌های نظارت',
+    lead: 'نظارت کارگاهی و عالیه پروژه‌های عمرانی در سراسر کشور با دفاتر فنی، ناظران مقیم و کنترل کیفیت اجرا.',
+  },
+  {
+    slug: 'lab',
+    label: 'آزمایشگاهی',
+    title: 'خدمات آزمایشگاهی',
+    lead: 'تجهیزات آزمایشگاه مقاومت مصالح و کنترل کیفیت بتن، خاک و میلگرد بر اساس استانداردهای ملی و بین‌المللی.',
+  },
 ];
 
 export function getProjectById(id: string): Project | undefined {

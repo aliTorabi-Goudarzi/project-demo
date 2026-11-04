@@ -73,18 +73,6 @@ type TestLeader = {
 
 const CHART_ROWS: { className: string | null; leaders: TestLeader[] }[] = [
   {
-    className: 'org-chart__row--ceo',
-    leaders: [
-      {
-        name: 'محمد منزوی',
-        image: '/assets/team/ceo.webp',
-        title: 'مدیر عامل',
-        sub: 'بنیان‌گذار و راهبر ارشد مجموعه',
-        ceo: true,
-      },
-    ],
-  },
-  {
     className: null,
     leaders: [
       {
@@ -329,9 +317,7 @@ test('executive spotlight presents the CEO profile, quote and matrix', async ({ 
   await expect(photo).toHaveAttribute('decoding', 'async');
 
   await expect(spot.locator('.executive-details h3')).toHaveText('مهندس محمد منزوی');
-  await expect(spot.locator('.executive-role-pill')).toHaveText(
-    'بنیان‌گذار و مدیر عامل مهندسین مشاور',
-  );
+  await expect(spot.locator('.executive-role-pill')).toHaveText('مدیر عامل مهندسین مشاور');
   await expect(spot.locator('.executive-bio')).toHaveText(
     'فوق لیسانس معماری از دانشگاه تهران با بیش از ۳۲ سال سابقه ارشد مدیریتی و اجرایی در کلان‌پروژه‌های کشور. دارای پروانه اشتغال به کار مهندسی پایه ارشد در سه صلاحیت نظارت، طراحی و اجرا و سابقه هدایت شرکت‌های مهندسی معتبر و طرح‌های ملی.',
   );
@@ -375,7 +361,7 @@ test('leadership chart arranges all nine managers in four tiers', async ({ page 
 
   const chart = page.locator('main .org-chart');
   await expect(chart).toHaveCount(1);
-  await expect(chart.locator('.org-chart__connectors path')).toHaveCount(12);
+  await expect(chart.locator('.org-chart__connectors path')).toHaveCount(5);
 
   const rows = chart.locator('.org-chart__row');
   await expect(rows).toHaveCount(CHART_ROWS.length);
@@ -491,5 +477,66 @@ test('about images resolve with image content types', async ({ page }) => {
     const response = await page.request.get(assetUrl(image));
     expect(response.status(), image).toBe(200);
     expect(response.headers()['content-type'] ?? '', image).toMatch(/^image\//);
+  }
+});
+
+test('long résumé texts collapse behind a mobile accordion', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/about/');
+
+  const accordions = page.locator('main .about-resume .text-accordion');
+  await expect(accordions).toHaveCount(3);
+
+  for (const accordion of await accordions.all()) {
+    await expect(accordion.locator('.text-accordion__toggle')).toBeVisible();
+    await expect(accordion.locator('.text-accordion__toggle')).toHaveAttribute(
+      'aria-expanded',
+      'false',
+    );
+    await expect(accordion.locator('.text-accordion__toggle')).toContainText('ادامه مطلب');
+  }
+
+  const first = accordions.first();
+  const clip = first.locator('.text-accordion__clip');
+  const clampedOverflow = await clip.evaluate(
+    (element) => (element as HTMLElement).scrollHeight - (element as HTMLElement).clientHeight,
+  );
+  expect(clampedOverflow, 'collapsed preview must hide the rest of the text').toBeGreaterThan(80);
+
+  await first.locator('.text-accordion__toggle').click();
+  await expect(first).toHaveClass(/is-open/);
+  await expect(first.locator('.text-accordion__toggle')).toHaveAttribute('aria-expanded', 'true');
+  await expect(first.locator('.text-accordion__toggle')).toContainText('بستن');
+  const openOverflow = await clip.evaluate(
+    (element) => (element as HTMLElement).scrollHeight - (element as HTMLElement).clientHeight,
+  );
+  expect(openOverflow, 'opening must reveal the full text').toBeLessThanOrEqual(1);
+
+  // every About paragraph is justified on phones
+  const justified = ['main .about-resume--top p', 'main .about-resume--closing p', 'main .about-vision__intro p', 'main .bento-card--hero .bento-content p', 'main .executive-bio'];
+  for (const selector of justified) {
+    const alignment = await page
+      .locator(selector)
+      .first()
+      .evaluate((element) => getComputedStyle(element).textAlign);
+    expect(alignment, selector).toBe('justify');
+  }
+});
+
+test('desktop renders the résumé texts in full without the accordion toggle', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/about/');
+
+  await expect(page.locator('main .text-accordion')).toHaveCount(3);
+  for (const toggle of await page.locator('main .text-accordion__toggle').all()) {
+    await expect(toggle).toBeHidden();
+  }
+
+  const clips = page.locator('main .text-accordion__clip');
+  for (const clip of await clips.all()) {
+    const overflow = await clip.evaluate(
+      (element) => (element as HTMLElement).scrollHeight - (element as HTMLElement).clientHeight,
+    );
+    expect(overflow, 'desktop must show the full text').toBeLessThanOrEqual(1);
   }
 });

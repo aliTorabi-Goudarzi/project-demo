@@ -139,6 +139,35 @@ h1, h2, h3, h4, h5, h6 {
 }
 .nav__link:hover { color: var(--brand); background: var(--brand-soft); }
 .nav__link.is-active { color: var(--brand); font-weight: var(--fw-semi); background: var(--brand-soft); }
+.nav__item.has-sub { position: relative; }
+.nav__submenu {
+  position: absolute;
+  top: calc(100% + 6px);
+  inset-inline-start: 0;
+  min-width: 100%;
+  padding: var(--space-2);
+  background: var(--bg-panel);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  display: none;
+  z-index: 60;
+}
+.nav__item.has-sub:hover .nav__submenu,
+.nav__item.has-sub:focus-within .nav__submenu {
+  display: block;
+}
+.nav__sublink {
+  display: block;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: var(--fw-medium);
+  color: var(--fg-muted);
+  white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+.nav__sublink:hover { color: var(--brand); background: var(--brand-soft); }
 
 .header-actions { display: flex; align-items: center; gap: var(--space-3); }
 
@@ -195,6 +224,16 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--fg);
 }
 .drawer__link.is-active { color: var(--accent); }
+.drawer__sublink {
+  display: block;
+  margin-inline-start: var(--space-4);
+  padding: var(--space-2) var(--space-4);
+  border-inline-start: 2px solid var(--line-soft);
+  font-size: var(--text-base);
+  font-weight: var(--fw-medium);
+  color: var(--fg-muted);
+}
+.drawer__sublink:hover { color: var(--accent); }
 .drawer .btn { margin-top: var(--space-7); }
 
 /* ================================================================
@@ -2756,6 +2795,29 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
+/* Projects page: the category comes from ?cat= (set on <html> by an inline
+   bootstrap script) — one page head and one card set per category. */
+[data-cat-head] { display: none; }
+html[data-cat='design'] [data-cat-head='design'],
+html[data-cat='supervision'] [data-cat-head='supervision'],
+html[data-cat='lab'] [data-cat-head='lab'] {
+  display: block;
+}
+html:not([data-cat]) [data-cat-head='design'] { display: block; }
+html[data-cat='design'] .project:not([data-cat='design']),
+html[data-cat='supervision'] .project:not([data-cat='supervision']),
+html[data-cat='lab'] .project:not([data-cat='lab']) {
+  display: none;
+}
+
+/* Horizontal-scroll guard: nothing may widen the document on mobile.
+   `clip` (unlike `hidden`) never turns html/body into a scroll container,
+   so position: sticky/fixed keep working. */
+html,
+body {
+  overflow-x: clip;
+}
+
 /* ================================================================
    REACT PORT — hydration-safe helpers
    ================================================================ */
@@ -2931,7 +2993,7 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--fg-muted);
   line-height: var(--lh-loose);
   font-size: 0.98rem;
-  text-align: right;
+  text-align: justify;
 }
 
 .about-resume p:last-child {
@@ -2962,4 +3024,84 @@ h1, h2, h3, h4, h5, h6 {
 
 @media (max-width: 880px) {
   .about-vision { grid-template-columns: 1fr; }
+}
+
+/* Mobile accordion for the long résumé texts (client request): phones see a
+   one-to-two-sentence preview with a fade, the rest opens via the toggle.
+   The clamp is pure CSS so the static HTML renders collapsed on phones with
+   no hydration flash; desktop keeps the approved full-text layout. */
+.text-accordion__body {
+  position: relative;
+}
+.text-accordion__clip {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+.text-accordion__body::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 2.75rem;
+  background: linear-gradient(to bottom, transparent, var(--bg));
+  pointer-events: none;
+}
+.text-accordion__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-block-start: 0.75rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease);
+}
+.text-accordion__toggle svg {
+  transition: transform var(--dur-base) var(--ease);
+}
+.text-accordion__toggle:hover {
+  color: var(--fg);
+}
+.text-accordion.is-open .text-accordion__clip {
+  display: block;
+  overflow: visible;
+}
+.text-accordion.is-open .text-accordion__body::after {
+  content: none;
+}
+.text-accordion.is-open .text-accordion__toggle svg {
+  transform: rotate(180deg);
+}
+
+@media (min-width: 601px) {
+  .text-accordion__clip,
+  .text-accordion.is-open .text-accordion__clip {
+    display: block;
+    overflow: visible;
+  }
+  .text-accordion__body::after {
+    content: none;
+  }
+  .text-accordion__toggle {
+    display: none;
+  }
+}
+
+/* On phones every About paragraph is justified (client request); the
+   approved desktop alignments are untouched. */
+@media (max-width: 600px) {
+  .about-resume--closing p,
+  .about-vision__intro p,
+  .bento-card--hero .bento-content p,
+  .about-bento-grid--cards .bento-card p,
+  .executive-bio {
+    text-align: justify;
+  }
 }

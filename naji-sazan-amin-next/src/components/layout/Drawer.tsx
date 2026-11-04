@@ -42,14 +42,21 @@ export function Drawer({ open, onClose }: DrawerProps) {
       }}
     >
       {NAV_ITEMS.map((item) => (
-        <Link
-          key={item.href}
-          className={normalizePath(item.href) === pathname ? 'drawer__link is-active' : 'drawer__link'}
-          href={item.href}
-          onClick={onClose}
-        >
-          {item.label}
-        </Link>
+        <div key={item.href} className="drawer__group">
+          <Link
+            className={normalizePath(item.href) === pathname ? 'drawer__link is-active' : 'drawer__link'}
+            href={item.href}
+            onClick={onClose}
+          >
+            {item.label}
+          </Link>
+          {item.children?.map((child) => (
+            // Full navigation so the ?cat bootstrap script re-runs on /projects.
+            <a key={child.href} className="drawer__sublink" href={child.href}>
+              {child.label}
+            </a>
+          ))}
+        </div>
       ))}
       <Link className="btn btn--primary btn--block" href={ctaHref} onClick={onClose}>
         {SITE.ctaLabel}

@@ -17,7 +17,7 @@ function normalizeHref(href: string) {
 }
 
 function headerNav(page: Page) {
-  return page.locator(`#siteHeader nav[aria-label="${SITE.navAria}"] a`);
+  return page.locator(`#siteHeader nav[aria-label="${SITE.navAria}"] a.nav__link`);
 }
 
 test('header navigation exposes the four sections in order with the consultation CTA', async ({ page }) => {
@@ -42,6 +42,24 @@ test('header navigation exposes the four sections in order with the consultation
   await expect(cta).toBeVisible();
   await expect(cta).toHaveText(SITE.ctaLabel);
   await expect(cta).toHaveAttribute('href', '/contact/');
+
+  const projectsItem = page.locator('#siteHeader .nav__item.has-sub');
+  await expect(projectsItem).toHaveCount(1);
+  await expect(projectsItem.locator('.nav__submenu .nav__sublink')).toHaveText([
+    'طراحی',
+    'نظارت',
+    'آزمایشگاهی',
+  ]);
+  await expect(projectsItem.locator('.nav__submenu .nav__sublink').first()).toHaveAttribute(
+    'href',
+    '/projects/?cat=design',
+  );
+  await expect(projectsItem.locator('.nav__submenu')).toBeHidden();
+
+  await projectsItem.locator('.nav__link').hover();
+  await expect(projectsItem.locator('.nav__submenu')).toBeVisible();
+  await page.mouse.move(0, 400);
+  await expect(projectsItem.locator('.nav__submenu')).toBeHidden();
 });
 
 test('the active navigation item follows the current route', async ({ page }) => {

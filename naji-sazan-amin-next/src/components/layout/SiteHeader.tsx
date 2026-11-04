@@ -73,15 +73,38 @@ export function SiteHeader() {
             </span>
           </Link>
           <nav className="nav" aria-label={SITE.navAria}>
-            {NAV_ITEMS.map((item) => (
-              <Link
-                key={item.href}
-                className={normalizePath(item.href) === pathname ? 'nav__link is-active' : 'nav__link'}
-                href={item.href}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {NAV_ITEMS.map((item) => {
+              const linkClass =
+                normalizePath(item.href) === pathname ? 'nav__link is-active' : 'nav__link';
+              if (!item.children) {
+                return (
+                  <Link key={item.href} className={linkClass} href={item.href}>
+                    {item.label}
+                  </Link>
+                );
+              }
+              return (
+                <div
+                  key={item.href}
+                  className={
+                    normalizePath(item.href) === pathname ? 'nav__item has-sub is-active' : 'nav__item has-sub'
+                  }
+                >
+                  <Link className={linkClass} href={item.href} aria-haspopup="true">
+                    {item.label}
+                  </Link>
+                  <div className="nav__submenu">
+                    {item.children.map((child) => (
+                      // A full navigation re-runs the ?cat bootstrap script on
+                      // /projects — a soft Link navigation would skip it.
+                      <a key={child.href} className="nav__sublink" href={child.href}>
+                        {child.label}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
           </nav>
           <div className="header-actions">
             <button className="theme-toggle" type="button" id="themeToggle" aria-label={SITE.themeLabel} onClick={toggleTheme}>

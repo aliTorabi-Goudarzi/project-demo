@@ -1,3 +1,5 @@
+import { PROJECT_CATEGORIES } from './projects';
+
 export const SITE = {
   name: 'ناجی سازان امین',
   legalName: 'مهندسین مشاور ناجی سازان امین',
@@ -26,9 +28,19 @@ export const SITE = {
   },
 };
 
-export const NAV_ITEMS = [
+export type NavChild = { label: string; href: string };
+export type NavItem = { label: string; href: string; children?: NavChild[] };
+
+export const NAV_ITEMS: NavItem[] = [
   { label: 'خانه', href: '/' },
-  { label: 'پروژه‌ها', href: '/projects' },
+  {
+    label: 'پروژه‌ها',
+    href: '/projects',
+    children: PROJECT_CATEGORIES.map((category) => ({
+      label: category.label,
+      href: `/projects/?cat=${category.slug}`,
+    })),
+  },
   { label: 'درباره شرکت', href: '/about' },
   { label: 'تماس', href: '/contact' },
 ];
