@@ -6,7 +6,7 @@ import '@/styles/tokens.css';
 import '@/styles/main.css';
 
 import { ProjectModalProvider } from '@/components/layout/ProjectModalProvider';
-import { ServiceWorkerRegistration } from '@/components/layout/ServiceWorkerRegistration';
+import { ServiceWorkerCleanup } from '@/components/layout/ServiceWorkerCleanup';
 import { SiteEffects } from '@/components/layout/SiteEffects';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
@@ -58,7 +58,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <SiteFooter />
         </ProjectModalProvider>
         <SiteEffects />
-        <ServiceWorkerRegistration />
+        <ServiceWorkerCleanup />
       </body>
     </html>
   );

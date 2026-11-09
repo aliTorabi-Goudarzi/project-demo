@@ -81,7 +81,7 @@ test('the ?cat param selects the category, its cards and its page head', async (
   await page.goto('/projects/?cat=lab');
   await expect(page.locator('main [data-cat-head]:visible .page-head__title')).toHaveText('خدمات آزمایشگاهی');
   await expect(page.locator('.project:visible')).toHaveCount(expectedCounts.lab);
-  await expect(page.locator('[data-project="lab-consolidation"]')).toBeVisible();
+  await expect(page.locator('[data-project="lab-magnetic-particle"]')).toBeVisible();
   await expect(page.locator('[data-project="arg-kish"]')).toBeHidden();
   await expect(cards).toHaveCount(PROJECTS.length);
 });

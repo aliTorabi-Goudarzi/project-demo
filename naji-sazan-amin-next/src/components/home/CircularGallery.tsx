@@ -59,6 +59,10 @@ export function CircularGallery() {
       items.forEach((item, index) => {
         const state = itemState(angle + index * ANGLE_STEP);
         item.style.opacity = state.opacity;
+        // zIndex must follow the rotation too: a stale value keeps whichever
+        // card was front-most at load on top, so its semi-transparent body
+        // paints over the card that has since rotated to the front.
+        item.style.zIndex = state.zIndex;
         item.style.pointerEvents = state.pointerEvents;
       });
     };
@@ -101,6 +105,7 @@ export function CircularGallery() {
     };
 
     applyAngle(currentAngle);
+    applyItems(currentAngle);
 
     let observer: IntersectionObserver | null = null;
     if (typeof IntersectionObserver === 'undefined') {
@@ -138,14 +143,20 @@ export function CircularGallery() {
     };
     window.addEventListener('scroll', onScroll, { passive: true });
 
+    // Hovering the stage pauses the drift (desktop). Only bind these on
+    // devices that really hover—on touch screens a tap fires a synthetic
+    // mouseenter and the gallery would stay paused forever.
+    const hoverMedia = window.matchMedia('(hover: hover)');
     const onEnter = () => {
       autoRotating = false;
     };
     const onLeave = () => {
       autoRotating = true;
     };
-    stage.addEventListener('mouseenter', onEnter);
-    stage.addEventListener('mouseleave', onLeave);
+    if (hoverMedia.matches) {
+      stage.addEventListener('mouseenter', onEnter);
+      stage.addEventListener('mouseleave', onLeave);
+    }
 
     const step = (delta: number) => {
       targetAngle += delta;
@@ -179,8 +190,10 @@ export function CircularGallery() {
       observer?.disconnect();
       stop();
       window.removeEventListener('scroll', onScroll);
-      stage.removeEventListener('mouseenter', onEnter);
-      stage.removeEventListener('mouseleave', onLeave);
+      if (hoverMedia.matches) {
+        stage.removeEventListener('mouseenter', onEnter);
+        stage.removeEventListener('mouseleave', onLeave);
+      }
       prev?.removeEventListener('click', onPrev);
       next?.removeEventListener('click', onNext);
       media.removeEventListener('change', onMotionChange);

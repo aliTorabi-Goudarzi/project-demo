@@ -103,15 +103,55 @@ test.describe('hero', () => {
     expect(await video.evaluate((element) => (element as HTMLVideoElement).playsInline)).toBe(true);
 
     const sources = video.locator('source');
-    await expect(sources).toHaveCount(2);
+    // Only the alpha WebM is offered: the old H.264 fallback was an opaque
+    // white render that showed as a white hero block on any browser that
+    // fell back to it.
+    await expect(sources).toHaveCount(1);
     await expect(sources.nth(0)).toHaveAttribute('src', assetUrl('/assets/hero-building-loop.webm'));
     await expect(sources.nth(0)).toHaveAttribute('type', 'video/webm');
-    await expect(sources.nth(1)).toHaveAttribute('src', assetUrl('/assets/hero-building-loop.mp4'));
-    await expect(sources.nth(1)).toHaveAttribute('type', 'video/mp4');
+
+    // The poster must be transparent too — an opaque one paints a white block
+    // over the hero while the video's first frame has not painted yet.
+    const posterCornerAlpha = await page.evaluate(async (src) => {
+      const image = new Image();
+      image.src = src;
+      await image.decode();
+      const canvas = document.createElement('canvas');
+      canvas.width = image.naturalWidth;
+      canvas.height = image.naturalHeight;
+      const context = canvas.getContext('2d')!;
+      context.drawImage(image, 0, 0);
+      return context.getImageData(0, 0, 1, 1).data[3];
+    }, assetUrl('/assets/hero-poster.webp'));
+    expect(posterCornerAlpha, 'hero poster must have a transparent background').toBe(0);
 
     await expect(page.locator('.hero__bg-overlay')).toHaveCount(1);
     await expect(page.locator('.hero__ambient')).toHaveCount(1);
     await expect(page.locator('.hero__grid')).toHaveCount(1);
+  });
+
+  test('recovers the loop with a fresh request when the first video load fails', async ({ page }) => {
+    let requests = 0;
+    await page.route('**/assets/hero-building-loop*', (route) => {
+      requests += 1;
+      return requests === 1 ? route.abort() : route.continue();
+    });
+
+    await page.goto('/');
+    const video = page.locator('video#heroBgVideo');
+    await expect
+      .poll(
+        () =>
+          video.evaluate((element) => {
+            const el = element as HTMLVideoElement;
+            return !el.paused && el.currentTime > 0;
+          }),
+        { timeout: 20_000 },
+      )
+      .toBe(true);
+
+    const currentSrc = await video.evaluate((element) => (element as HTMLVideoElement).currentSrc);
+    expect(currentSrc, 'the retry must bypass the broken cached response').toContain('retry=');
   });
 
   test('background video plays while the hero is visible and pauses when it leaves the viewport', async ({ page }) => {
@@ -338,6 +378,80 @@ test.describe('circular gallery', () => {
       'href',
       /^\/projects\/?$/,
     );
+  });
+
+  test('the card nearest the camera keeps the top layer while the ring rotates', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/');
+
+    const stage = page.locator('.circular-gallery-stage');
+    await stage.scrollIntoViewIfNeeded();
+
+    const readStack = () =>
+      page.evaluate(() => {
+        const rotator = document.getElementById('circularGalleryRotator');
+        const rotMatch = /rotateY\((-?[\d.]+)deg\)/.exec(rotator?.style.transform ?? '');
+        const rot = rotMatch ? parseFloat(rotMatch[1]!) : Number.NaN;
+
+        const items = Array.from(
+          document.querySelectorAll<HTMLElement>('.circular-gallery-item'),
+        ).map((element, index) => {
+          const angleMatch = /rotateY\((-?[\d.]+)deg\)/.exec(element.style.transform);
+          const angle = angleMatch ? parseFloat(angleMatch[1]!) : Number.NaN;
+          const d = (((angle + rot) % 360) + 360) % 360;
+          const distance = Math.min(d, 360 - d);
+          const rect = element.getBoundingClientRect();
+          return {
+            index,
+            distance,
+            zIndex: Number(getComputedStyle(element).zIndex),
+            rect: { left: rect.left, right: rect.right, height: rect.height },
+          };
+        });
+
+        return { rot, items };
+      });
+
+    // Wait until the ring has rotated well past one 30° step and a card is
+    // near the front — the exact phase where the stale-zIndex bug used to
+    // paint the previous front card over the new one.
+    await expect
+      .poll(
+        async () => {
+          const { rot, items } = await readStack();
+          const front = items.reduce((a, b) => (a.distance <= b.distance ? a : b));
+          return rot < -40 && front.distance < 4 ? 1 : 0;
+        },
+        { timeout: 20_000 },
+      )
+      .toBe(1);
+
+    const { items } = await readStack();
+    const front = items.reduce((a, b) => (a.distance <= b.distance ? a : b));
+    const topZ = Math.max(...items.map((item) => item.zIndex));
+    expect(topZ, 'the front card must own the highest z-index').toBe(front.zIndex);
+
+    // Phones show exactly three cards and, like the desktop ring, the cards
+    // keep the same size — the arc perspective alone does the depth cueing.
+    // (Cards on the far side of the ring are backface-hidden; their boxes can
+    // still intersect the viewport, so only the front hemisphere counts.)
+    const visible = items.filter(
+      (item) => item.distance < 90 && item.rect.right > 0 && item.rect.left < 390,
+    );
+    expect(visible).toHaveLength(3);
+
+    for (const side of visible.filter((item) => item.index !== front.index)) {
+      expect(side.zIndex).toBeLessThan(front.zIndex);
+      expect(
+        Math.abs(side.rect.height - front.rect.height) / front.rect.height,
+        `card #${side.index} should match the front card's size`,
+      ).toBeLessThan(0.1);
+      const gap =
+        side.rect.left > front.rect.left
+          ? side.rect.left - front.rect.right
+          : front.rect.left - side.rect.right;
+      expect(gap, `gap between the front card and card #${side.index}`).toBeGreaterThan(7);
+    }
   });
 
   test('hover pauses auto-rotation and prev/next rotate the stage', async ({ page }) => {

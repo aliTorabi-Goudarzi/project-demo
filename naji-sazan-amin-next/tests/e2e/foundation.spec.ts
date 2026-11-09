@@ -9,7 +9,7 @@ import { SERVICES } from '../../src/lib/services';
 test.use({ viewport: { width: 390, height: 844 } });
 
 test('data contracts match the current site', () => {
-  expect(PROJECTS).toHaveLength(46);
+  expect(PROJECTS).toHaveLength(45);
   expect(SERVICES).toHaveLength(4);
   expect(PROJECT_CATEGORIES.map((category) => category.slug)).toEqual([
     'design',
@@ -46,11 +46,13 @@ test('non-hero navigation keeps App Router prefetch enabled', () => {
   expect(hero).toContain('prefetch={false}');
 });
 
-test('static export ships styles, the service worker and speculation rules', () => {
+test('static export ships styles and speculation rules without a service worker', () => {
   const html = fs.readFileSync(path.resolve(process.cwd(), 'out/index.html'), 'utf8');
   expect(html).toMatch(/<link[^>]+rel="stylesheet"/);
   expect(html).toContain('speculationrules');
-  expect(fs.existsSync(path.resolve(process.cwd(), 'out/sw.js'))).toBe(true);
+  // The old offline worker cached media range responses and broke the hero
+  // loop; it must not ship anymore.
+  expect(fs.existsSync(path.resolve(process.cwd(), 'out/sw.js'))).toBe(false);
 });
 
 test('home renders the shared shell without console errors', async ({ page }) => {

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
 import { AnimatedStat } from '@/components/about/AnimatedStat';
+import { BoardMembers } from '@/components/about/BoardMembers';
 import { CollapsibleText } from '@/components/about/CollapsibleText';
 import { LeadershipChart } from '@/components/about/LeadershipChart';
 import { CtaPanel } from '@/components/shared/CtaPanel';
@@ -299,6 +300,17 @@ export default function AboutPage() {
                 <p className="stats-card__sub">{stat.sub}</p>
               </div>
             ))}
+          </div>
+
+          <div className="board-block reveal">
+            <header className="section-head section-head--center">
+              <h2 className="h-2">اعضای هیئت مدیره</h2>
+              <p className="lead">
+                ارکان راهبری شرکت؛ تعیین سیاست‌های کلان و نظارت بر مسیر توسعه سازمان
+              </p>
+            </header>
+
+            <BoardMembers />
           </div>
 
           <header

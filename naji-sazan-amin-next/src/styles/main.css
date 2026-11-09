@@ -2285,10 +2285,10 @@ h1, h2, h3, h4, h5, h6 {
     height: 440px;
   }
   .circular-gallery-item {
-    width: 180px;
-    height: 260px;
-    margin-left: -90px;
-    margin-top: -130px;
+    width: 160px;
+    height: 231px;
+    margin-left: -80px;
+    margin-top: -115.5px;
   }
   .circular-gallery-title {
     font-size: 1rem;
@@ -2794,6 +2794,46 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+/* Board of directors: one row above the org chart. The portraits are 3:4,
+   shown uncropped so every face stays centred. */
+.board-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  max-width: 62rem;
+  margin-inline: auto;
+  padding-inline: 0.75rem;
+}
+
+.board-row__node {
+  position: relative;
+}
+
+.board-row .editorial-leader-photo {
+  aspect-ratio: 3 / 4;
+  min-height: 0;
+}
+
+.board-block {
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+@media (max-width: 960px) {
+  .board-row {
+    gap: 1rem;
+    max-width: 48rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .board-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.9rem;
+    max-width: 20rem;
+    padding-inline: 0;
+  }
+}
+
 
 /* Projects page: the category comes from ?cat= (set on <html> by an inline
    bootstrap script) — one page head and one card set per category. */
@@ -2822,8 +2862,8 @@ body {
    REACT PORT — hydration-safe helpers
    ================================================================ */
 :root { --gallery-radius: 640px; }
-@media (max-width: 959px) { :root { --gallery-radius: 400px; } }
-@media (max-width: 599px) { :root { --gallery-radius: 250px; } }
+@media (max-width: 960px) { :root { --gallery-radius: 500px; } }
+@media (max-width: 600px) { :root { --gallery-radius: 360px; } }
 
 .form-honeypot {
   position: absolute;

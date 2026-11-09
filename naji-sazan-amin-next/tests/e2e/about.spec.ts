@@ -139,6 +139,24 @@ const CHART_ROWS: { className: string | null; leaders: TestLeader[] }[] = [
 
 const CHART_LEADERS = CHART_ROWS.flatMap((row) => row.leaders);
 
+const BOARD_MEMBERS = [
+  {
+    name: 'محمد منزوی',
+    title: 'مدیرعامل و نائب رئیس هیئت مدیره',
+    image: '/assets/team/ceo.webp',
+  },
+  {
+    name: 'عادل سعادتی',
+    title: 'رئیس هیئت مدیره',
+    image: '/assets/team/adel-saadati.webp',
+  },
+  {
+    name: 'محمد بنی مصطفی',
+    title: 'عضو هیئت مدیره',
+    image: '/assets/team/mohammad-bani-mostafa-portrait.webp',
+  },
+];
+
 test('about page renders metadata and the centered page head', async ({ page }) => {
   const response = await page.goto('/about/');
   expect(response?.status()).toBe(200);
@@ -409,6 +427,47 @@ test('leadership chart arranges all nine managers in four tiers', async ({ page 
   expect(names).toEqual(CHART_LEADERS.map((leader) => leader.name));
 });
 
+test('board of directors row sits above the chart with the three members', async ({ page }) => {
+  await page.goto('/about/');
+
+  const block = page.locator('main .board-block');
+  await expect(block).toHaveCount(1);
+  await expect(block.locator('h2')).toHaveText('اعضای هیئت مدیره');
+
+  const members = BOARD_MEMBERS;
+
+  const cards = block.locator('.board-row .editorial-leader-card');
+  await expect(cards).toHaveCount(members.length);
+
+  for (const [index, member] of members.entries()) {
+    const card = cards.nth(index);
+    await expect(card.locator('.editorial-leader-name')).toHaveText(member.name);
+    await expect(card.locator('.editorial-leader-title')).toHaveText(member.title);
+
+    const photo = card.locator('.editorial-leader-photo img');
+    await expect(photo).toHaveAttribute('src', imageVariant(member.image, 600, 'webp'));
+    await expect(photo).toHaveAttribute('alt', member.name);
+  }
+
+  const layout = await page.evaluate(() => {
+    const board = document.querySelector('main .board-row');
+    const chart = document.querySelector('main .org-chart');
+    if (!board || !chart) return null;
+    const boardRect = board.getBoundingClientRect();
+    const chartRect = chart.getBoundingClientRect();
+    const cardRects = Array.from(document.querySelectorAll('main .board-row__node')).map((node) =>
+      node.getBoundingClientRect(),
+    );
+    return {
+      rowAboveChart: boardRect.bottom < chartRect.top,
+      // DOM order reads right-to-left here, so the first card is the rightmost.
+      singleRow: new Set(cardRects.map((rect) => Math.round(rect.top))).size === 1,
+      rightToLeft: cardRects.length === 3 && cardRects[0]!.right > cardRects[2]!.right,
+    };
+  });
+  expect(layout).toEqual({ rowAboveChart: true, singleRow: true, rightToLeft: true });
+});
+
 test('CTA offers the contact and projects routes', async ({ page }) => {
   await page.goto('/about/');
 
@@ -434,7 +493,7 @@ test('all about images resolve from the static export', async ({ page }) => {
 
   const images = page.locator('main img');
   await expect(images).toHaveCount(
-    CHART_LEADERS.filter((leader) => leader.image).length + 1,
+    CHART_LEADERS.filter((leader) => leader.image).length + BOARD_MEMBERS.length + 1,
   );
 
   for (const image of await images.all()) {
@@ -469,6 +528,7 @@ test('about images resolve with image content types', async ({ page }) => {
     '/assets/projects/real/majlesi-isfahan/cover.webp',
     ...new Set([
       ...CHART_LEADERS.filter((leader) => leader.image).map((leader) => leader.image!),
+      ...BOARD_MEMBERS.map((member) => member.image),
       '/assets/team/ceo.webp',
     ]),
   ];

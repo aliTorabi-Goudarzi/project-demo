@@ -11,11 +11,54 @@ export function HeroVideo() {
     const hero = video.closest('.hero');
     if (!hero || !('IntersectionObserver' in window)) return;
 
+    let started = false;
+    let retries = 0;
+    let checkTimer: number | null = null;
+
+    const clearTimer = () => {
+      if (checkTimer !== null) {
+        window.clearTimeout(checkTimer);
+        checkTimer = null;
+      }
+    };
+
+    // After a soft reload some browsers keep a partial/aborted range entry in
+    // the media cache: play() never resolves and the hero shows the still
+    // poster until a hard reload. Force a fresh request with a cache-busting
+    // query and play again (at most twice; the poster stays as the fallback).
+    const retryWithFreshRequest = () => {
+      if (retries >= 2) return;
+      retries += 1;
+      const source = video.querySelector('source')?.getAttribute('src');
+      if (!source) return;
+      video.src = `${source}?retry=${retries}-${Date.now()}`;
+      video.load();
+      void video.play().catch(() => undefined);
+      scheduleCheck();
+    };
+
+    const scheduleCheck = () => {
+      clearTimer();
+      checkTimer = window.setTimeout(() => {
+        if (started || (!video.paused && video.currentTime > 0)) return;
+        retryWithFreshRequest();
+      }, 2200);
+    };
+
+    const markStarted = () => {
+      started = true;
+      clearTimer();
+    };
+    video.addEventListener('playing', markStarted);
+    video.addEventListener('timeupdate', markStarted);
+    video.addEventListener('error', retryWithFreshRequest);
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            void video.play().catch(() => undefined);
+            void video.play().catch(retryWithFreshRequest);
+            scheduleCheck();
           } else {
             video.pause();
           }
@@ -25,12 +68,21 @@ export function HeroVideo() {
     );
 
     observer.observe(hero);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      clearTimer();
+      video.removeEventListener('playing', markStarted);
+      video.removeEventListener('timeupdate', markStarted);
+      video.removeEventListener('error', retryWithFreshRequest);
+    };
   }, []);
 
   return (
     <>
-      {/* The poster is the LCP element until the video's first frame paints. */}
+      {/* The poster is the LCP element until the video's first frame paints.
+          It must stay transparent (extracted from the alpha WebM) — an opaque
+          poster paints a white block over the hero whenever the video has not
+          started yet or a stale cached response delays the first frame. */}
       <link rel="preload" href="/assets/hero-poster.webp" as="image" fetchPriority="high" />
       <video
       ref={videoRef}
@@ -45,8 +97,11 @@ export function HeroVideo() {
       preload="metadata"
       poster="/assets/hero-poster.webp"
     >
+      {/* WebM/VP9 is the only source: it carries the alpha channel. The old
+          H.264 fallback was an opaque white render, so any browser that fell
+          back to it showed a white hero block — those browsers now simply
+          keep the transparent poster. */}
       <source src="/assets/hero-building-loop.webm" type="video/webm" />
-      <source src="/assets/hero-building-loop.mp4" type="video/mp4" />
       </video>
     </>
   );

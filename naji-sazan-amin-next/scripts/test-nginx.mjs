@@ -422,8 +422,8 @@ try {
     const generated = await send(true, httpsPort, generatedUrl, { Host: 'localhost' });
     const generatedCache = generated.headers['cache-control'] ?? '';
     check(
-      generated.status === 200 && generatedCache.includes('max-age=604800') && !generatedCache.includes('immutable'),
-      'generated responsive image uses a short-lived cache',
+      generated.status === 200 && generatedCache.includes('no-cache') && !generatedCache.includes('immutable'),
+      'generated responsive image revalidates instead of a long cache',
       `${generatedUrl} status ${generated.status}, cache-control ${generatedCache || '-'}`,
     );
   }
