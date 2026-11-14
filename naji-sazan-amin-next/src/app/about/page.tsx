@@ -28,6 +28,7 @@ const RESUME_PARAGRAPHS = [
 const BENTO_CARDS = [
   {
     heading: 'مطالعات و طراحی یکپارچه',
+    image: '/assets/projects/real/seoul-residential/cover.webp',
     body: 'مطالعات فاز صفر، یک و دو؛ طراحی معماری، سازه و تأسیسات مکانیکی و الکتریکی بر اساس مصوبات سازمان برنامه و بودجه و با کنترل مشاوران مجرب.',
     footer: 'فاز صفر، ۱ و ۲ • BIM و هماهنگی تأسیسات',
     icon: (
@@ -39,6 +40,7 @@ const BENTO_CARDS = [
   },
   {
     heading: 'نظارت کارگاهی و کنترل کیفیت',
+    image: '/assets/projects/real/qiam-dasht/cover.webp',
     body: 'استقرار دفاتر فنی و ناظران مقیم در محل اجرای پروژه‌ها؛ کنترل کیفیت بتن، میلگرد و جوش، پایش ایمنی کارگاه و انطباق کامل با نقشه‌ها و ضوابط.',
     footer: 'نظارت مقیم • آزمایشگاه تخصصی • HSE',
     icon: (
@@ -178,7 +180,13 @@ export default function AboutPage() {
 
           <div className="about-bento-grid about-bento-grid--cards">
             {BENTO_CARDS.map((card, index) => (
-              <div key={card.heading} className="bento-card reveal" data-delay={String(index + 1)}>
+              <div
+                key={card.heading}
+                className="bento-card bento-card--photo reveal"
+                data-delay={String(index + 1)}
+                style={{ backgroundImage: `url('${card.image}')` }}
+              >
+                <div className="bento-overlay" />
                 <div>
                   <div className="bento-card__icon">
                     <svg
@@ -198,9 +206,7 @@ export default function AboutPage() {
                   <h4>{card.heading}</h4>
                   <p>{card.body}</p>
                 </div>
-                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--accent)' }}>
-                  {card.footer}
-                </div>
+                <div className="bento-card__footer">{card.footer}</div>
               </div>
             ))}
           </div>
@@ -212,7 +218,12 @@ export default function AboutPage() {
             </CollapsibleText>
           </div>
 
-          <div className="about-vision reveal" id="vision">
+          <div
+            className="about-vision about-vision--photo reveal"
+            id="vision"
+            style={{ backgroundImage: "url('/assets/projects/real/narges-bagh-aseman/cover.webp')" }}
+          >
+            <div className="bento-overlay" />
             <div className="about-vision__intro">
               <h2 className="h-2">چشم‌انداز و اهداف</h2>
               <p>

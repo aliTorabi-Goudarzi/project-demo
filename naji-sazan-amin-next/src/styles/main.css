@@ -204,6 +204,19 @@ h1, h2, h3, h4, h5, h6 {
 .menu-btn[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
 .menu-btn[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
+/* Narrow phones: the brand (logo + two-line name) is flex-shrink: 0, so under
+   ~400px it pushed the header actions — including the hamburger — outside the
+   bar. Tighten the chrome on small screens and keep only the logo under 380px
+   so the menu button always stays inside the viewport. */
+@media (max-width: 480px) {
+  .site-header { padding-inline: var(--space-3); }
+  .site-header__inner { gap: var(--space-4); padding-inline: var(--space-4); }
+}
+
+@media (max-width: 380px) {
+  .brand__text { display: none; }
+}
+
 .drawer {
   position: fixed;
   inset: 0;
@@ -2426,20 +2439,57 @@ h1, h2, h3, h4, h5, h6 {
 .bento-card--hero {
   grid-column: 1 / -1;
   min-height: 280px;
+}
+
+/* Photo-backed panels (hero banner, service cards, vision box): a cover photo
+   under the brand-navy scrim; every child except the overlay sits above it. */
+.bento-card--hero,
+.bento-card--photo,
+.about-vision--photo {
   color: #ffffff;
   background-size: cover;
   background-position: center;
 }
 
-.bento-card--hero .bento-overlay {
+.bento-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(to right, rgba(3, 3, 81, 0.95) 0%, rgba(3, 3, 81, 0.8) 55%, rgba(3, 3, 81, 0.6) 100%);
   z-index: 1;
 }
 
-[data-theme="dark"] .bento-card--hero .bento-overlay {
+[data-theme="dark"] .bento-overlay {
   background: linear-gradient(to right, rgba(10, 15, 30, 0.96) 0%, rgba(10, 15, 30, 0.85) 60%, rgba(10, 15, 30, 0.7) 100%);
+}
+
+.bento-card--photo > :not(.bento-overlay),
+.about-vision--photo > :not(.bento-overlay) {
+  position: relative;
+  z-index: 2;
+}
+
+.bento-card--photo .bento-card__icon {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+.bento-card.bento-card--photo h4 {
+  color: #ffffff;
+}
+
+.bento-card.bento-card--photo p {
+  color: #e2e8f0;
+}
+
+.bento-card__footer {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.bento-card--photo .bento-card__footer {
+  color: #f3d9ad;
 }
 
 .bento-card--hero .bento-content {
@@ -3016,6 +3066,22 @@ body {
   height: 0.48rem;
   border-radius: 50%;
   background: var(--accent);
+}
+
+/* Photo-backed variant (client request): same treatment as the page's blue
+   banner — cover photo under the navy scrim, light text above it. */
+.about-vision--photo {
+  position: relative;
+  overflow: hidden;
+}
+
+.about-vision--photo .h-2 {
+  color: #ffffff;
+}
+
+.about-vision--photo .about-vision__intro p,
+.about-vision--photo .about-vision__list li {
+  color: #e2e8f0;
 }
 
 /* Résumé — the official company profile opens the page; the approved

@@ -38,6 +38,7 @@ const STATS = [
 const BENTO_CARDS = [
   {
     heading: 'مطالعات و طراحی یکپارچه',
+    image: '/assets/projects/real/seoul-residential/cover.webp',
     body: 'مطالعات فاز صفر، یک و دو؛ طراحی معماری، سازه و تأسیسات مکانیکی و الکتریکی بر اساس مصوبات سازمان برنامه و بودجه و با کنترل مشاوران مجرب.',
     footer: 'فاز صفر، ۱ و ۲ • BIM و هماهنگی تأسیسات',
     iconPaths: [
@@ -47,6 +48,7 @@ const BENTO_CARDS = [
   },
   {
     heading: 'نظارت کارگاهی و کنترل کیفیت',
+    image: '/assets/projects/real/qiam-dasht/cover.webp',
     body: 'استقرار دفاتر فنی و ناظران مقیم در محل اجرای پروژه‌ها؛ کنترل کیفیت بتن، میلگرد و جوش، پایش ایمنی کارگاه و انطباق کامل با نقشه‌ها و ضوابط.',
     footer: 'نظارت مقیم • آزمایشگاه تخصصی • HSE',
     iconPaths: [
@@ -296,7 +298,10 @@ test('the blue banner and the two-card row render as separate blocks', async ({ 
   for (const [index, expected] of BENTO_CARDS.entries()) {
     const card = cards.nth(index);
     await expect(card).toHaveClass(/reveal/);
+    await expect(card).toHaveClass(/bento-card--photo/);
     await expect(card).toHaveAttribute('data-delay', String(index + 1));
+    expect(await card.getAttribute('style')).toContain(assetUrl(expected.image));
+    await expect(card.locator('.bento-overlay')).toHaveCount(1);
     await expect(card.locator('h4')).toHaveText(expected.heading);
     await expect(card.locator('p')).toHaveText(expected.body);
 
@@ -310,9 +315,7 @@ test('the blue banner and the two-card row render as separate blocks', async ({ 
 
     const footer = card.locator(':scope > div').last();
     await expect(footer).toHaveText(expected.footer);
-    await expect(footer).toHaveAttribute('style', /font-size:\s*0\.8rem/);
-    await expect(footer).toHaveAttribute('style', /font-weight:\s*700/);
-    await expect(footer).toHaveAttribute('style', /color:\s*var\(--accent\)/);
+    await expect(footer).toHaveClass(/bento-card__footer/);
   }
 });
 
@@ -357,6 +360,11 @@ test('vision section lists the five strategic objectives', async ({ page }) => {
 
   const vision = page.locator('main .about-vision');
   await expect(vision).toHaveCount(1);
+  await expect(vision).toHaveClass(/about-vision--photo/);
+  expect(await vision.getAttribute('style')).toContain(
+    assetUrl('/assets/projects/real/narges-bagh-aseman/cover.webp'),
+  );
+  await expect(vision.locator('.bento-overlay')).toHaveCount(1);
   await expect(vision.locator('h2')).toHaveText('چشم‌انداز و اهداف');
   await expect(vision.locator('.about-vision__intro p')).toContainText(
     'تبدیل شدن به یکی از برجسته‌ترین و قابل‌اعتمادترین شرکت‌های مهندسین مشاور',
