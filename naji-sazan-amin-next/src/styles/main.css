@@ -332,6 +332,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Hero Architectural 3D Video Background */
+/* z-index stays auto: the wrap must NOT become a stacking context, or the
+   video's mix-blend-mode (WebKit solid fallback) could only blend against the
+   transparent group instead of the hero backdrop. The bottom fade lives on the
+   video itself for the same reason. */
 .hero__bg-wrap {
   position: absolute;
   inset: 0;
@@ -339,12 +343,10 @@ h1, h2, h3, h4, h5, h6 {
   height: 100%;
   overflow: hidden;
   pointer-events: none;
-  z-index: 0;
+  z-index: auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 85%, transparent 100%);
-  mask-image: linear-gradient(to bottom, black 0%, black 85%, transparent 100%);
 }
 
 .hero__bg-video {
@@ -358,6 +360,8 @@ h1, h2, h3, h4, h5, h6 {
   object-fit: contain;
   opacity: 0.40;
   transition: opacity var(--dur-normal) var(--ease), filter var(--dur-normal) var(--ease);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 85%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 0%, black 85%, transparent 100%);
 }
 
 :root[data-theme="light"] .hero__bg-video {
@@ -368,6 +372,16 @@ h1, h2, h3, h4, h5, h6 {
 :root[data-theme="dark"] .hero__bg-video {
   filter: brightness(1.1) contrast(1.1);
   opacity: 0.40;
+}
+
+/* WebKit solid fallback (source swapped in HeroVideo): the render carries a
+   baked black background — screen/multiply makes that background neutral so
+   only the wireframe shows, matching the alpha WebM's look in both themes. */
+.hero__bg-video--solid {
+  mix-blend-mode: screen;
+}
+:root[data-theme="light"] .hero__bg-video--solid {
+  mix-blend-mode: multiply;
 }
 
 .hero__bg-overlay {

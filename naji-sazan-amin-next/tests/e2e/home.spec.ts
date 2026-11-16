@@ -101,6 +101,10 @@ test.describe('hero', () => {
     expect(await video.evaluate((element) => (element as HTMLVideoElement).loop)).toBe(true);
     expect(await video.evaluate((element) => (element as HTMLVideoElement).muted)).toBe(true);
     expect(await video.evaluate((element) => (element as HTMLVideoElement).playsInline)).toBe(true);
+    // Chromium/Firefox keep the alpha WebM; the solid swap is WebKit-only.
+    expect(await video.evaluate((element) => (element as HTMLVideoElement).className)).not.toContain(
+      'hero__bg-video--solid',
+    );
 
     const sources = video.locator('source');
     // Only the alpha WebM is offered: the old H.264 fallback was an opaque
@@ -172,6 +176,40 @@ test.describe('hero', () => {
 
     await page.evaluate(() => window.scrollTo(0, 0));
     await expect.poll(isPaused, { timeout: 20_000 }).toBe(false);
+  });
+
+  test('WebKit devices get the solid render instead of the alpha WebM', async ({ browser }) => {
+    // Every browser on iOS is WebKit (Safari and Chrome alike) and drops the
+    // VP9 alpha plane, so the whole family swaps to the solid render.
+    const context = await browser.newContext({
+      userAgent:
+        'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1',
+      viewport: { width: 390, height: 844 },
+      isMobile: true,
+      hasTouch: true,
+    });
+    const page = await context.newPage();
+    await page.goto('/');
+
+    const video = page.locator('video#heroBgVideo');
+    await expect(video).toHaveClass(/hero__bg-video--solid/);
+    expect(await video.evaluate((element) => (element as HTMLVideoElement).currentSrc)).toContain(
+      assetUrl('/assets/hero-building-loop-solid.mp4'),
+    );
+
+    // The bundled H.264 decoder must actually play the solid render.
+    await expect
+      .poll(
+        () =>
+          video.evaluate((element) => {
+            const el = element as HTMLVideoElement;
+            return !el.paused && el.currentTime > 0;
+          }),
+        { timeout: 20_000 },
+      )
+      .toBe(true);
+
+    await context.close();
   });
 });
 
